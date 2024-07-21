@@ -55,7 +55,6 @@ void AControllableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AControllableCharacter::Move);
-		EnhancedInputComponent->BindAction(LeftMouseButtonAction, ETriggerEvent::Started, this, &AControllableCharacter::LeftMouseButtonPressed);
 	}
 }
 
@@ -101,8 +100,4 @@ void AControllableCharacter::Move(const FInputActionValue& Value)
 		const FVector RightDir = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(RightDir, InputValue.Y);
 	}
-}
-
-void AControllableCharacter::LeftMouseButtonPressed()
-{
 }

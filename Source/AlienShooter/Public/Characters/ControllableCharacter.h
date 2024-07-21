@@ -22,6 +22,8 @@ class ALIENSHOOTER_API AControllableCharacter : public ABaseCharacter
 
 public:
 	AControllableCharacter();
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -37,7 +39,6 @@ protected:
 protected:
 	/* Input callbacks begin */
 	void Move(const FInputActionValue& Value);
-	void LeftMouseButtonPressed();
 	/* Input callbacks end */
 	
 	/* Input actions begin */
@@ -46,12 +47,5 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
 	TObjectPtr<UInputAction> MoveAction;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
-	TObjectPtr<UInputAction> LeftMouseButtonAction;
 	/* Input end */
-
-public:
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 };

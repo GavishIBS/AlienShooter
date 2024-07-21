@@ -1,0 +1,35 @@
+// Copyright (c) 2024 Gavish Bansal
+// 
+// All rights reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Characters/ControllableCharacter.h"
+#include "ShooterCharacter.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class ALIENSHOOTER_API AShooterCharacter : public AControllableCharacter
+{
+	GENERATED_BODY()
+
+public:
+	AShooterCharacter();
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+protected:
+	virtual void BeginPlay() override;
+
+	/* Input callbacks begin */
+	void LeftMouseButtonPressed();
+	/* Input callbacks end */
+	
+	/* Input begin */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
+	TObjectPtr<UInputAction> LeftMouseButtonPressedAction;
+	/* Input end */
+};
