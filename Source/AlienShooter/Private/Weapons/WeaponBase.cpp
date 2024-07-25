@@ -4,10 +4,8 @@
 
 
 #include "Weapons/WeaponBase.h"
-
 #include "Characters/ShooterCharacter.h"
 #include "Components/SphereComponent.h"
-#include "GameFramework/Character.h"
 
 AWeaponBase::AWeaponBase()
 {
@@ -21,6 +19,14 @@ AWeaponBase::AWeaponBase()
 
 	WeaponStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponStaticeMesh"));
 	WeaponStaticMesh->SetupAttachment(OverlapSphere);
+
+	WeaponSkeletalMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponSkeletalMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
+	WeaponSkeletalMesh->SetSimulatePhysics(false);
+
+	WeaponStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponStaticMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
+	WeaponStaticMesh->SetSimulatePhysics(false);
 }
 
 void AWeaponBase::BeginPlay()
@@ -33,6 +39,7 @@ void AWeaponBase::Init_Callbacks()
 {
 	if (OverlapSphere)
 		OverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeaponBase::OnBeginOverlap);
+	OnWeaponPicked.AddDynamic(this, &AWeaponBase::OnWeaponPickedCallback);
 }
 
 void AWeaponBase::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -41,21 +48,24 @@ void AWeaponBase::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 {
 	if (const AShooterCharacter* ShooterCharacter = Cast<AShooterCharacter>(OtherActor))
 	{
-		if (ShooterCharacter->CanTakeWeapon(this))
-		{
-			TakeWeapon(ShooterCharacter);
-		}
+		ShooterCharacter->PickupWeapon(this);
 	}
 }
 
+void AWeaponBase::OnWeaponPickedCallback()
+{
+	OverlapSphere->SetGenerateOverlapEvents(false);
+}
+
+/*
 bool AWeaponBase::TakeWeapon(const ACharacter* InstigatorCharacter)
 {
 	if (!InstigatorCharacter) return false;
 
-	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
+	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
 		EAttachmentRule::SnapToTarget,
 		EAttachmentRule::SnapToTarget, false);
 	this->AttachToComponent(InstigatorCharacter->GetMesh(), AttachmentTransformRules,
 		WeaponProperties.InHandAttachmentSocketName);
 	return false;
-}
+}*/

@@ -47,4 +47,10 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			YawOffsetFromVelocity = DeltaRotation.Yaw;
 		} else YawOffsetFromVelocity = 0.f;
 	}
+
+	{
+		// Combat
+		bEquipped = ShooterCharacter->IsEquipped();
+		WeaponInHand_Name = ShooterCharacter->GetWeaponInHand_Name();
+	}
 }

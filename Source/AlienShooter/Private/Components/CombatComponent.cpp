@@ -24,10 +24,19 @@ void UCombatComponent::Init_Component()
 	OwnerAsShooterCharacter = Cast<AShooterCharacter>(GetOwner());
 }
 
-void UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
+bool UCombatComponent::CanTakeWeapon(const AWeaponBase* InWeapon) const
 {
+	if (!InWeapon) return false;
+	// TODO: Check if already have same weapon
+	return true;
+}
+
+bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
+{
+	if (CanTakeWeapon(InWeapon) == false) return false;
+	
 	// Destroy previous weapon
-	WeaponInHand->Destroy();
+	if (WeaponInHand) WeaponInHand->Destroy();
 	
 	Weapons.Add(InWeapon->GetWeaponClass());
 
@@ -36,8 +45,11 @@ void UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 		EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
 	InWeapon->AttachToComponent(OwnerAsShooterCharacter->GetMesh(),
 		AttachmentTransformRules, InWeapon->GetWeaponProperties().InHandAttachmentSocketName);
+
+	InWeapon->OnWeaponPicked.Broadcast();
 	
 	WeaponInHand = InWeapon;
+	return true;
 }
 
 bool UCombatComponent::SelectWeapon(const int Index)

@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "Weapons/WeaponTypes.h"
 #include "ShooterAnimInstance.generated.h"
 
 class AShooterCharacter;
@@ -38,8 +39,14 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Locomotion)
 	bool bFalling = false;
 
-	FRotator DeltaRotation;
+	FRotator DeltaRotation = FRotator();
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Locomotion)
 	float YawOffsetFromVelocity = 0.f;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Combat)
+	bool bEquipped = false;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Combat)
+	EWeaponName WeaponInHand_Name = EWeaponName::EWN_None;
 };

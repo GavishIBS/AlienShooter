@@ -26,7 +26,9 @@ protected:
 
 	virtual void Init_Component();
 
-	void AddWeapon(AWeaponBase* InWeapon);
+	bool CanTakeWeapon(const AWeaponBase* InWeapon) const;
+	
+	bool AddWeapon(AWeaponBase* InWeapon);
 	bool SelectWeapon(const int Index);
 	
 	UPROPERTY(VisibleAnywhere, Category=Combat)

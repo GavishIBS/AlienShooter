@@ -11,6 +11,8 @@
 
 class USphereComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponPicked);
+
 UCLASS()
 class ALIENSHOOTER_API AWeaponBase : public AActor
 {
@@ -19,17 +21,21 @@ class ALIENSHOOTER_API AWeaponBase : public AActor
 public:	
 	AWeaponBase();
 
-	bool TakeWeapon(const ACharacter* InstigatorCharacter);
+	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
+	FOnWeaponPicked OnWeaponPicked;
+	
+	//bool TakeWeapon(const ACharacter* InstigatorCharacter);
 
 protected:
+	virtual void BeginPlay() override;
 	void Init_Callbacks();
 	
 	UFUNCTION()
 	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-protected:
-	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void OnWeaponPickedCallback();
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Components)
 	TObjectPtr<USphereComponent> OverlapSphere;
 	

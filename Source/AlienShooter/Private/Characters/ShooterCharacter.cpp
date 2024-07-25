@@ -44,8 +44,8 @@ void AShooterCharacter::LeftMouseButtonPressed()
 {
 }
 
-bool AShooterCharacter::CanTakeWeapon(AWeaponBase* InWeapon) const
+void AShooterCharacter::PickupWeapon(AWeaponBase* InWeapon) const
 {
-	// TODO: Implementation
-	return true;
+	if (!CombatComponent) return;
+	CombatComponent->AddWeapon(InWeapon);
 }

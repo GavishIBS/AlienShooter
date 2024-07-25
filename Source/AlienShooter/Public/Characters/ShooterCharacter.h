@@ -7,6 +7,7 @@
 #include "CoreMinimal.h"
 #include "Characters/ControllableCharacter.h"
 #include "Components/CombatComponent.h"
+#include "Weapons/WeaponBase.h"
 #include "ShooterCharacter.generated.h"
 
 class AWeaponBase;
@@ -25,6 +26,8 @@ public:
 	virtual void PostInitializeComponents() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	
+	void PickupWeapon(AWeaponBase* InWeapon) const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -42,5 +45,7 @@ protected:
 	/* Input end */
 
 public:
-	bool CanTakeWeapon(AWeaponBase* InWeapon) const;
+	FORCEINLINE bool IsEquipped() const {return CombatComponent ? CombatComponent->WeaponInHand ? true : false : false;}
+	FORCEINLINE EWeaponName GetWeaponInHand_Name() const {return CombatComponent ? CombatComponent->WeaponInHand ?
+			CombatComponent->WeaponInHand->GetWeaponProperties().WeaponName : EWeaponName::EWN_None : EWeaponName::EWN_None;}
 };
