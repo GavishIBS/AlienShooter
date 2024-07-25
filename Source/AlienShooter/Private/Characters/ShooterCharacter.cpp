@@ -5,10 +5,19 @@
 
 #include "Characters/ShooterCharacter.h"
 #include "EnhancedInputComponent.h"
+#include "Components/CombatComponent.h"
 
 AShooterCharacter::AShooterCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+}
+
+void AShooterCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if (CombatComponent) CombatComponent->Init_Component();
 }
 
 void AShooterCharacter::BeginPlay()
@@ -33,4 +42,10 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AShooterCharacter::LeftMouseButtonPressed()
 {
+}
+
+bool AShooterCharacter::CanTakeWeapon(AWeaponBase* InWeapon) const
+{
+	// TODO: Implementation
+	return true;
 }

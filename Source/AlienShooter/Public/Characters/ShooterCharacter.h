@@ -6,7 +6,11 @@
 
 #include "CoreMinimal.h"
 #include "Characters/ControllableCharacter.h"
+#include "Components/CombatComponent.h"
 #include "ShooterCharacter.generated.h"
+
+class AWeaponBase;
+class UCombatComponent;
 
 /**
  * 
@@ -18,12 +22,16 @@ class ALIENSHOOTER_API AShooterCharacter : public AControllableCharacter
 
 public:
 	AShooterCharacter();
+	virtual void PostInitializeComponents() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
+	TObjectPtr<UCombatComponent> CombatComponent = nullptr;
+	
 	/* Input callbacks begin */
 	void LeftMouseButtonPressed();
 	/* Input callbacks end */
@@ -32,4 +40,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
 	TObjectPtr<UInputAction> LeftMouseButtonPressedAction;
 	/* Input end */
+
+public:
+	bool CanTakeWeapon(AWeaponBase* InWeapon) const;
 };
