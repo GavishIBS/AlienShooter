@@ -37,11 +37,27 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(LeftMouseButtonPressedAction, ETriggerEvent::Started, this, &AShooterCharacter::LeftMouseButtonPressed);
+		EnhancedInputComponent->BindAction(MouseWheelUpAction, ETriggerEvent::Started, this, &AShooterCharacter::MouseWheelUp);
+		EnhancedInputComponent->BindAction(MouseWheelDownAction, ETriggerEvent::Started, this, &AShooterCharacter::MouseWheelDown);
 	}
 }
 
 void AShooterCharacter::LeftMouseButtonPressed()
 {
+	if (CombatComponent)
+		CombatComponent->FireButtonPressed();
+}
+
+void AShooterCharacter::MouseWheelUp()
+{
+	if (!CombatComponent) return;
+	CombatComponent->SelectWeapon(CombatComponent->WeaponIndex + 1);
+}
+
+void AShooterCharacter::MouseWheelDown()
+{
+	if (!CombatComponent) return;
+	CombatComponent->SelectWeapon(CombatComponent->WeaponIndex - 1);
 }
 
 void AShooterCharacter::PickupWeapon(AWeaponBase* InWeapon) const

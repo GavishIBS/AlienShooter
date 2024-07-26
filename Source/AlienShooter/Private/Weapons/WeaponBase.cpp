@@ -5,6 +5,7 @@
 
 #include "Weapons/WeaponBase.h"
 #include "Characters/ShooterCharacter.h"
+#include "Components/ArrowComponent.h"
 #include "Components/SphereComponent.h"
 
 AWeaponBase::AWeaponBase()
@@ -16,23 +17,33 @@ AWeaponBase::AWeaponBase()
 	
 	WeaponSkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponSkeletalMesh"));
 	WeaponSkeletalMesh->SetupAttachment(OverlapSphere);
-
-	WeaponStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponStaticeMesh"));
-	WeaponStaticMesh->SetupAttachment(OverlapSphere);
-
 	WeaponSkeletalMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	WeaponSkeletalMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
 	WeaponSkeletalMesh->SetSimulatePhysics(false);
 
+	WeaponStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponStaticeMesh"));
+	WeaponStaticMesh->SetupAttachment(OverlapSphere);
 	WeaponStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	WeaponStaticMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
 	WeaponStaticMesh->SetSimulatePhysics(false);
+	
+	WeaponMuzzle_S = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponMuzzle_S"));
+	WeaponMuzzle_S->SetupAttachment(WeaponStaticMesh);
+
+	MuzzleDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("MuzzleDirection"));
+	MuzzleDirection->SetupAttachment(OverlapSphere);
 }
 
 void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
 	Init_Callbacks();
+	
+	if (WeaponProperties.bIsSkeletalMesh)
+	{
+		WeaponStaticMesh->DestroyComponent();
+		WeaponMuzzle_S->DestroyComponent();
+	}
 }
 
 void AWeaponBase::Init_Callbacks()
@@ -40,6 +51,7 @@ void AWeaponBase::Init_Callbacks()
 	if (OverlapSphere)
 		OverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeaponBase::OnBeginOverlap);
 	OnWeaponPicked.AddDynamic(this, &AWeaponBase::OnWeaponPickedCallback);
+	OnWeaponFired.AddDynamic(this, &AWeaponBase::OnWeaponFiredCallback);
 }
 
 void AWeaponBase::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -55,6 +67,27 @@ void AWeaponBase::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 void AWeaponBase::OnWeaponPickedCallback()
 {
 	OverlapSphere->SetGenerateOverlapEvents(false);
+	OwnerAsShooterCharacter = Cast<AShooterCharacter>(GetOwner());
+}
+
+void AWeaponBase::OnWeaponFiredCallback()
+{
+	Fire();
+}
+
+void AWeaponBase::Fire()
+{
+}
+
+FTransform AWeaponBase::GetWeaponMuzzleTransform() const
+{
+	if (WeaponProperties.bIsSkeletalMesh && WeaponSkeletalMesh)
+		return WeaponSkeletalMesh->GetSocketTransform(WeaponProperties.WeaponMuzzleSocketName, RTS_World);
+
+	if (WeaponStaticMesh)
+		return WeaponMuzzle_S->GetComponentTransform();
+
+	return FTransform();
 }
 
 /*

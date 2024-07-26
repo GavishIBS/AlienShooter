@@ -33,7 +33,7 @@ protected:
 	TObjectPtr<APlayerController> PlayerController;
 
 	/* Character rotation begin */
-	void UpdateCharacterRotationToCursor() const;
+	void UpdateCharacterRotationToCursor();
 	/* Character rotation end */
 	
 protected:
@@ -48,4 +48,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
 	TObjectPtr<UInputAction> MoveAction;
 	/* Input end */
+
+	FVector CursorTraceHitLocation = FVector();
 };

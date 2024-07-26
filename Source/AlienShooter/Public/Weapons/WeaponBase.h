@@ -9,9 +9,12 @@
 #include "GameFramework/Actor.h"
 #include "WeaponBase.generated.h"
 
+class UArrowComponent;
+class AShooterCharacter;
 class USphereComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponPicked);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFired);
 
 UCLASS()
 class ALIENSHOOTER_API AWeaponBase : public AActor
@@ -23,6 +26,9 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
 	FOnWeaponPicked OnWeaponPicked;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
+	FOnWeaponFired OnWeaponFired;
 	
 	//bool TakeWeapon(const ACharacter* InstigatorCharacter);
 
@@ -35,15 +41,29 @@ protected:
 
 	UFUNCTION()
 	void OnWeaponPickedCallback();
+
+	UFUNCTION()
+	void OnWeaponFiredCallback();
+
+	virtual void Fire();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Ownership)
+	TObjectPtr<AShooterCharacter> OwnerAsShooterCharacter = nullptr;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Components)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Components)
 	TObjectPtr<USphereComponent> OverlapSphere;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Components)
 	TObjectPtr<USkeletalMeshComponent> WeaponSkeletalMesh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UStaticMeshComponent> WeaponStaticMesh;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Components)
+	TObjectPtr<USceneComponent> WeaponMuzzle_S;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Components)
+	TObjectPtr<UArrowComponent> MuzzleDirection;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	FWeaponProperties WeaponProperties = FWeaponProperties();
@@ -56,4 +76,5 @@ public:
 	FORCEINLINE UStaticMeshComponent* GetWeaponMeshAsStaticMesh() const {return WeaponStaticMesh;}
 	FORCEINLINE FWeaponProperties GetWeaponProperties() const {return WeaponProperties;}
 	FORCEINLINE TSubclassOf<AWeaponBase> GetWeaponClass() const {return WeaponData.WeaponClass;}
+	FORCEINLINE FTransform GetWeaponMuzzleTransform() const;
 };

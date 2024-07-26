@@ -30,12 +30,17 @@ protected:
 	
 	bool AddWeapon(AWeaponBase* InWeapon);
 	bool SelectWeapon(const int Index);
+
+	void FireButtonPressed();
 	
 	UPROPERTY(VisibleAnywhere, Category=Combat)
 	TArray<TSubclassOf<AWeaponBase>> Weapons = TArray<TSubclassOf<AWeaponBase>>();
 
 	UPROPERTY(VisibleAnywhere, Category=Combat)
 	AWeaponBase* WeaponInHand = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category=Combat)
+	int8 WeaponIndex = -1;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category=Ownership)

@@ -4,7 +4,6 @@
 
 
 #include "Components/CombatComponent.h"
-
 #include "Characters/ShooterCharacter.h"
 #include "Weapons/WeaponBase.h"
 
@@ -27,7 +26,8 @@ void UCombatComponent::Init_Component()
 bool UCombatComponent::CanTakeWeapon(const AWeaponBase* InWeapon) const
 {
 	if (!InWeapon) return false;
-	// TODO: Check if already have same weapon
+	for (auto& WeaponClass : Weapons)
+		if (InWeapon->GetWeaponClass() == WeaponClass) return false;
 	return true;
 }
 
@@ -37,9 +37,13 @@ bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 	
 	// Destroy previous weapon
 	if (WeaponInHand) WeaponInHand->Destroy();
-	
+
+	// Add weapon class to list
 	Weapons.Add(InWeapon->GetWeaponClass());
 
+	// Update ownership
+	InWeapon->SetOwner(OwnerAsShooterCharacter);
+	
 	// Attach weapon to hand
 	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
 		EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
@@ -49,13 +53,17 @@ bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 	InWeapon->OnWeaponPicked.Broadcast();
 	
 	WeaponInHand = InWeapon;
+	WeaponIndex = Weapons.Num() - 1;
 	return true;
 }
 
 bool UCombatComponent::SelectWeapon(const int Index)
 {
 	if (!OwnerAsShooterCharacter || !GetWorld()) return false;
-	if (Weapons.Num() - 1 < Index) return false;
+	if (Index < 0 || Weapons.Num() - 1 < Index) return false;
+
+	// Destroy current weapon
+	if (WeaponInHand) WeaponInHand->Destroy();
 	
 	const TSubclassOf<AWeaponBase> WeaponClassSelection = Weapons[Index];
 	FActorSpawnParameters ActorSpawnParameters;
@@ -65,11 +73,22 @@ bool UCombatComponent::SelectWeapon(const int Index)
 	
 	if (!WeaponSelection) return false;
 
+	// Update ownership
+	WeaponSelection->SetOwner(OwnerAsShooterCharacter);
+	WeaponSelection->OnWeaponPicked.Broadcast();
+	
 	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
 	EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
 	WeaponSelection->AttachToComponent(OwnerAsShooterCharacter->GetMesh(),
 		AttachmentTransformRules, WeaponSelection->GetWeaponProperties().InHandAttachmentSocketName);
 	WeaponInHand = WeaponSelection;
-
+	WeaponIndex = Index;
+	
 	return true;
+}
+
+void UCombatComponent::FireButtonPressed()
+{
+	if (!WeaponInHand) return;
+	WeaponInHand->OnWeaponFired.Broadcast();
 }

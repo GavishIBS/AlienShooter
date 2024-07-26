@@ -58,7 +58,7 @@ void AControllableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	}
 }
 
-void AControllableCharacter::UpdateCharacterRotationToCursor() const
+void AControllableCharacter::UpdateCharacterRotationToCursor()
 {
 	if (!PlayerController) return;
 
@@ -67,8 +67,8 @@ void AControllableCharacter::UpdateCharacterRotationToCursor() const
 	if (HitResult.bBlockingHit)
 	{
 		// Calculate new rotation
-		const FVector HitLocation = HitResult.Location;
-		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetMesh()->GetComponentLocation(), HitLocation);
+		CursorTraceHitLocation = HitResult.Location;
+		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetMesh()->GetComponentLocation(), CursorTraceHitLocation);
 		FRotator NewRotation = FRotator(GetMesh()->GetComponentRotation().Pitch, LookAtRotation.Yaw - 90.f, GetMesh()->GetComponentRotation().Roll);
 		// NewRotation.Yaw is LookAtRotation.Yaw - 90.f and not LookAtRotation.Yaw because character mesh component is
 		// rotated by -90.f yaw value relative to the capsule component.

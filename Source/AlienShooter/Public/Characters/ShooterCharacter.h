@@ -37,11 +37,19 @@ protected:
 	
 	/* Input callbacks begin */
 	void LeftMouseButtonPressed();
+	void MouseWheelUp();
+	void MouseWheelDown();
 	/* Input callbacks end */
 	
 	/* Input begin */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
-	TObjectPtr<UInputAction> LeftMouseButtonPressedAction;
+	UPROPERTY(EditDefaultsOnly, Category=Input)
+	TObjectPtr<UInputAction> LeftMouseButtonPressedAction = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category=Input)
+	TObjectPtr<UInputAction> MouseWheelUpAction = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category=Input)
+	TObjectPtr<UInputAction> MouseWheelDownAction = nullptr;
 	/* Input end */
 
 public:
