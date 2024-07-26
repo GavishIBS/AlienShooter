@@ -6,7 +6,6 @@
 #include "Weapons/HitscanWeapon.h"
 #include "Characters/ShooterCharacter.h"
 #include "Components/ArrowComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Interfaces/HitInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -31,10 +30,11 @@ void AHitscanWeapon::Fire()
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(this);
 	ActorsToIgnore.Add(OwnerAsShooterCharacter);
-	for (int i = 1; i <= HitscanWeaponProperties.NumberOfTraces; i++)
+	for (int i = 0; i < HitscanWeaponProperties.NumberOfTraces; i++)
 	{
-		const float TraceHeight = HitscanWeaponProperties.TraceHeightOffset + OwnerAsShooterCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight() -
-			i * OwnerAsShooterCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight() / HitscanWeaponProperties.NumberOfTraces;
+		const float TraceHeight = HitscanWeaponProperties.TraceHeightOffset +
+			OwnerAsShooterCharacter->GetMesh()->GetComponentLocation().Z -
+				((i * OwnerAsShooterCharacter->GetMesh()->GetRelativeLocation().Z) / HitscanWeaponProperties.NumberOfHeightDivisions);
 
 		const FVector MuzzleLocation = GetWeaponMuzzleTransform().GetLocation();
 		const FVector Start = FVector(MuzzleLocation.X, MuzzleLocation.Y, TraceHeight);
@@ -47,7 +47,7 @@ void AHitscanWeapon::Fire()
 		if (HitResult.bBlockingHit)
 		{
 			if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
-				BulletHealth -= HitInterface->GetHit(WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor);
+				BulletHealth -= HitInterface->GetHit(WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter);
 			if (BulletHealth <= 0.f)
 				break;
 		}

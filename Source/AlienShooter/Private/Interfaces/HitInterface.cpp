@@ -5,7 +5,7 @@
 
 #include "Interfaces/HitInterface.h"
 
-float IHitInterface::GetHit(float Damage, float RandomizationFactor)
+float IHitInterface::GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
 {
 	return 0.f;
 }

@@ -50,4 +50,7 @@ protected:
 	/* Input end */
 
 	FVector CursorTraceHitLocation = FVector();
+
+public:
+	FORCEINLINE FVector GetCursorTraceHitLocation() const {return CursorTraceHitLocation;}
 };

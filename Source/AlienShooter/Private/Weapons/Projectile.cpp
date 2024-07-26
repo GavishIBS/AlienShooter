@@ -48,6 +48,6 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
                         FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor))
-		ProjectileProperties.BulletHealth -= HitInterface->GetHit(ProjectileProperties.Damage, ProjectileProperties.Damage_RandomizationFactor);
+		ProjectileProperties.BulletHealth -= HitInterface->GetHit(ProjectileProperties.Damage, ProjectileProperties.Damage_RandomizationFactor, WeaponOwner);
 	Destroy();
 }

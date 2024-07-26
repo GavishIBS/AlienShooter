@@ -29,6 +29,9 @@ protected:
 	TObjectPtr<AShooterCharacter> ShooterCharacter;
 	TObjectPtr<UCharacterMovementComponent> MovementComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category=Properties)
+	FName RightHandSocketName = FName("hand_r");
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Locomotion)
 	FVector Velocity = FVector();
@@ -48,5 +51,15 @@ protected:
 	bool bEquipped = false;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Combat)
+	TObjectPtr<AWeaponBase> WeaponInHand = nullptr;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Combat)
 	EWeaponName WeaponInHand_Name = EWeaponName::EWN_None;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
+	bool bEnableRightHandIK = false;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
+	FRotator RightHandRotation = FRotator();
+
 };

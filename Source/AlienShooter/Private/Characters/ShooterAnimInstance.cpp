@@ -51,6 +51,21 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		// Combat
 		bEquipped = ShooterCharacter->IsEquipped();
+		WeaponInHand = ShooterCharacter->GetWeaponInHand();
 		WeaponInHand_Name = ShooterCharacter->GetWeaponInHand_Name();
+	}
+
+	{
+		// IK
+		bEnableRightHandIK = ShooterCharacter->GetShooterProperties()->bEnableIK;
+		if (bEquipped && WeaponInHand && bEnableRightHandIK)
+		{
+			const FVector RightHandLocation = ShooterCharacter->GetMesh()->GetSocketLocation(RightHandSocketName);
+			RightHandRotation = ShooterCharacter->GetMesh()->GetSocketRotation(RightHandSocketName);
+			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(RightHandLocation,
+				RightHandLocation + (RightHandLocation - ShooterCharacter->GetCursorTraceHitLocation()));
+			RightHandRotation.Yaw = LookAtRotation.Yaw;
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("%f"), RightHandRotation.Yaw));
+		}
 	}
 }

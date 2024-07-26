@@ -34,7 +34,7 @@ protected:
 	void FireButtonPressed();
 	
 	UPROPERTY(VisibleAnywhere, Category=Combat)
-	TArray<TSubclassOf<AWeaponBase>> Weapons = TArray<TSubclassOf<AWeaponBase>>();
+	TMap<TSubclassOf<AWeaponBase>, int> Weapons;
 
 	UPROPERTY(VisibleAnywhere, Category=Combat)
 	AWeaponBase* WeaponInHand = nullptr;

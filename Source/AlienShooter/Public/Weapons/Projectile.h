@@ -9,6 +9,7 @@
 #include "Weapons/WeaponTypes.h"
 #include "Projectile.generated.h"
 
+class AProjectileWeapon;
 class UBoxComponent;
 class UProjectileMovementComponent;
 
@@ -17,7 +18,8 @@ class ALIENSHOOTER_API AProjectile : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
+	friend AProjectileWeapon;
 	AProjectile();
 
 	void Init(const float& InBulletHealth, const float& InDamage, const float& InDamage_RandomizationFactor);
@@ -26,6 +28,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
 
+	// Ownership
+	AActor* WeaponOwner = nullptr;
+	
 	UFUNCTION()
 	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 

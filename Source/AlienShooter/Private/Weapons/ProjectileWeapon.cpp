@@ -28,5 +28,6 @@ void AProjectileWeapon::Fire()
 		ActorSpawnParameters.Owner = this;
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileWeaponData.ProjectileClass, MuzzleTransform, ActorSpawnParameters);
 		Projectile->Init(WeaponProperties.BulletHealth, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor);
+		Projectile->WeaponOwner = (AActor*)(OwnerAsShooterCharacter);
 	}
 }

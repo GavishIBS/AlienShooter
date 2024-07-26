@@ -10,7 +10,7 @@
 UCombatComponent::UCombatComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-	Weapons.SetNum(0);
+	Weapons.Empty();
 }
 
 void UCombatComponent::BeginPlay()
@@ -26,8 +26,8 @@ void UCombatComponent::Init_Component()
 bool UCombatComponent::CanTakeWeapon(const AWeaponBase* InWeapon) const
 {
 	if (!InWeapon) return false;
-	for (auto& WeaponClass : Weapons)
-		if (InWeapon->GetWeaponClass() == WeaponClass) return false;
+	for (auto& Weapon : Weapons)
+		if (InWeapon->GetWeaponClass() == Weapon.Get<0>()) return false;
 	return true;
 }
 
@@ -39,7 +39,7 @@ bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 	if (WeaponInHand) WeaponInHand->Destroy();
 
 	// Add weapon class to list
-	Weapons.Add(InWeapon->GetWeaponClass());
+	Weapons.Add(InWeapon->GetWeaponClass(), InWeapon->GetTotalAmmoAvailable());
 
 	// Update ownership
 	InWeapon->SetOwner(OwnerAsShooterCharacter);
@@ -49,7 +49,8 @@ bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 		EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
 	InWeapon->AttachToComponent(OwnerAsShooterCharacter->GetMesh(),
 		AttachmentTransformRules, InWeapon->GetWeaponProperties().InHandAttachmentSocketName);
-
+	OwnerAsShooterCharacter->GetShooterProperties()->bEnableIK = InWeapon->GetWeaponProperties().bShouldEnableIK;
+	
 	InWeapon->OnWeaponPicked.Broadcast();
 	
 	WeaponInHand = InWeapon;
@@ -64,18 +65,21 @@ bool UCombatComponent::SelectWeapon(const int Index)
 
 	// Destroy current weapon
 	if (WeaponInHand) WeaponInHand->Destroy();
-	
-	const TSubclassOf<AWeaponBase> WeaponClassSelection = Weapons[Index];
+
+	TArray<TSubclassOf<AWeaponBase>> Keys;
+	Weapons.GetKeys(Keys);
+	const TSubclassOf<AWeaponBase> WeaponClassSelection = Keys[Index];
 	FActorSpawnParameters ActorSpawnParameters;
 	ActorSpawnParameters.Instigator = OwnerAsShooterCharacter;
 	ActorSpawnParameters.Owner = OwnerAsShooterCharacter;
 	AWeaponBase* WeaponSelection = GetWorld()->SpawnActor<AWeaponBase>(WeaponClassSelection, ActorSpawnParameters);
+	OwnerAsShooterCharacter->GetShooterProperties()->bEnableIK = WeaponSelection->GetWeaponProperties().bShouldEnableIK;
 	
 	if (!WeaponSelection) return false;
 
-	// Update ownership
+	// Update ownership and broadcast OnWeaponSelected
 	WeaponSelection->SetOwner(OwnerAsShooterCharacter);
-	WeaponSelection->OnWeaponPicked.Broadcast();
+	WeaponSelection->OnWeaponSelected.Broadcast();
 	
 	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
 	EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);

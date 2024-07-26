@@ -5,6 +5,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ShooterTypes.h"
 #include "Characters/ControllableCharacter.h"
 #include "Components/CombatComponent.h"
 #include "Weapons/WeaponBase.h"
@@ -26,12 +27,21 @@ public:
 	virtual void PostInitializeComponents() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+	/* Interfaces begin */
+	virtual float GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
+	/* Interfaces end */
 	
 	void PickupWeapon(AWeaponBase* InWeapon) const;
 
 protected:
 	virtual void BeginPlay() override;
 
+	void InitCallbacks();
+
+	UFUNCTION()
+	void OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UCombatComponent> CombatComponent = nullptr;
 	
@@ -52,8 +62,12 @@ protected:
 	TObjectPtr<UInputAction> MouseWheelDownAction = nullptr;
 	/* Input end */
 
+	FShooterProperties ShooterProperties = FShooterProperties();
+
 public:
 	FORCEINLINE bool IsEquipped() const {return CombatComponent ? CombatComponent->WeaponInHand ? true : false : false;}
+	FORCEINLINE TObjectPtr<AWeaponBase> GetWeaponInHand() const {return CombatComponent ? CombatComponent->WeaponInHand : nullptr;}
 	FORCEINLINE EWeaponName GetWeaponInHand_Name() const {return CombatComponent ? CombatComponent->WeaponInHand ?
 			CombatComponent->WeaponInHand->GetWeaponProperties().WeaponName : EWeaponName::EWN_None : EWeaponName::EWN_None;}
+	FORCEINLINE FShooterProperties* GetShooterProperties() {return &ShooterProperties;}
 };

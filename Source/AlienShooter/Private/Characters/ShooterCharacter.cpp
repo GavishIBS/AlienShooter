@@ -5,7 +5,10 @@
 
 #include "Characters/ShooterCharacter.h"
 #include "EnhancedInputComponent.h"
+#include "Components/AttributeComponent.h"
 #include "Components/CombatComponent.h"
+#include "Engine/DamageEvents.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -23,6 +26,12 @@ void AShooterCharacter::PostInitializeComponents()
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	InitCallbacks();
+}
+
+void AShooterCharacter::InitCallbacks()
+{
+	OnTakeAnyDamage.AddDynamic(this, &AShooterCharacter::OnTakeAnyDamageCallback);
 }
 
 void AShooterCharacter::Tick(float DeltaSeconds)
@@ -39,6 +48,30 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(LeftMouseButtonPressedAction, ETriggerEvent::Started, this, &AShooterCharacter::LeftMouseButtonPressed);
 		EnhancedInputComponent->BindAction(MouseWheelUpAction, ETriggerEvent::Started, this, &AShooterCharacter::MouseWheelUp);
 		EnhancedInputComponent->BindAction(MouseWheelDownAction, ETriggerEvent::Started, this, &AShooterCharacter::MouseWheelDown);
+	}
+}
+
+float AShooterCharacter::GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
+{
+	const float Damage_Calc = Damage +
+		UKismetMathLibrary::RandomFloatInRange(-RandomizationFactor, RandomizationFactor);
+	const FDamageEvent DamageEvent;
+	TakeDamage(Damage_Calc, DamageEvent, nullptr, InDamageCauser);
+	return Damage_Calc;
+}
+
+void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage,
+	const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (!AttributeComponent) return;
+
+	float NewHealth = AttributeComponent->GetHealth() - Damage;
+	NewHealth = FMath::Clamp(NewHealth, 0.f, AttributeComponent->GetMaxHealth());
+
+	if (NewHealth <= 0.f)
+	{
+		// Death
+		// TODO: Implementation
 	}
 }
 
