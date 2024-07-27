@@ -52,7 +52,7 @@ void AWeaponBase::Init_Callbacks()
 		OverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeaponBase::OnBeginOverlap);
 	OnWeaponPicked.AddDynamic(this, &AWeaponBase::OnWeaponPickedCallback);
 	OnWeaponSelected.AddDynamic(this, &AWeaponBase::OnWeaponSelectedCallback);
-	OnWeaponFired.AddDynamic(this, &AWeaponBase::OnWeaponFiredCallback);
+	OnWeaponFirePressed.AddDynamic(this, &AWeaponBase::OnWeaponFirePressedCallback);
 }
 
 void AWeaponBase::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -77,12 +77,12 @@ void AWeaponBase::OnWeaponSelectedCallback()
 	OwnerAsShooterCharacter = Cast<AShooterCharacter>(GetOwner());
 }
 
-void AWeaponBase::OnWeaponFiredCallback()
+void AWeaponBase::OnWeaponFirePressedCallback()
 {
 	if (CanFire())
 	{
-		Fire();
 		WeaponProperties.DeductAmmo(1);
+		Fire();
 	} else WeaponFiredFailed();
 }
 
@@ -94,6 +94,7 @@ bool AWeaponBase::CanFire() const
 
 void AWeaponBase::Fire()
 {
+	OnWeaponFired.Broadcast();
 }
 
 void AWeaponBase::WeaponFiredFailed()

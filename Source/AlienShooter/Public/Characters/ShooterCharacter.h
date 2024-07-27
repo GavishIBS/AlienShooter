@@ -65,6 +65,8 @@ protected:
 	FShooterProperties ShooterProperties = FShooterProperties();
 
 public:
+	FORCEINLINE TObjectPtr<UCombatComponent> GetCombatComponent() const {return CombatComponent;}
+	
 	FORCEINLINE bool IsEquipped() const {return CombatComponent ? CombatComponent->WeaponInHand ? true : false : false;}
 	FORCEINLINE TObjectPtr<AWeaponBase> GetWeaponInHand() const {return CombatComponent ? CombatComponent->WeaponInHand : nullptr;}
 	FORCEINLINE EWeaponName GetWeaponInHand_Name() const {return CombatComponent ? CombatComponent->WeaponInHand ?

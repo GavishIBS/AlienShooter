@@ -15,6 +15,7 @@ class USphereComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponPicked);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponSelected);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFirePressed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFired);
 
 UCLASS()
@@ -31,6 +32,9 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
 	FOnWeaponSelected OnWeaponSelected;
 	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
+	FOnWeaponFirePressed OnWeaponFirePressed;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
 	FOnWeaponFired OnWeaponFired;
 	
@@ -50,7 +54,7 @@ protected:
 	void OnWeaponSelectedCallback();
 
 	UFUNCTION()
-	void OnWeaponFiredCallback();
+	void OnWeaponFirePressedCallback();
 
 	bool CanFire() const;
 	virtual void Fire();
@@ -87,4 +91,5 @@ public:
 	FORCEINLINE TSubclassOf<AWeaponBase> GetWeaponClass() const {return WeaponData.WeaponClass;}
 	FORCEINLINE FTransform GetWeaponMuzzleTransform() const;
 	FORCEINLINE int GetTotalAmmoAvailable() const {return WeaponProperties.GetTotalAmmoAvailable();}
+	FORCEINLINE void SetTotalAmmoAvailable(const int& Value) {WeaponProperties.SetTotalAmmoAvailable(Value);}
 };

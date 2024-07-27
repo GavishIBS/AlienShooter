@@ -36,7 +36,11 @@ bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 	if (CanTakeWeapon(InWeapon) == false) return false;
 	
 	// Destroy previous weapon
-	if (WeaponInHand) WeaponInHand->Destroy();
+	if (WeaponInHand)
+	{
+		OnWeaponDestroyBegin(WeaponInHand);
+		WeaponInHand->Destroy();
+	}
 
 	// Add weapon class to list
 	Weapons.Add(InWeapon->GetWeaponClass(), InWeapon->GetTotalAmmoAvailable());
@@ -55,6 +59,8 @@ bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 	
 	WeaponInHand = InWeapon;
 	WeaponIndex = Weapons.Num() - 1;
+	OnWeaponSelected();
+	OnWeaponUpdated.Broadcast();
 	return true;
 }
 
@@ -62,9 +68,13 @@ bool UCombatComponent::SelectWeapon(const int Index)
 {
 	if (!OwnerAsShooterCharacter || !GetWorld()) return false;
 	if (Index < 0 || Weapons.Num() - 1 < Index) return false;
-
+	
 	// Destroy current weapon
-	if (WeaponInHand) WeaponInHand->Destroy();
+	if (WeaponInHand)
+	{
+		OnWeaponDestroyBegin(WeaponInHand);
+		WeaponInHand->Destroy();
+	}
 
 	TArray<TSubclassOf<AWeaponBase>> Keys;
 	Weapons.GetKeys(Keys);
@@ -80,6 +90,12 @@ bool UCombatComponent::SelectWeapon(const int Index)
 	// Update ownership and broadcast OnWeaponSelected
 	WeaponSelection->SetOwner(OwnerAsShooterCharacter);
 	WeaponSelection->OnWeaponSelected.Broadcast();
+
+	// Update ammo
+	TArray<int> Values;
+	Weapons.GenerateValueArray(Values);
+	const int Ammo = Values[Index];
+	WeaponSelection->SetTotalAmmoAvailable(Ammo);
 	
 	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
 	EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
@@ -87,6 +103,8 @@ bool UCombatComponent::SelectWeapon(const int Index)
 		AttachmentTransformRules, WeaponSelection->GetWeaponProperties().InHandAttachmentSocketName);
 	WeaponInHand = WeaponSelection;
 	WeaponIndex = Index;
+	OnWeaponSelected();
+	OnWeaponUpdated.Broadcast();
 	
 	return true;
 }
@@ -94,5 +112,35 @@ bool UCombatComponent::SelectWeapon(const int Index)
 void UCombatComponent::FireButtonPressed()
 {
 	if (!WeaponInHand) return;
-	WeaponInHand->OnWeaponFired.Broadcast();
+	WeaponInHand->OnWeaponFirePressed.Broadcast();
+}
+
+void UCombatComponent::OnWeaponSelected()
+{
+	WeaponInHand->OnWeaponFired.AddDynamic(this, &UCombatComponent::OnWeaponFiredCallback);
+}
+
+void UCombatComponent::OnWeaponDestroyBegin(AWeaponBase* InWeapon)
+{
+	InWeapon->OnWeaponFired.RemoveDynamic(this, &UCombatComponent::OnWeaponFiredCallback);
+}
+
+void UCombatComponent::OnWeaponFiredCallback()
+{
+	UpdateAmmoForCurrentWeapon();
+}
+
+void UCombatComponent::UpdateAmmoForCurrentWeapon()
+{
+	// Update ammo for current weapon
+	int Local_Index = 0;
+	for (auto& Weapon : Weapons)
+	{
+		if (Local_Index == WeaponIndex)
+		{
+			Weapon.Value = WeaponInHand->GetTotalAmmoAvailable();
+			OnWeaponUpdated.Broadcast();
+		}
+		Local_Index++;
+	}
 }

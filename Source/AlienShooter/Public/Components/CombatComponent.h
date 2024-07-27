@@ -8,9 +8,10 @@
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
-
 class AWeaponBase;
 class AShooterCharacter;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponUpdated);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API UCombatComponent : public UActorComponent
@@ -20,6 +21,9 @@ class ALIENSHOOTER_API UCombatComponent : public UActorComponent
 public:
 	friend AShooterCharacter;
 	UCombatComponent();
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
+	FOnWeaponUpdated OnWeaponUpdated;
 
 protected:
 	virtual void BeginPlay() override;
@@ -32,6 +36,14 @@ protected:
 	bool SelectWeapon(const int Index);
 
 	void FireButtonPressed();
+
+	UFUNCTION()
+	void OnWeaponFiredCallback();
+
+	void OnWeaponSelected();
+	void OnWeaponDestroyBegin(AWeaponBase* InWeapon);
+	
+	void UpdateAmmoForCurrentWeapon();
 	
 	UPROPERTY(VisibleAnywhere, Category=Combat)
 	TMap<TSubclassOf<AWeaponBase>, int> Weapons;

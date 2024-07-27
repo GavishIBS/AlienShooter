@@ -65,7 +65,6 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(RightHandLocation,
 				RightHandLocation + (RightHandLocation - ShooterCharacter->GetCursorTraceHitLocation()));
 			RightHandRotation.Yaw = LookAtRotation.Yaw;
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("%f"), RightHandRotation.Yaw));
 		}
 	}
 }

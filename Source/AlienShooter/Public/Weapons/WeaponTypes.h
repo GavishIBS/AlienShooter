@@ -56,10 +56,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	bool bShouldEnableIK = true;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
+	TObjectPtr<UTexture2D> WeaponIcon = nullptr;
+
 private:
 	bool bIsEmpty = AmmoAvailable <= 0;
 	
 	int GetTotalAmmoAvailable() const {return AmmoAvailable;}
+	void SetTotalAmmoAvailable(const int& Value)
+	{
+		AmmoAvailable = Value > MaxAmmoCapacity ? MaxAmmoCapacity : Value;
+	}
 	void DeductAmmo(const int Value)
 	{
 		AmmoAvailable -= Value;
