@@ -52,14 +52,14 @@ bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
 		EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
 	InWeapon->AttachToComponent(OwnerAsShooterCharacter->GetMesh(),
-		AttachmentTransformRules, InWeapon->GetWeaponProperties().InHandAttachmentSocketName);
-	OwnerAsShooterCharacter->GetShooterProperties()->bEnableIK = InWeapon->GetWeaponProperties().bShouldEnableIK;
+		AttachmentTransformRules, InWeapon->GetWeaponProperties()->InHandAttachmentSocketName);
 	
 	InWeapon->OnWeaponPicked.Broadcast();
 	
 	WeaponInHand = InWeapon;
 	WeaponIndex = Weapons.Num() - 1;
 	OnWeaponSelected();
+	OnNewWeaponAdded.Broadcast(WeaponInHand);
 	OnWeaponUpdated.Broadcast();
 	return true;
 }
@@ -83,7 +83,6 @@ bool UCombatComponent::SelectWeapon(const int Index)
 	ActorSpawnParameters.Instigator = OwnerAsShooterCharacter;
 	ActorSpawnParameters.Owner = OwnerAsShooterCharacter;
 	AWeaponBase* WeaponSelection = GetWorld()->SpawnActor<AWeaponBase>(WeaponClassSelection, ActorSpawnParameters);
-	OwnerAsShooterCharacter->GetShooterProperties()->bEnableIK = WeaponSelection->GetWeaponProperties().bShouldEnableIK;
 	
 	if (!WeaponSelection) return false;
 
@@ -100,7 +99,7 @@ bool UCombatComponent::SelectWeapon(const int Index)
 	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
 	EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
 	WeaponSelection->AttachToComponent(OwnerAsShooterCharacter->GetMesh(),
-		AttachmentTransformRules, WeaponSelection->GetWeaponProperties().InHandAttachmentSocketName);
+		AttachmentTransformRules, WeaponSelection->GetWeaponProperties()->InHandAttachmentSocketName);
 	WeaponInHand = WeaponSelection;
 	WeaponIndex = Index;
 	OnWeaponSelected();

@@ -112,6 +112,13 @@ FTransform AWeaponBase::GetWeaponMuzzleTransform() const
 	return FTransform();
 }
 
+FTransform AWeaponBase::GetLeftHandPlacementTransform() const
+{
+	if (WeaponProperties.bIsSkeletalMesh)
+		return WeaponSkeletalMesh->GetSocketTransform(WeaponProperties.WeaponLeftHandPlacementSocketName, RTS_World);
+	return WeaponStaticMesh->GetSocketTransform(WeaponProperties.WeaponLeftHandPlacementSocketName, RTS_World);
+}
+
 /*
 bool AWeaponBase::TakeWeapon(const ACharacter* InstigatorCharacter)
 {

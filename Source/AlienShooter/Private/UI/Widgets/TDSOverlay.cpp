@@ -4,6 +4,8 @@
 
 
 #include "UI/Widgets/TDSOverlay.h"
+
+#include "UI/Widgets/TDSWeaponBoxList.h"
 #include "UI/Widgets/TDSWeaponInHandDataBox.h"
 
 UTDSOverlay::UTDSOverlay(const FObjectInitializer& ObjectInitializer)
@@ -23,7 +25,6 @@ void UTDSOverlay::NativeConstruct()
 {
 	Super::NativeConstruct();
 	InitComponents();
-	GEngine->AddOnScreenDebugMessage(-1,4.f,FColor::Yellow,FString("jhsdfb"));
 }
 
 void UTDSOverlay::NativeDestruct()
@@ -37,5 +38,10 @@ void UTDSOverlay::InitComponents()
 	{
 		WeaponInHandDataBox->SetOwnerCharacter(OwnerAsShooterCharacter);
 		WeaponInHandDataBox->InitComponent();
+	}
+	if (WeaponBoxList)
+	{
+		WeaponBoxList->SetOwnerCharacter(OwnerAsShooterCharacter);
+		WeaponBoxList->InitComponent();
 	}
 }

@@ -12,6 +12,7 @@ class AWeaponBase;
 class AShooterCharacter;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponUpdated);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewWeaponAdded, const AWeaponBase*, InWeapon);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API UCombatComponent : public UActorComponent
@@ -24,7 +25,10 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
 	FOnWeaponUpdated OnWeaponUpdated;
-
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
+	FOnNewWeaponAdded OnNewWeaponAdded;
+	
 protected:
 	virtual void BeginPlay() override;
 

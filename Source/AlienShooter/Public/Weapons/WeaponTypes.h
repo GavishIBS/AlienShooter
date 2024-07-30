@@ -54,10 +54,14 @@ public:
 	int MaxAmmoCapacity = 1000.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
-	bool bShouldEnableIK = true;
+	TObjectPtr<UTexture2D> WeaponIcon = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
-	TObjectPtr<UTexture2D> WeaponIcon = nullptr;
+	FName WeaponLeftHandPlacementSocketName = FName("LeftHandSocket");
+
+private:
+	bool bShouldEnableRightHandIK = true;
+	bool bShouldEnableFabrik = true;
 
 private:
 	bool bIsEmpty = AmmoAvailable <= 0;

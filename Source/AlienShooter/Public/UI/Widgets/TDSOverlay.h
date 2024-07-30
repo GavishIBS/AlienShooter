@@ -8,6 +8,7 @@
 #include "UI/Widgets/TDSUserWidget.h"
 #include "TDSOverlay.generated.h"
 
+class UTDSWeaponBoxList;
 class AShooterCharacter;
 class UTDSWeaponInHandDataBox;
 class UCanvasPanel;
@@ -36,4 +37,7 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UTDSWeaponInHandDataBox> WeaponInHandDataBox;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UTDSWeaponBoxList> WeaponBoxList;
 };

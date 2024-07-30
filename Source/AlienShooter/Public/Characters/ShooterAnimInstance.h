@@ -26,12 +26,18 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 protected:
+	void CalculateIK();
+	
+protected:
 	TObjectPtr<AShooterCharacter> ShooterCharacter;
 	TObjectPtr<UCharacterMovementComponent> MovementComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
 	FName RightHandSocketName = FName("hand_r");
-
+	
+	UPROPERTY(EditDefaultsOnly, Category=Properties)
+	FName RightHandBoneName = FName("hand_r");
+	
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Locomotion)
 	FVector Velocity = FVector();
@@ -57,9 +63,14 @@ protected:
 	EWeaponName WeaponInHand_Name = EWeaponName::EWN_None;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
+	bool bEnableFabrik = false;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
+	FTransform LeftHandTransform = FTransform();
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
 	bool bEnableRightHandIK = false;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
 	FRotator RightHandRotation = FRotator();
-
 };

@@ -23,6 +23,12 @@ void UTDSWeaponInHandDataBox::NativePreConstruct()
 		SizeBox_Root->SetWidthOverride(RootSize.X);
 		SizeBox_Root->SetHeightOverride(RootSize.Y);
 	}
+	
+	if (WeaponIcon && SizeBox_AmmoBox)
+	{
+		WeaponIcon->SetRenderOpacity(0.f);
+		SizeBox_AmmoBox->SetRenderOpacity(0.f);
+	}
 }
 
 void UTDSWeaponInHandDataBox::NativeConstruct()
@@ -55,7 +61,7 @@ void UTDSWeaponInHandDataBox::OnWeaponUpdatedCallback()
 		{
 			WeaponIcon->SetRenderOpacity(1.f);
 			SizeBox_AmmoBox->SetRenderOpacity(1.f);
-			WeaponIcon->SetBrushFromTexture(OwnerAsShooterCharacter->GetWeaponInHand()->GetWeaponProperties().WeaponIcon);
+			WeaponIcon->SetBrushFromTexture(OwnerAsShooterCharacter->GetWeaponInHand()->GetWeaponProperties()->WeaponIcon);
 			AmmoText->SetText(FText::AsNumber(OwnerAsShooterCharacter->GetWeaponInHand()->GetTotalAmmoAvailable()));
 		} else
 		{

@@ -70,6 +70,7 @@ public:
 	FORCEINLINE bool IsEquipped() const {return CombatComponent ? CombatComponent->WeaponInHand ? true : false : false;}
 	FORCEINLINE TObjectPtr<AWeaponBase> GetWeaponInHand() const {return CombatComponent ? CombatComponent->WeaponInHand : nullptr;}
 	FORCEINLINE EWeaponName GetWeaponInHand_Name() const {return CombatComponent ? CombatComponent->WeaponInHand ?
-			CombatComponent->WeaponInHand->GetWeaponProperties().WeaponName : EWeaponName::EWN_None : EWeaponName::EWN_None;}
+			CombatComponent->WeaponInHand->GetWeaponProperties()->WeaponName : EWeaponName::EWN_None : EWeaponName::EWN_None;}
 	FORCEINLINE FShooterProperties* GetShooterProperties() {return &ShooterProperties;}
+	FORCEINLINE int GetNumberOfWeapon() const {return CombatComponent ? CombatComponent->Weapons.Num() : 0;}
 };

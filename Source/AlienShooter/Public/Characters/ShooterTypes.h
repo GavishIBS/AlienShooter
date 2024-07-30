@@ -12,7 +12,4 @@ struct FShooterProperties
 
 public:
 	friend AShooterCharacter;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
-	bool bEnableIK = false;
 };

@@ -55,10 +55,33 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		WeaponInHand_Name = ShooterCharacter->GetWeaponInHand_Name();
 	}
 
+	// IK
+	CalculateIK();
+}
+
+void UShooterAnimInstance::CalculateIK()
+{
+	if (!ShooterCharacter->GetWeaponInHand()) return;
+	
+	// Left hand FABRIK
 	{
-		// IK
-		bEnableRightHandIK = ShooterCharacter->GetShooterProperties()->bEnableIK;
-		if (bEquipped && WeaponInHand && bEnableRightHandIK)
+		bEnableFabrik = ShooterCharacter->GetWeaponInHand()->ShouldEnableFabrik();
+		if (bEquipped && bEnableFabrik)
+		{
+			LeftHandTransform = ShooterCharacter->GetWeaponInHand()->GetLeftHandPlacementTransform();
+			FVector OutPosition;
+			FRotator OutRotation;
+			ShooterCharacter->GetMesh()->TransformToBoneSpace(RightHandBoneName, LeftHandTransform.GetLocation(),
+				FRotator::ZeroRotator, OutPosition, OutRotation);
+			LeftHandTransform.SetLocation(OutPosition);
+			LeftHandTransform.SetRotation(FQuat(OutRotation));
+		}
+	}
+
+	// Right hand IK
+	{
+		bEnableRightHandIK = ShooterCharacter->GetWeaponInHand()->ShouldEnableRightHandIK();
+		if (bEquipped && bEnableRightHandIK)
 		{
 			const FVector RightHandLocation = ShooterCharacter->GetMesh()->GetSocketLocation(RightHandSocketName);
 			RightHandRotation = ShooterCharacter->GetMesh()->GetSocketRotation(RightHandSocketName);
