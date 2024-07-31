@@ -38,6 +38,6 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UTDSWeaponInHandDataBox> WeaponInHandDataBox;
 
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UTDSWeaponBoxList> WeaponBoxList;
+	//UPROPERTY(meta=(BindWidget))
+	//TObjectPtr<UTDSWeaponBoxList> WeaponBoxList;
 };

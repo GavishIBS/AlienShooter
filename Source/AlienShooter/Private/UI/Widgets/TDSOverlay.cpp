@@ -4,7 +4,6 @@
 
 
 #include "UI/Widgets/TDSOverlay.h"
-
 #include "UI/Widgets/TDSWeaponBoxList.h"
 #include "UI/Widgets/TDSWeaponInHandDataBox.h"
 
@@ -39,9 +38,10 @@ void UTDSOverlay::InitComponents()
 		WeaponInHandDataBox->SetOwnerCharacter(OwnerAsShooterCharacter);
 		WeaponInHandDataBox->InitComponent();
 	}
+	/*
 	if (WeaponBoxList)
 	{
 		WeaponBoxList->SetOwnerCharacter(OwnerAsShooterCharacter);
 		WeaponBoxList->InitComponent();
-	}
+	}*/
 }
