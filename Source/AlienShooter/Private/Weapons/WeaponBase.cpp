@@ -7,6 +7,7 @@
 #include "Characters/ShooterCharacter.h"
 #include "Components/ArrowComponent.h"
 #include "Components/SphereComponent.h"
+#include "Weapons/BulletShell.h"
 
 AWeaponBase::AWeaponBase()
 {
@@ -95,10 +96,24 @@ bool AWeaponBase::CanFire() const
 void AWeaponBase::Fire()
 {
 	OnWeaponFired.Broadcast();
+
+	if (WeaponData.BulletShellClass)
+		SpawnBulletShell();
 }
 
 void AWeaponBase::WeaponFiredFailed()
 {
+}
+
+void AWeaponBase::SpawnBulletShell() const
+{
+	if (!GetWorld()) return;
+
+	const FTransform EjectionSocketTransform = WeaponProperties.bIsSkeletalMesh ?
+		WeaponSkeletalMesh->GetSocketTransform(WeaponProperties.ShellEjectionSocketName) :
+		WeaponStaticMesh->GetSocketTransform(WeaponProperties.ShellEjectionSocketName);
+
+	GetWorld()->SpawnActor<ABulletShell>(WeaponData.BulletShellClass, EjectionSocketTransform);
 }
 
 FTransform AWeaponBase::GetWeaponMuzzleTransform() const

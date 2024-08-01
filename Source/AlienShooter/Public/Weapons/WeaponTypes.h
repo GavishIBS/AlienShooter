@@ -9,6 +9,7 @@
 
 class AWeaponBase;
 class AProjectile;
+class ABulletShell;
 
 UENUM()
 enum class EWeaponName : uint8
@@ -59,6 +60,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	FName WeaponLeftHandPlacementSocketName = FName("LeftHandSocket");
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
+	FName ShellEjectionSocketName = FName("ShellEjectionSocket");
+
 private:
 	bool bShouldEnableRightHandIK = true;
 	bool bShouldEnableFabrik = true;
@@ -101,6 +105,9 @@ struct FWeaponData
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Data)
 	TSubclassOf<AWeaponBase> WeaponClass = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category=Data)
+	TSubclassOf<ABulletShell> BulletShellClass = nullptr;
 };
 
 USTRUCT(BlueprintType)

@@ -59,6 +59,7 @@ protected:
 	bool CanFire() const;
 	virtual void Fire();
 	virtual void WeaponFiredFailed();
+	void SpawnBulletShell() const;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Ownership)
 	TObjectPtr<AShooterCharacter> OwnerAsShooterCharacter = nullptr;
