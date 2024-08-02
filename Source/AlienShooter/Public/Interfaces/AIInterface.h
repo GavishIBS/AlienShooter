@@ -27,4 +27,10 @@ public:
 	void ChaseTarget(AAIControllerBase* AIController);
 	
 	bool IsInAttackRange();
+
+	virtual void StartAttackTrace();
+	virtual void EndAttackTrace();
+
+protected:
+	virtual void AttackTrace();
 };

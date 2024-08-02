@@ -11,6 +11,7 @@
 ABaseAIPawn::ABaseAIPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	Tags.Add(FName("TeamFungus"));
 }
 
 void ABaseAIPawn::BeginPlay()

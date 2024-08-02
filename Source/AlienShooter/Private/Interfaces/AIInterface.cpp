@@ -32,3 +32,15 @@ bool IAIInterface::IsInAttackRange()
 {
 	return false;
 }
+
+void IAIInterface::StartAttackTrace()
+{
+}
+
+void IAIInterface::EndAttackTrace()
+{
+}
+
+void IAIInterface::AttackTrace()
+{
+}

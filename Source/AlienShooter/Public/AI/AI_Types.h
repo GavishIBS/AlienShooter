@@ -21,6 +21,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
 	float MaxHealth = 100.f;
 
+	UPROPERTY(EditDefaultsOnly, Category=Properties)
+	float AttackDamage = 10.f;
+
+	UPROPERTY(EditDefaultsOnly, Category=Properties)
+	float AttackDamageRandomizationFactor = 4.f;
+
 public:
 	void SetHealth(const float& NewHealth)
 	{

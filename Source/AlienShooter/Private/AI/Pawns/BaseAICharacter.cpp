@@ -5,15 +5,19 @@
 
 #include "AI/Pawns/BaseAICharacter.h"
 #include "AI/Controller/AIControllerBase.h"
+#include "Components/CollisionTraceComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/KismetMathLibrary.h"
 
 ABaseAICharacter::ABaseAICharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
+	Tags.Add(FName("TeamFungus"));
+	
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+
+	CollisionTraceComponent = CreateDefaultSubobject<UCollisionTraceComponent>(TEXT("CollisionTraceComponent"));
 }
 
 void ABaseAICharacter::BeginPlay()
@@ -26,6 +30,7 @@ void ABaseAICharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	if (!IsInAttackRange())
 		ChaseTarget(AIController);
+	else Attack();
 }
 
 void ABaseAICharacter::PossessedBy(AController* NewController)
@@ -35,6 +40,13 @@ void ABaseAICharacter::PossessedBy(AController* NewController)
 	if (!AIController) Destroy();
 	InitCallbacks();
 	if (const bool bUpdated = UpdateChaseTarget(AIController); !bUpdated) Destroy();
+}
+
+void ABaseAICharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if (CollisionTraceComponent)
+		CollisionTraceComponent->InitComponent(GetMesh());
 }
 
 void ABaseAICharacter::InitCallbacks()
@@ -64,5 +76,39 @@ void ABaseAICharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Damag
 	{
 		// Death
 		// TODO: Implementation
+	}
+}
+
+void ABaseAICharacter::Attack()
+{
+}
+
+void ABaseAICharacter::StartAttackTrace()
+{
+	GetWorldTimerManager().SetTimer(AttackTraceTimerHandle, this, &ABaseAICharacter::AttackTrace,
+		AttackTraceRate, true);
+}
+
+void ABaseAICharacter::EndAttackTrace()
+{
+	GetWorldTimerManager().ClearTimer(AttackTraceTimerHandle);
+}
+
+void ABaseAICharacter::AttackTrace()
+{
+	IAIInterface::AttackTrace();
+	if (!CollisionTraceComponent) return;
+
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(this);
+	const FHitResult HitResult = CollisionTraceComponent->DoTraceSingle(ActorsToIgnore, 0); // TODO: Attack index (2 attacks for each enemy)
+
+	if (!HitResult.bBlockingHit || HitResult.GetActor()->ActorHasTag("TeamFungus")) return;
+	
+	if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
+	{
+		HitInterface->GetHit(AIController->GetAIProperties().AttackDamage,
+			AIController->GetAIProperties().AttackDamageRandomizationFactor, this);
+		EndAttackTrace();
 	}
 }
