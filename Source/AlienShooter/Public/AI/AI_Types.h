@@ -27,9 +27,29 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
 	float AttackDamageRandomizationFactor = 4.f;
 
+	UPROPERTY(EditDefaultsOnly, Category=Properties)
+	float AttackRange = 35.f;
+
 public:
 	void SetHealth(const float& NewHealth)
 	{
 		Health = NewHealth;
 	}
+};
+
+USTRUCT(BlueprintType)
+struct FAIAnimations
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category=Animations)
+	TArray<UAnimMontage*> AttackAnimMontages = TArray<UAnimMontage*>();
+};
+
+UENUM()
+enum EAIState : uint8
+{
+	EAS_Idle = 0,
+	EAS_Attacking = 1
 };

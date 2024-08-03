@@ -5,6 +5,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AI/AI_Types.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/AIInterface.h"
 #include "Interfaces/HitInterface.h"
@@ -35,6 +36,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category=Attacking)
 	virtual void EndAttackTrace() override;
+
+	virtual bool IsInAttackRange() override;
+
+	UFUNCTION(BlueprintCallable, Category=Attacking)
+	virtual void OnEndAttack() override;
 	/* Interface end */
 
 protected:
@@ -49,7 +55,11 @@ protected:
 	UFUNCTION()
 	void OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
-	void Attack();
+	bool CanAttack() const;
+	void Attack() const;
+
+	UPROPERTY(EditDefaultsOnly, Category=Animations)
+	FAIAnimations AIAnimations;
 
 	FTimerHandle AttackTraceTimerHandle;
 

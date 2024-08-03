@@ -28,9 +28,9 @@ void ABaseAICharacter::BeginPlay()
 void ABaseAICharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if (!IsInAttackRange())
-		ChaseTarget(AIController);
-	else Attack();
+	if (IsInAttackRange())
+		Attack();
+	else ChaseTarget(AIController);
 }
 
 void ABaseAICharacter::PossessedBy(AController* NewController)
@@ -70,8 +70,6 @@ void ABaseAICharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Damag
 	NewHealth = FMath::Clamp(NewHealth, 0.f, AIController->GetAIProperties().MaxHealth);
 	AIController->SetHealth(NewHealth);
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString::Printf(TEXT("NewHealth: %f"), NewHealth));
-
 	if (NewHealth <= 0.f)
 	{
 		// Death
@@ -79,8 +77,28 @@ void ABaseAICharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Damag
 	}
 }
 
-void ABaseAICharacter::Attack()
+bool ABaseAICharacter::CanAttack() const
 {
+	if (!AIController) return false;
+	if (AIController->GetAIState() >= EAS_Attacking) return false;
+	return true;
+}
+
+void ABaseAICharacter::Attack() const
+{
+	if (!CanAttack()) return;
+	if (AIAnimations.AttackAnimMontages.Num() == 0) return;
+	
+	const int MontageSelectionIndex = FMath::RandRange(0, AIAnimations.AttackAnimMontages.Num() - 1);
+
+	if (!AIAnimations.AttackAnimMontages[MontageSelectionIndex]) return;
+
+	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+	{
+		AnimInstance->Montage_Play(AIAnimations.AttackAnimMontages[MontageSelectionIndex]);
+		AIController->SetAIState(EAS_Attacking);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("Playing attack montage"));
+	}
 }
 
 void ABaseAICharacter::StartAttackTrace()
@@ -92,6 +110,24 @@ void ABaseAICharacter::StartAttackTrace()
 void ABaseAICharacter::EndAttackTrace()
 {
 	GetWorldTimerManager().ClearTimer(AttackTraceTimerHandle);
+}
+
+bool ABaseAICharacter::IsInAttackRange()
+{
+	if (!AIController) return false;
+
+	if (FMath::Abs(AIController->TargetCharacter->GetActorLocation().Size() - GetActorLocation().Size())
+		< AIController->GetAIProperties().AttackRange)
+	{
+		return true;
+	}
+	return false;
+}
+
+void ABaseAICharacter::OnEndAttack()
+{
+	if (AIController)
+		AIController->SetAIState(EAS_Idle);
 }
 
 void ABaseAICharacter::AttackTrace()

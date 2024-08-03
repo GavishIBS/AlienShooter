@@ -11,6 +11,8 @@
 ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());

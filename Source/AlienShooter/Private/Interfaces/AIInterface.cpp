@@ -41,6 +41,10 @@ void IAIInterface::EndAttackTrace()
 {
 }
 
+void IAIInterface::OnEndAttack()
+{
+}
+
 void IAIInterface::AttackTrace()
 {
 }

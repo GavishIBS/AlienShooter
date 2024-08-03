@@ -13,7 +13,6 @@
 AShooterCharacter::AShooterCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 }
 
@@ -67,6 +66,7 @@ void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Dama
 
 	float NewHealth = AttributeComponent->GetHealth() - Damage;
 	NewHealth = FMath::Clamp(NewHealth, 0.f, AttributeComponent->GetMaxHealth());
+	AttributeComponent->SetHealth(NewHealth);
 
 	if (NewHealth <= 0.f)
 	{

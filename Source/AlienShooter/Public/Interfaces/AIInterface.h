@@ -26,10 +26,12 @@ public:
 	bool UpdateChaseTarget(AAIControllerBase* AIController);
 	void ChaseTarget(AAIControllerBase* AIController);
 	
-	bool IsInAttackRange();
+	virtual bool IsInAttackRange();
 
 	virtual void StartAttackTrace();
 	virtual void EndAttackTrace();
+
+	virtual void OnEndAttack();
 
 protected:
 	virtual void AttackTrace();

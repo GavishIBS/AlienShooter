@@ -30,6 +30,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
 	FAIProperties AIProperties = FAIProperties();
+
+	UPROPERTY(EditDefaultsOnly, Category=Properties)
+	TEnumAsByte<EAIState> AIState = EAS_Idle;
 	
 	// Behaviour params
 	TObjectPtr<ACharacter> TargetCharacter = nullptr;
@@ -37,7 +40,9 @@ protected:
 public:
 	FORCEINLINE ACharacter* GetTargetCharacter() const {return TargetCharacter;}
 	FORCEINLINE FAIProperties GetAIProperties() const {return AIProperties;}
+	FORCEINLINE EAIState GetAIState() const {return AIState;}
 
 	FORCEINLINE void SetTargetCharacter(ACharacter* InCharacter) {TargetCharacter = InCharacter;}
 	FORCEINLINE void SetHealth(const float& NewHealth) {AIProperties.Health = NewHealth;}
+	FORCEINLINE void SetAIState(const EAIState InState) {AIState = InState;}
 };
