@@ -22,5 +22,5 @@ class ALIENSHOOTER_API IHitInterface
 	GENERATED_BODY()
 
 public:
-	virtual float GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser);
+	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser);
 };

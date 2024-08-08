@@ -29,7 +29,7 @@ void ABaseCharacter::BeginPlay()
 	Super::BeginPlay();
 }
 
-float ABaseCharacter::GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
+float ABaseCharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
 {
-	return IHitInterface::GetHit(Damage, RandomizationFactor, InDamageCauser);
+	return IHitInterface::GetHit(HitLocation, Damage, RandomizationFactor, InDamageCauser);
 }

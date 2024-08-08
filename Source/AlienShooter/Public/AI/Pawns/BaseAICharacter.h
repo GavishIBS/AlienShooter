@@ -29,7 +29,7 @@ public:
 	virtual void PostInitializeComponents() override;
 	
 	/* Interface begin */
-	virtual float GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
+	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
 
 	UFUNCTION(BlueprintCallable, Category=Attacking)
 	virtual void StartAttackTrace() override;

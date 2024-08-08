@@ -50,7 +50,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	}
 }
 
-float AShooterCharacter::GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
+float AShooterCharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
 {
 	const float Damage_Calc = Damage +
 		UKismetMathLibrary::RandomFloatInRange(-RandomizationFactor, RandomizationFactor);

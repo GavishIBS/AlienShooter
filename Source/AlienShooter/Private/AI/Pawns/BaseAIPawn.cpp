@@ -40,7 +40,7 @@ void ABaseAIPawn::InitCallbacks()
 	OnTakeAnyDamage.AddDynamic(this, &ABaseAIPawn::OnTakeAnyDamageCallback);
 }
 
-float ABaseAIPawn::GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
+float ABaseAIPawn::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
 {
 	const float Damage_Calc = Damage +
 		UKismetMathLibrary::RandomFloatInRange(-RandomizationFactor, RandomizationFactor);

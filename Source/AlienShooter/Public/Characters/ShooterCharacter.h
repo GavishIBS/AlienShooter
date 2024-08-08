@@ -29,7 +29,7 @@ public:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	/* Interfaces begin */
-	virtual float GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
+	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
 	/* Interfaces end */
 	
 	void PickupWeapon(AWeaponBase* InWeapon) const;

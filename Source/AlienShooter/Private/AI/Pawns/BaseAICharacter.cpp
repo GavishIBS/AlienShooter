@@ -54,7 +54,7 @@ void ABaseAICharacter::InitCallbacks()
 	OnTakeAnyDamage.AddDynamic(this, &ABaseAICharacter::OnTakeAnyDamageCallback);
 }
 
-float ABaseAICharacter::GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
+float ABaseAICharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
 {
 	const float Damage_Calc = Damage +
 		UKismetMathLibrary::RandomFloatInRange(-RandomizationFactor, RandomizationFactor);
@@ -143,7 +143,7 @@ void ABaseAICharacter::AttackTrace()
 	
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
 	{
-		HitInterface->GetHit(AIController->GetAIProperties().AttackDamage,
+		HitInterface->GetHit(HitResult.ImpactPoint, AIController->GetAIProperties().AttackDamage,
 			AIController->GetAIProperties().AttackDamageRandomizationFactor, this);
 		EndAttackTrace();
 	}

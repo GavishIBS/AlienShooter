@@ -4,7 +4,6 @@
 
 
 #include "Weapons/Projectile.h"
-
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Interfaces/HitInterface.h"
@@ -48,6 +47,6 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
                         FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor))
-		ProjectileProperties.BulletHealth -= HitInterface->GetHit(ProjectileProperties.Damage, ProjectileProperties.Damage_RandomizationFactor, WeaponOwner);
+		ProjectileProperties.BulletHealth -= HitInterface->GetHit(Hit.ImpactPoint, ProjectileProperties.Damage, ProjectileProperties.Damage_RandomizationFactor, WeaponOwner);
 	Destroy();
 }
