@@ -13,7 +13,6 @@
 AShooterCharacter::AShooterCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 }
 
@@ -51,7 +50,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	}
 }
 
-float AShooterCharacter::GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
+float AShooterCharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
 {
 	const float Damage_Calc = Damage +
 		UKismetMathLibrary::RandomFloatInRange(-RandomizationFactor, RandomizationFactor);
@@ -67,6 +66,7 @@ void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Dama
 
 	float NewHealth = AttributeComponent->GetHealth() - Damage;
 	NewHealth = FMath::Clamp(NewHealth, 0.f, AttributeComponent->GetMaxHealth());
+	AttributeComponent->SetHealth(NewHealth);
 
 	if (NewHealth <= 0.f)
 	{

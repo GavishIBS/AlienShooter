@@ -25,7 +25,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	
 	/* Interface begin */
-	virtual float GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
+	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
 	/* Interface end */
 
 protected:

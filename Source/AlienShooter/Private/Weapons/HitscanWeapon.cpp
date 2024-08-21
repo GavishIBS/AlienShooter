@@ -47,7 +47,7 @@ void AHitscanWeapon::Fire()
 		if (HitResult.bBlockingHit)
 		{
 			if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
-				BulletHealth -= HitInterface->GetHit(WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter);
+				BulletHealth -= HitInterface->GetHit(HitResult.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter);
 			if (BulletHealth <= 0.f)
 				break;
 		}

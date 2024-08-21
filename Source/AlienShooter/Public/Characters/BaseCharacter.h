@@ -23,7 +23,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual float GetHit(const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
+	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
 	
 	/* Camera begin */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
