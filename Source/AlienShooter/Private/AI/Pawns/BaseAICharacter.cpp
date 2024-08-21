@@ -8,6 +8,8 @@
 #include "Components/CollisionTraceComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 ABaseAICharacter::ABaseAICharacter()
 {
@@ -49,13 +51,46 @@ void ABaseAICharacter::PostInitializeComponents()
 		CollisionTraceComponent->InitComponent(GetMesh());
 }
 
+void ABaseAICharacter::Destroyed()
+{
+	Super::Destroyed();
+	
+	UNiagaraSystem* NiagaraSystem = nullptr;
+	if (!DeathParticleSystem.Get())
+		DeathParticleSystem.LoadSynchronous();
+	NiagaraSystem = DeathParticleSystem.Get();
+	if (NiagaraSystem)
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, GetActorLocation(),
+			GetActorRotation(), GetActorScale3D(), true, true);
+
+	if (DeathDecalMaterialInstance)
+	{
+		TArray<AActor*> ActorsToIgnore;
+		ActorsToIgnore.Add(this);
+		FHitResult OutHit;
+		const FVector Start = GetActorLocation();
+		const FVector End = GetActorLocation() - FVector(0.f, 0.f, 1000.f);
+		UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1,
+			false, ActorsToIgnore, EDrawDebugTrace::ForDuration, OutHit, true);
+		if (OutHit.bBlockingHit)
+		{
+			UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(),
+				DeathDecalMaterialInstance, DeathDecalSize, OutHit.ImpactPoint,
+				FRotator(-90.f, 0.f, 0.f), DeathDecalLifeSpawn);
+		}
+	}
+}
+
 void ABaseAICharacter::InitCallbacks()
 {
 	OnTakeAnyDamage.AddDynamic(this, &ABaseAICharacter::OnTakeAnyDamageCallback);
+	OnDeath.AddDynamic(this, &ABaseAICharacter::OnDeathCallback);
 }
 
 float ABaseAICharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
 {
+	if (LifeStatus != ELifeStatus::ELS_Alive) return 0.f;
+
 	const float Damage_Calc = Damage +
 		UKismetMathLibrary::RandomFloatInRange(-RandomizationFactor, RandomizationFactor);
 	const FDamageEvent DamageEvent;
@@ -66,15 +101,26 @@ float ABaseAICharacter::GetHit(const FVector& HitLocation, const float& Damage, 
 void ABaseAICharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
 	AController* InstigatedBy, AActor* DamageCauser)
 {
+	if (LifeStatus != ELifeStatus::ELS_Alive) return;
+
 	float NewHealth = AIController->GetAIProperties().Health - Damage;
 	NewHealth = FMath::Clamp(NewHealth, 0.f, AIController->GetAIProperties().MaxHealth);
 	AIController->SetHealth(NewHealth);
 
 	if (NewHealth <= 0.f)
 	{
-		// Death
-		// TODO: Implementation
+		OnDeath.Broadcast(DamageCauser);
 	}
+}
+
+void ABaseAICharacter::OnDeathCallback(AActor* Killer)
+{
+	if (LifeStatus == ELifeStatus::ELS_Dead) return;
+	if (!AIAnimations.DeathAnimMontage) return;
+	
+	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+		AnimInstance->Montage_Play(AIAnimations.DeathAnimMontage);
+	LifeStatus = ELifeStatus::ELS_Dead;
 }
 
 bool ABaseAICharacter::CanAttack() const
@@ -99,6 +145,11 @@ void ABaseAICharacter::Attack() const
 		AIController->SetAIState(EAS_Attacking);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("Playing attack montage"));
 	}
+}
+
+void ABaseAICharacter::ShouldDestroy()
+{
+	Destroy();
 }
 
 void ABaseAICharacter::StartAttackTrace()

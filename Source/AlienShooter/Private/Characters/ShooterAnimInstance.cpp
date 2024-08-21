@@ -63,6 +63,19 @@ void UShooterAnimInstance::CalculateIK()
 {
 	if (!ShooterCharacter->GetWeaponInHand()) return;
 	
+	// Right hand IK
+	{
+		bEnableRightHandIK = ShooterCharacter->GetWeaponInHand()->ShouldEnableRightHandIK();
+		if (bEquipped && bEnableRightHandIK)
+		{
+			const FVector RightHandLocation = ShooterCharacter->GetMesh()->GetSocketLocation(RightHandSocketName);
+			RightHandRotation = ShooterCharacter->GetMesh()->GetSocketRotation(RightHandSocketName);
+			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(RightHandLocation,
+				RightHandLocation + (RightHandLocation - ShooterCharacter->GetCursorTraceHitLocation()));
+			RightHandRotation.Yaw = LookAtRotation.Yaw;
+		}
+	}
+
 	// Left hand FABRIK
 	{
 		bEnableFabrik = ShooterCharacter->GetWeaponInHand()->ShouldEnableFabrik();
@@ -75,19 +88,6 @@ void UShooterAnimInstance::CalculateIK()
 				FRotator::ZeroRotator, OutPosition, OutRotation);
 			LeftHandTransform.SetLocation(OutPosition);
 			LeftHandTransform.SetRotation(FQuat(OutRotation));
-		}
-	}
-
-	// Right hand IK
-	{
-		bEnableRightHandIK = ShooterCharacter->GetWeaponInHand()->ShouldEnableRightHandIK();
-		if (bEquipped && bEnableRightHandIK)
-		{
-			const FVector RightHandLocation = ShooterCharacter->GetMesh()->GetSocketLocation(RightHandSocketName);
-			RightHandRotation = ShooterCharacter->GetMesh()->GetSocketRotation(RightHandSocketName);
-			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(RightHandLocation,
-				RightHandLocation + (RightHandLocation - ShooterCharacter->GetCursorTraceHitLocation()));
-			RightHandRotation.Yaw = LookAtRotation.Yaw;
 		}
 	}
 }

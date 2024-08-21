@@ -42,6 +42,9 @@ protected:
 	UFUNCTION()
 	void OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 	
+	UFUNCTION()
+	virtual void OnDeathCallback(AActor* Killer);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UCombatComponent> CombatComponent = nullptr;
 	

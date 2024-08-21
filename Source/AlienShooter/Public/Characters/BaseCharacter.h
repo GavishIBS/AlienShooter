@@ -5,7 +5,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "../GameCharacter.h"
 #include "Interfaces/HitInterface.h"
 #include "BaseCharacter.generated.h"
 
@@ -14,7 +14,7 @@ class USpringArmComponent;
 class UAttributeComponent;
 
 UCLASS()
-class ALIENSHOOTER_API ABaseCharacter : public ACharacter, public IHitInterface
+class ALIENSHOOTER_API ABaseCharacter : public AGameCharacter, public IHitInterface
 {
 	GENERATED_BODY()
 

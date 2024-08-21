@@ -31,6 +31,7 @@ void AShooterCharacter::BeginPlay()
 void AShooterCharacter::InitCallbacks()
 {
 	OnTakeAnyDamage.AddDynamic(this, &AShooterCharacter::OnTakeAnyDamageCallback);
+	OnDeath.AddDynamic(this, &AShooterCharacter::OnDeathCallback);
 }
 
 void AShooterCharacter::Tick(float DeltaSeconds)
@@ -52,6 +53,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 float AShooterCharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
 {
+	if (LifeStatus != ELifeStatus::ELS_Alive) return 0.f;
+
 	const float Damage_Calc = Damage +
 		UKismetMathLibrary::RandomFloatInRange(-RandomizationFactor, RandomizationFactor);
 	const FDamageEvent DamageEvent;
@@ -63,6 +66,7 @@ void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Dama
 	const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	if (!AttributeComponent) return;
+	if (LifeStatus != ELifeStatus::ELS_Alive) return;
 
 	float NewHealth = AttributeComponent->GetHealth() - Damage;
 	NewHealth = FMath::Clamp(NewHealth, 0.f, AttributeComponent->GetMaxHealth());
@@ -70,9 +74,15 @@ void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Dama
 
 	if (NewHealth <= 0.f)
 	{
-		// Death
-		// TODO: Implementation
+		OnDeath.Broadcast(DamageCauser);
 	}
+}
+
+void AShooterCharacter::OnDeathCallback(AActor* Killer)
+{
+	if (!PlayerController) return;
+	PlayerController->DisableInput(PlayerController);
+	LifeStatus = ELifeStatus::ELS_Dead;
 }
 
 void AShooterCharacter::LeftMouseButtonPressed()

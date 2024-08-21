@@ -45,6 +45,9 @@ struct FAIAnimations
 public:
 	UPROPERTY(EditDefaultsOnly, Category=Animations)
 	TArray<UAnimMontage*> AttackAnimMontages = TArray<UAnimMontage*>();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	TObjectPtr<UAnimMontage> DeathAnimMontage = nullptr;
 };
 
 UENUM()
