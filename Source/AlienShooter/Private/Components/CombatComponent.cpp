@@ -143,3 +143,62 @@ void UCombatComponent::UpdateAmmoForCurrentWeapon()
 		Local_Index++;
 	}
 }
+
+bool UCombatComponent::CanTakeAmmo(const TSubclassOf<AWeaponBase>& FitWeaponClass)
+{
+	if (!FitWeaponClass) return false;
+
+	if (WeaponInHand && FitWeaponClass == WeaponInHand->GetClass())
+	{
+		if (*Weapons.Find(FitWeaponClass) >= WeaponInHand->GetMaxAmmoCapacity())
+		{
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+
+	for (auto& Weapon : Weapons)
+	{
+		if (FitWeaponClass == Weapon.Get<0>())
+		{
+			AWeaponBase* WeaponInstance = GetWorld()->SpawnActor<AWeaponBase>(FitWeaponClass);
+			if (WeaponInstance)
+			{
+				if (Weapon.Value >= WeaponInstance->GetMaxAmmoCapacity())
+				{
+					WeaponInstance->Destroy();
+					return false;
+				}
+				else { WeaponInstance->Destroy(); }
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UCombatComponent::TakeAmmo(const TSubclassOf<AWeaponBase>& FitWeaponClass, const int& AmmoValue)
+{
+	if (!CanTakeAmmo(FitWeaponClass)) return false;
+
+	if (WeaponInHand && FitWeaponClass == WeaponInHand->GetClass())
+	{
+		WeaponInHand->SetTotalAmmoAvailable(WeaponInHand->GetTotalAmmoAvailable() + AmmoValue);
+		UpdateAmmoForCurrentWeapon();
+		return true;
+	}
+
+	for (auto& Weapon : Weapons)
+	{
+		if (FitWeaponClass == Weapon.Get<0>())
+		{
+			Weapon.Value += AmmoValue;
+			OnWeaponUpdated.Broadcast();
+			return true;
+		}
+	}
+
+	return false;
+}
