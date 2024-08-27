@@ -25,7 +25,7 @@ protected:
 	float MaxHealth = 100.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Attributes)
-	float Health = MaxHealth;
+	float Health = 100.f;
 	/* Attributes end */
 
 public:
@@ -34,4 +34,8 @@ public:
 
 	FORCEINLINE void SetMaxHealth(const float Value) {MaxHealth = Value;}
 	FORCEINLINE void SetHealth(const float Value) {Health = Value;}
+
+	FORCEINLINE void AddHealth(const float Value) { Health += Value; }
+
+	// TODO: Clamp Health
 };

@@ -10,6 +10,7 @@
 
 class AWeaponBase;
 class AShooterCharacter;
+class AAmmoPickup;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponUpdated);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewWeaponAdded, const AWeaponBase*, InWeapon);
@@ -48,6 +49,11 @@ protected:
 	void OnWeaponDestroyBegin(AWeaponBase* InWeapon);
 	
 	void UpdateAmmoForCurrentWeapon();
+
+	bool CanTakeAmmo(const TSubclassOf<AWeaponBase>& FitWeaponClass);
+
+public:
+	bool TakeAmmo(const TSubclassOf<AWeaponBase>& FitWeaponClass, const int& AmmoValue);
 	
 	UPROPERTY(VisibleAnywhere, Category=Combat)
 	TMap<TSubclassOf<AWeaponBase>, int> Weapons;
