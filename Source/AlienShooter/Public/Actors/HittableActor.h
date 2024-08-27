@@ -24,10 +24,4 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void CreateField();
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Geometry)
-	TObjectPtr<UGeometryCollectionComponent> GeometryCollectionComponent;
 };

@@ -9,6 +9,7 @@ AGameCharacter::AGameCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	Tags.Add(FName("Character"));
 }
 
 void AGameCharacter::BeginPlay()

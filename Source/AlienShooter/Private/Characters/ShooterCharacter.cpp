@@ -71,6 +71,7 @@ void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Dama
 	float NewHealth = AttributeComponent->GetHealth() - Damage;
 	NewHealth = FMath::Clamp(NewHealth, 0.f, AttributeComponent->GetMaxHealth());
 	AttributeComponent->SetHealth(NewHealth);
+	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Cyan, FString::Printf(TEXT("NewHealth: %f"), NewHealth));
 
 	if (NewHealth <= 0.f)
 	{
