@@ -40,7 +40,8 @@ protected:
 	void InitCallbacks();
 
 	UFUNCTION()
-	void OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	void OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
+		class AController* InstigatedBy, AActor* DamageCauser);
 	
 	UFUNCTION()
 	virtual void OnDeathCallback(AActor* Killer);

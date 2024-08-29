@@ -17,7 +17,7 @@ AAISpawnerBase::AAISpawnerBase()
 
 void AAISpawnerBase::StartSpawning()
 {
-	if (!SpawnPoint) return;
+	if (SpawnPoint == nullptr) return;
 	GetWorldTimerManager().SetTimer(SpawnerTickTimerHandle, this, &AAISpawnerBase::SpawnTick, SpawnTimerTickRate, true, SpawnTimerTickRate);
 }
 

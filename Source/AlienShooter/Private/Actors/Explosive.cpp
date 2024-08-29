@@ -8,6 +8,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Damage/ExplosionDamage.h"
 
 AExplosive::AExplosive()
 {
@@ -15,9 +16,6 @@ AExplosive::AExplosive()
 
 	ExplosiveMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ExplosiveMesh"));
 	ExplosiveMesh->SetupAttachment(GetRootComponent());
-
-	AreaSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
-	AreaSphere->SetupAttachment(ExplosiveMesh);
 
 	ExplosionOriginPoint = CreateDefaultSubobject<USceneComponent>(TEXT("ExplosionOriginPoint"));
 	ExplosionOriginPoint->SetupAttachment(ExplosiveMesh);
@@ -38,25 +36,19 @@ float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const 
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, GetActorLocation(),
 			GetActorRotation(), GetActorScale3D(), true, true);
 
-	// Apply damage to overlapping characters
-	TArray<AActor*> FoundActors;
-	AreaSphere->GetOverlappingActors(FoundActors, FilterClass);
-
 	TArray<AActor*> ActorsToIgnore;
-	for (auto Character : FoundActors)
-	{
-		UGameplayStatics::ApplyRadialDamageWithFalloff(GetWorld(), DamageProperties.BaseDamage,
-			DamageProperties.MinimumDamage, ExplosionOriginPoint->GetComponentLocation(),
-			DamageProperties.DamageInnerRadius, DamageProperties.DamageOutherRadius,
-			DamageProperties.DamageFalloff, UDamageType::StaticClass(), ActorsToIgnore, InDamageCauser);
-	}
+	//UGameplayStatics::ApplyRadialDamageWithFalloff(this, DamageProperties.BaseDamage,
+		//DamageProperties.MinimumDamage, ExplosionOriginPoint->GetComponentLocation(),
+		//DamageProperties.DamageInnerRadius, DamageProperties.DamageOuterRadius,
+		//DamageProperties.DamageFalloff, UExplosionDamage::StaticClass(), ActorsToIgnore, InDamageCauser);
+	UGameplayStatics::ApplyRadialDamage(this, DamageProperties.BaseDamage,
+		ExplosionOriginPoint->GetComponentLocation(), DamageProperties.DamageInnerRadius,
+		UExplosionDamage::StaticClass(), ActorsToIgnore);
 
-	// Destroy mesh
-	ExplosiveMesh->SetVisibility(false);
+	// Destroy
 	ExplosiveMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Ignore);
 	ExplosiveMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	// TODO: Destroy after slight delay so that fx can be noticed
+	Destroy();
 
 	return 100000.0f;
 }

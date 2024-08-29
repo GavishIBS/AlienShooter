@@ -19,19 +19,19 @@ struct FDamageProperties
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, Category="Properties")
-	float BaseDamage = 100.f;
+	float BaseDamage = 150.f;
 	
 	UPROPERTY(EditAnywhere, Category="Properties")
-	float MinimumDamage = 100.f;
+	float MinimumDamage = 10.f;
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float DamageInnerRadius = 150.f;
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
-	float DamageOutherRadius = 250;
+	float DamageOuterRadius = 300.f;
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
-	float DamageFalloff;
+	float DamageFalloff = 2.f;
 };
 
 /**
@@ -52,9 +52,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> ExplosiveMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	TObjectPtr<USphereComponent> AreaSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USceneComponent> ExplosionOriginPoint;
