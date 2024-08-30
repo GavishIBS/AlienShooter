@@ -6,18 +6,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "LightSwitchboard.generated.h"
+#include "ElectricitySwitchboard.generated.h"
 
 class ALight;
 class UBoxComponent;
+class AElectronicActor;
 
 UCLASS()
-class ALIENSHOOTER_API ALightSwitchboard : public AActor
+class ALIENSHOOTER_API AElectricitySwitchboard : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	ALightSwitchboard();
+	AElectricitySwitchboard();
 
 protected:
 	virtual void BeginPlay() override;
@@ -36,8 +37,6 @@ protected:
 		const FHitResult& SweepResult);
 
 private:
-	void ToggleVisibility(bool bVisibility);
-
-	UPROPERTY(EditAnywhere, Category = "Lights")
-	TArray<ALight*> ControlledLightInstances;
+	UPROPERTY(EditAnywhere, Category = "Controlled")
+	TArray<AElectronicActor*> ControlledActors;
 };
