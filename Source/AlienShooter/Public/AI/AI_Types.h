@@ -28,7 +28,7 @@ public:
 	float AttackDamageRandomizationFactor = 4.f;
 
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
-	float AttackRange = 35.f;
+	float AttackRange = 100.f;
 
 public:
 	void SetHealth(const float& NewHealth)

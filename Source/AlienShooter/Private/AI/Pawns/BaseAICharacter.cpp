@@ -170,7 +170,7 @@ bool ABaseAICharacter::IsInAttackRange()
 {
 	if (!AIController) return false;
 
-	if (FMath::Abs(AIController->TargetCharacter->GetActorLocation().Size() - GetActorLocation().Size())
+	if (FVector::Dist(AIController->TargetCharacter->GetActorLocation(), GetActorLocation())
 		< AIController->GetAIProperties().AttackRange)
 	{
 		return true;

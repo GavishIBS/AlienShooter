@@ -27,6 +27,9 @@ void ASpawnStarter::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor->ActorHasTag("Player"))
-		Spawner->StartSpawning();
-	else Destroy();
+	{
+		bool bSpawned = Spawner->StartSpawning();
+		if (bSpawned) Destroy();
+	}
+	
 }

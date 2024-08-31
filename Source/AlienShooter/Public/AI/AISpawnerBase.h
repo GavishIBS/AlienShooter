@@ -34,7 +34,7 @@ public:
 	AAISpawnerBase();
 
 protected:
-	void StartSpawning();
+	bool StartSpawning();
 	void SpawnTick();
 
 	UPROPERTY(VisibleAnywhere, Category = "Properties")

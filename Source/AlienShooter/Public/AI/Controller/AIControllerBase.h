@@ -29,7 +29,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
-	FAIProperties AIProperties = FAIProperties();
+	FAIProperties AIProperties;
 
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
 	TEnumAsByte<EAIState> AIState = EAS_Idle;

@@ -15,10 +15,14 @@ AAISpawnerBase::AAISpawnerBase()
 	SpawnPoint->SetupAttachment(GetRootComponent());
 }
 
-void AAISpawnerBase::StartSpawning()
+bool AAISpawnerBase::StartSpawning()
 {
-	if (!SpawnPoint) return;
-	GetWorldTimerManager().SetTimer(SpawnerTickTimerHandle, this, &AAISpawnerBase::SpawnTick, SpawnTimerTickRate, true, SpawnTimerTickRate);
+	if (SpawnPoint)
+	{
+		GetWorldTimerManager().SetTimer(SpawnerTickTimerHandle, this, &AAISpawnerBase::SpawnTick, SpawnTimerTickRate, true, SpawnTimerTickRate);
+		return true;
+	}
+	return false;
 }
 
 void AAISpawnerBase::SpawnTick()
