@@ -42,6 +42,8 @@ protected:
 	void OnCloseDoorBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	virtual bool TryUnlockDoor(AActor* Caller);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> DoorMesh;
 
@@ -67,4 +69,7 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float DoorSpeed = 6.f;
+
+public:
+	FORCEINLINE virtual bool IsLocked() const { return false; }
 };

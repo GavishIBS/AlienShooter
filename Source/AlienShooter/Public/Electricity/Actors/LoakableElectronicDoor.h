@@ -8,6 +8,8 @@
 #include "Electricity/Actors/ElectronicDoor.h"
 #include "LoakableElectronicDoor.generated.h"
 
+class AInventoryPickup;
+
 /**
  * 
  */
@@ -24,12 +26,17 @@ protected:
 	virtual void BeginPlay() override;
 	void OnLockOpened();
 
+	virtual bool TryUnlockDoor(AActor* Caller) override;
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Properties", meta = (AllowPrivateAccess = "true"))
 	bool bLocked = false;
 
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AInventoryPickup> DoorKey_Class;
+
 public:
-	FORCEINLINE bool IsLocked() const { return bLocked; }
+	FORCEINLINE virtual bool IsLocked() const override { return bLocked; }
 	FORCEINLINE void SetLocked(const bool Value)
 	{
 		if (bLocked == Value) return;

@@ -12,6 +12,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class UAttributeComponent;
+class UInventoryComponent;
 
 UCLASS()
 class ALIENSHOOTER_API ABaseCharacter : public AGameCharacter, public IHitInterface
@@ -20,6 +21,7 @@ class ALIENSHOOTER_API ABaseCharacter : public AGameCharacter, public IHitInterf
 
 public:
 	ABaseCharacter();
+	virtual void PostInitializeComponents() override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -35,4 +37,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UAttributeComponent> AttributeComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
+	TObjectPtr<UInventoryComponent> InventoryComponent;
 };

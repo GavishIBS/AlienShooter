@@ -73,15 +73,22 @@ void AElectronicDoor::OnElectricityTurnedOn()
 void AElectronicDoor::OnOpenDoorBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->ActorHasTag("Player"))
-		OpenDoor();
+	if (!OtherActor->ActorHasTag("Player")) return;
+	
+	if (IsLocked())
+	{
+		if (!TryUnlockDoor(OtherActor))
+			return;
+	}
+	OpenDoor();
 }
 
 void AElectronicDoor::OnCloseDoorBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag("Player"))
-		CloseDoor();
+	if (!OtherActor->ActorHasTag("Player")) return;
+	if (IsLocked()) return;
+	CloseDoor();
 }
 
 void AElectronicDoor::OpenDoor()
@@ -92,4 +99,9 @@ void AElectronicDoor::OpenDoor()
 void AElectronicDoor::CloseDoor()
 {
 	bClosing = true;
+}
+
+bool AElectronicDoor::TryUnlockDoor(AActor* Caller)
+{
+	return false;
 }
