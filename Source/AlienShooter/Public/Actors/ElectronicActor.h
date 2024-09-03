@@ -20,7 +20,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnElectricityTurnedOn();
 
-private:
+protected:
+	UPROPERTY(EditAnywhere, Category = "Properties")
 	bool bHaveElectricity = false;
 
 public:
@@ -28,7 +29,9 @@ public:
 
 	FORCEINLINE void SetHaveElectricity(const bool Value)
 	{
+		if (bHaveElectricity == Value) return;
 		bHaveElectricity = Value;
-		OnElectricityTurnedOn();
+		if (bHaveElectricity)
+			OnElectricityTurnedOn();
 	}
 };

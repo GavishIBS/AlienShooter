@@ -38,7 +38,7 @@ void AElectricitySwitchboard::OnBoxOverlap(UPrimitiveComponent* OverlappedCompon
 	if (OtherActor->ActorHasTag("Player"))
 	{
 		for (AElectronicActor* Actor : ControlledActors)
-			if (Actor)
+			if (Actor && Actor->HaveElectricity() == false)
 				Actor->SetHaveElectricity(true);
 
 		OverlapBox->SetGenerateOverlapEvents(false);

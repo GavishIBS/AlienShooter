@@ -53,6 +53,7 @@ void AElectronicDoor::Tick(float DeltaTime)
 void AElectronicDoor::BeginPlay()
 {
 	Super::BeginPlay();
+	if (HaveElectricity()) BindCallbacks();
 }
 
 void AElectronicDoor::BindCallbacks()
