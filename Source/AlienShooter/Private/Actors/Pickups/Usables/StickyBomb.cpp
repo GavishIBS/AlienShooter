@@ -6,6 +6,8 @@
 #include "Actors/Pickups/Usables/StickyBomb.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
+#include "Damage/ExplosionDamage.h"
 
 AStickyBomb::AStickyBomb()
 {
@@ -16,33 +18,40 @@ void AStickyBomb::BeginPlay()
 	Super::BeginPlay();
 }
 
-bool AStickyBomb::CanUse(ACharacter* User)
+bool AStickyBomb::CanUse(ACharacter* User, FHitResult& HitResult)
 {
+	return Super::CanUse(User, HitResult);
+}
+
+bool AStickyBomb::UseItem(ACharacter* User)
+{
+	FHitResult HitResult;
+	if (!CanUse(User, HitResult)) return false;
+
+	SetActorLocation(HitResult.ImpactPoint);
+	// TODO: Set rotation
+
+	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::KeepWorld,
+		EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false);
+	AttachToActor(HitResult.GetActor(), AttachmentTransformRules);
+
+	StartExplosionTimer();
+
 	return true;
 }
 
-void AStickyBomb::UseItem(ACharacter* User)
+void AStickyBomb::StartExplosionTimer()
 {
-	if (!CanUse(User)) return;
+	GetWorldTimerManager().SetTimer(ExplosionTimerHandle, this, &AStickyBomb::Explode, ExplosionDelay, false, ExplosionDelay);
+}
 
-	FHitResult HitResult;
-	TArray<AActor*> ActorsToIgnore;
-	ActorsToIgnore.Add(User);
-	FVector Start = User->GetActorLocation() + User->GetMesh()->GetForwardVector();
-	FVector End = Start + (User->GetMesh()->GetForwardVector() * UseRange);
+void AStickyBomb::Explode()
+{
+	UGameplayStatics::ApplyRadialDamage(this, DamageProperties.BaseDamage,
+		Mesh->GetComponentLocation(), DamageProperties.DamageInnerRadius,
+		UExplosionDamage::StaticClass(), TArray<AActor*>());
 
-	UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1, false,
-		ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString("Explosion"));
 
-	if (HitResult.bBlockingHit)
-	{
-		
-
-		SetActorLocation(HitResult.ImpactPoint);
-		// TODO: Set rotation
-
-		FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::KeepWorld,
-			EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false);
-		AttachToActor(HitResult.GetActor(), AttachmentTransformRules);
-	}
+	Destroy();
 }

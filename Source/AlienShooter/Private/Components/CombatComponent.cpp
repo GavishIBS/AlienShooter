@@ -68,13 +68,9 @@ bool UCombatComponent::SelectWeapon(const int Index)
 {
 	if (!OwnerAsShooterCharacter || !GetWorld()) return false;
 	if (Index < 0 || Weapons.Num() - 1 < Index) return false;
-	
+
 	// Destroy current weapon
-	if (WeaponInHand)
-	{
-		OnWeaponDestroyBegin(WeaponInHand);
-		WeaponInHand->Destroy();
-	}
+	DestroyCurrentWeapon();
 
 	TArray<TSubclassOf<AWeaponBase>> Keys;
 	Weapons.GetKeys(Keys);
@@ -105,6 +101,12 @@ bool UCombatComponent::SelectWeapon(const int Index)
 	OnWeaponSelected();
 	OnWeaponUpdated.Broadcast();
 	
+	return true;
+}
+
+bool UCombatComponent::UnselectWeapon()
+{
+	DestroyCurrentWeapon();
 	return true;
 }
 
@@ -201,4 +203,14 @@ bool UCombatComponent::TakeAmmo(const TSubclassOf<AWeaponBase>& FitWeaponClass, 
 	}
 
 	return false;
+}
+
+void UCombatComponent::DestroyCurrentWeapon()
+{
+	if (WeaponInHand)
+	{
+		OnWeaponDestroyBegin(WeaponInHand);
+		WeaponInHand->Destroy();
+		WeaponInHand = nullptr;
+	}
 }

@@ -9,6 +9,7 @@
 #include "Components/CombatComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Components/InventoryComponent.h"
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -87,20 +88,49 @@ void AShooterCharacter::OnDeathCallback(AActor* Killer)
 
 void AShooterCharacter::LeftMouseButtonPressed()
 {
-	if (CombatComponent)
+	if (CombatComponent && CombatComponent->WeaponInHand)
 		CombatComponent->FireButtonPressed();
+	else if (InventoryComponent && InventoryComponent->ItemInHand)
+		InventoryComponent->UseButtonPressed();
 }
 
 void AShooterCharacter::MouseWheelUp()
 {
 	if (!CombatComponent) return;
-	CombatComponent->SelectWeapon(CombatComponent->WeaponIndex + 1);
+
+	bool bLeftAltDown = PlayerController->IsInputKeyDown(EKeys::LeftAlt);		
+	
+	if (!bLeftAltDown)
+	{
+		InventoryComponent->UnselectItem();
+		if (CombatComponent->WeaponInHand)
+			CombatComponent->SelectWeapon(CombatComponent->WeaponIndex + 1);
+		else CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
+	} else {
+		if (!InventoryComponent) return;
+		CombatComponent->UnselectWeapon();
+		InventoryComponent->SelectItem(InventoryComponent->SelectedItemIndex + 1);
+	}
 }
 
 void AShooterCharacter::MouseWheelDown()
 {
 	if (!CombatComponent) return;
-	CombatComponent->SelectWeapon(CombatComponent->WeaponIndex - 1);
+
+	bool bLeftAltDown = PlayerController->IsInputKeyDown(EKeys::LeftAlt);
+
+	if (!bLeftAltDown)
+	{
+		InventoryComponent->UnselectItem();
+		if (CombatComponent->WeaponInHand)
+			CombatComponent->SelectWeapon(CombatComponent->WeaponIndex - 1);
+		else CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
+	}
+	else {
+		if (!InventoryComponent) return;
+		CombatComponent->UnselectWeapon();
+		InventoryComponent->SelectItem(InventoryComponent->SelectedItemIndex - 1);
+	}
 }
 
 void AShooterCharacter::PickupWeapon(AWeaponBase* InWeapon) const

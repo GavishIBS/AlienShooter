@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/UsableActor.h"
+#include "Utilities.h"
 #include "StickyBomb.generated.h"
 
 /**
@@ -19,13 +20,23 @@ class ALIENSHOOTER_API AStickyBomb : public AUsableActor
 public:
 	AStickyBomb();
 	UFUNCTION(BlueprintCallable)
-	virtual void UseItem(ACharacter* User) override;
+	virtual bool UseItem(ACharacter* User) override;
 
 protected:
 	virtual void BeginPlay() override;
-	virtual bool CanUse(ACharacter* User) override;
+	virtual bool CanUse(ACharacter* User, FHitResult& HitResult) override;
+
+	void Explode();
 
 	// Properties
 	UPROPERTY(EditAnywhere, Category = "Properties")
-	float UseRange = 150.f;
+	float ExplosionDelay = 7.f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	FDamageProperties DamageProperties = FDamageProperties();
+
+private:
+	void StartExplosionTimer();
+
+	FTimerHandle ExplosionTimerHandle;
 };

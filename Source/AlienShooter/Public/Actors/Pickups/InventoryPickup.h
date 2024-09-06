@@ -24,6 +24,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual bool PostPickup(AActor* Caller) override;
 
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	bool bGenerateOverlapEvents = false;
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Data")
 	FItemData ItemData = FItemData();

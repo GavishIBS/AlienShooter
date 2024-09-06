@@ -5,14 +5,17 @@
 
 #include "Actors/Pickups/InventoryPickup.h"
 #include "Components/InventoryComponent.h"
+#include "Components/SphereComponent.h"
 
 AInventoryPickup::AInventoryPickup()
 {
+	OverlapSphere->SetGenerateOverlapEvents(false);
 }
 
 void AInventoryPickup::BeginPlay()
 {
 	Super::BeginPlay();
+	OverlapSphere->SetGenerateOverlapEvents(bGenerateOverlapEvents);
 }
 
 bool AInventoryPickup::PostPickup(AActor* Caller)

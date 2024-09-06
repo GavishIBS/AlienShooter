@@ -39,6 +39,7 @@ protected:
 	
 	bool AddWeapon(AWeaponBase* InWeapon);
 	bool SelectWeapon(const int Index);
+	bool UnselectWeapon();
 
 	void FireButtonPressed();
 
@@ -51,6 +52,8 @@ protected:
 	void UpdateAmmoForCurrentWeapon();
 
 	bool CanTakeAmmo(const TSubclassOf<AWeaponBase>& FitWeaponClass);
+
+	void DestroyCurrentWeapon(); // Destorys weapon currently in hand
 
 public:
 	bool TakeAmmo(const TSubclassOf<AWeaponBase>& FitWeaponClass, const int& AmmoValue);
