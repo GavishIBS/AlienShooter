@@ -29,7 +29,7 @@ protected:
 	virtual bool PostPickup(AActor* Caller);
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	TObjectPtr<UStaticMeshComponent> PickupMesh;
+	TObjectPtr<UStaticMeshComponent> Mesh;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<USphereComponent> OverlapSphere;

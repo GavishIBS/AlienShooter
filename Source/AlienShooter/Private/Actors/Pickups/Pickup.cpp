@@ -10,15 +10,15 @@ APickup::APickup()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	PickupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickupMesh"));
-	PickupMesh->SetupAttachment(GetRootComponent());
-	PickupMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	PickupMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickupMesh"));
+	Mesh->SetupAttachment(GetRootComponent());
+	Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	OverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("OverlapSphere"));
-	OverlapSphere->SetupAttachment(PickupMesh);
-	//OverlapSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	//OverlapSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	OverlapSphere->SetupAttachment(Mesh);
+	OverlapSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	OverlapSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 }
 
 void APickup::BeginPlay()
