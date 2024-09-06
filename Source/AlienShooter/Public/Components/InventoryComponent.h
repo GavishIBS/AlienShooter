@@ -10,7 +10,11 @@
 #include "InventoryComponent.generated.h"
 
 class ABaseCharacter;
+class AShooterCharacter;
 class AInventoryPickup;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemSelected, AActor*, SelectedItem);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API UInventoryComponent : public UActorComponent
@@ -19,13 +23,25 @@ class ALIENSHOOTER_API UInventoryComponent : public UActorComponent
 
 public:	
 	friend ABaseCharacter;
+	friend AShooterCharacter;
 	UInventoryComponent();
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category = Delegates)
+	FOnInventoryUpdated OnInventoryUpdated;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category = Delegates)
+	FOnItemSelected OnItemSelected;
+
+public:
 	bool AddItemToInventory(const FItemData ItemData);
 	bool RemoveItemFromInventory(const TSubclassOf<AInventoryPickup> ItemClass);
+	bool RemoveItemFromInventory(const int32 Index);
 	int32 HaveEmpltySlot();
 	int HaveItem(const TSubclassOf<AInventoryPickup> ItemClass);
 	void ClearSlot(const int32 Index);
+
+	bool SelectItem(const int Index);
+	bool UnselectItem();
 
 	// DEBUG
 	UFUNCTION(BlueprintCallable)
@@ -36,9 +52,21 @@ protected:
 	virtual void BeginPlay() override;
 	void InitInventory();
 
+	void UseButtonPressed();
+
+	TObjectPtr<ACharacter> OwnerAsCharacter;
+
+protected:
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	int32 InventorySize = 4;
 
 private:
+	void DestroyCurrentItem(); // Destorys item currently in hand
+
+private:
 	TArray<FSlotData> Content;
+
+	AInventoryPickup* ItemInHand = nullptr;
+
+	int32 SelectedItemIndex = -1;  // -1 => Unselected
 };

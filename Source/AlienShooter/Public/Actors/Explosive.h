@@ -7,32 +7,12 @@
 
 #include "CoreMinimal.h"
 #include "Actors/HittableActor.h"
+#include "Utilities.h"
 #include "Explosive.generated.h"
 
 class UNiagaraSystem;
 class USphereComponent;
 class AGameCharacter;
-
-USTRUCT(BlueprintType)
-struct FDamageProperties
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, Category="Properties")
-	float BaseDamage = 150.f;
-	
-	UPROPERTY(EditAnywhere, Category="Properties")
-	float MinimumDamage = 10.f;
-
-	UPROPERTY(EditAnywhere, Category = "Properties")
-	float DamageInnerRadius = 150.f;
-
-	UPROPERTY(EditAnywhere, Category = "Properties")
-	float DamageOuterRadius = 300.f;
-
-	UPROPERTY(EditAnywhere, Category = "Properties")
-	float DamageFalloff = 2.f;
-};
 
 /**
  * 

@@ -110,6 +110,8 @@ void ABaseAICharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Damag
 	NewHealth = FMath::Clamp(NewHealth, 0.f, AIController->GetAIProperties().MaxHealth);
 	AIController->SetHealth(NewHealth);
 
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("NewHealth: %f"), NewHealth));
+
 	if (NewHealth <= 0.f)
 	{
 		OnDeath.Broadcast(DamageCauser);

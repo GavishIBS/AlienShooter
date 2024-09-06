@@ -5,6 +5,8 @@
 
 #include "Components/InventoryComponent.h"
 #include "Actors/Pickups/InventoryPickup.h"
+#include "GameFramework/Character.h"
+#include "Actors/UsableActor.h"
 
 UInventoryComponent::UInventoryComponent()
 {
@@ -19,6 +21,7 @@ void UInventoryComponent::BeginPlay()
 void UInventoryComponent::InitInventory()
 {
 	Content.SetNum(InventorySize);
+	OwnerAsCharacter = Cast<ACharacter>(GetOwner());
 }
 
 bool UInventoryComponent::AddItemToInventory(const FItemData ItemData)
@@ -29,6 +32,7 @@ bool UInventoryComponent::AddItemToInventory(const FItemData ItemData)
 		if (Content.Num() <= Index) return false;
 		Content[Index].ItemData = ItemData;
 		Content[Index].bEmpty = false;
+		OnInventoryUpdated.Broadcast();
 		return true;
 	}
 	return false;
@@ -42,10 +46,20 @@ bool UInventoryComponent::RemoveItemFromInventory(const TSubclassOf<AInventoryPi
 		if (Content.Num() <= Index) return false;
 		Content[Index].bEmpty = true;
 		Content[Index].ItemData = FItemData();
+		OnInventoryUpdated.Broadcast();
 		return true;
 
 	}
 	return false;
+}
+
+bool UInventoryComponent::RemoveItemFromInventory(const int32 Index)
+{
+	if (Index >= Content.Num()) return false;
+	Content[Index].bEmpty = true;
+	Content[Index].ItemData = FItemData();
+	OnInventoryUpdated.Broadcast();
+	return true;
 }
 
 int32 UInventoryComponent::HaveEmpltySlot()
@@ -77,6 +91,68 @@ void UInventoryComponent::ClearSlot(const int32 Index)
 	if (Content.Num() <= Index) return;
 	Content[Index].bEmpty = true;
 	Content[Index].ItemData = FItemData();
+	OnInventoryUpdated.Broadcast();
+}
+
+bool UInventoryComponent::SelectItem(const int Index)
+{
+	if (Index == SelectedItemIndex) return false;
+	if (!OwnerAsCharacter || !GetWorld()) return false;
+	if (Index < 0 || InventorySize - 1 < Index) return false;
+
+	// Destroy current item
+	DestroyCurrentItem();
+
+	const TSubclassOf<AActor> ItemClassSelection = Content[Index].ItemData.ItemClass;
+	FActorSpawnParameters ActorSpawnParameters;
+	ActorSpawnParameters.Instigator = (APawn*)OwnerAsCharacter;
+	ActorSpawnParameters.Owner = (AActor*)OwnerAsCharacter;
+	AInventoryPickup* ItemSelection = GetWorld()->SpawnActor<AInventoryPickup>(ItemClassSelection, ActorSpawnParameters);
+
+	if (!ItemSelection) return false;
+
+	// Update ownership and broadcast OnItemSelected
+	ItemSelection->SetOwner((AActor*)OwnerAsCharacter);
+	OnItemSelected.Broadcast(ItemSelection);
+
+	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
+	ItemSelection->AttachToComponent(OwnerAsCharacter->GetMesh(), AttachmentTransformRules, FName());
+	ItemInHand = ItemSelection;
+	SelectedItemIndex = Index;
+
+	return true;
+}
+
+bool UInventoryComponent::UnselectItem()
+{
+	// Destroy current item
+	DestroyCurrentItem();
+	return true;
+}
+
+void UInventoryComponent::UseButtonPressed()
+{
+	if (!ItemInHand) return;
+
+	if (AUsableActor* UsableActor = Cast<AUsableActor>(ItemInHand))
+	{
+		ACharacter* Character = Cast<ACharacter>(GetOwner());
+		if (UsableActor->UseItem(Character))
+		{
+			RemoveItemFromInventory(SelectedItemIndex);
+			ItemInHand = nullptr;
+		}
+	}
+}
+
+void UInventoryComponent::DestroyCurrentItem()
+{
+	if (ItemInHand)
+	{
+		ItemInHand->Destroy();
+		ItemInHand = nullptr;
+	}
 }
 
 void UInventoryComponent::PrintContent()
