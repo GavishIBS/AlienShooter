@@ -47,6 +47,9 @@ void AStickyBomb::StartExplosionTimer()
 
 void AStickyBomb::Explode()
 {
+	if (ExplosionParticleSystem)
+		UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticleSystem, GetActorLocation(), GetActorRotation(), true);
+
 	UGameplayStatics::ApplyRadialDamage(this, DamageProperties.BaseDamage,
 		Mesh->GetComponentLocation(), DamageProperties.DamageInnerRadius,
 		UExplosionDamage::StaticClass(), TArray<AActor*>());

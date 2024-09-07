@@ -35,6 +35,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	FDamageProperties DamageProperties = FDamageProperties();
 
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	UParticleSystem* ExplosionParticleSystem = nullptr;
+
 private:
 	void StartExplosionTimer();
 
