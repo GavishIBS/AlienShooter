@@ -109,7 +109,11 @@ bool UInventoryComponent::SelectItem(const int Index)
 	ActorSpawnParameters.Owner = (AActor*)OwnerAsCharacter;
 	AInventoryPickup* ItemSelection = GetWorld()->SpawnActor<AInventoryPickup>(ItemClassSelection, ActorSpawnParameters);
 
-	if (!ItemSelection) return false;
+	if (!ItemSelection)
+	{
+		SelectedItemIndex = Index;
+		return false;
+	}
 
 	// Update ownership and broadcast OnItemSelected
 	ItemSelection->SetOwner((AActor*)OwnerAsCharacter);
