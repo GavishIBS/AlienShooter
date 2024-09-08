@@ -10,7 +10,7 @@
 #include "InventoryPickup.generated.h"
 
 /**
- * 
+ * All inventory items are equipables
  */
 UCLASS()
 class ALIENSHOOTER_API AInventoryPickup : public APickup
@@ -30,4 +30,10 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Data")
 	FItemData ItemData = FItemData();
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	FItemProperties ItemProperties = FItemProperties();
+
+public:
+	FORCEINLINE FName GetAttachmentSocketName() const { return ItemProperties.AttachmentSocketName; }
 };

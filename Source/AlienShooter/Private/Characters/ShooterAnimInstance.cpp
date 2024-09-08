@@ -61,7 +61,12 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 void UShooterAnimInstance::CalculateIK()
 {
-	if (!ShooterCharacter->GetWeaponInHand()) return;
+	if (!ShooterCharacter->GetWeaponInHand())
+	{
+		bEnableRightHandIK = false;
+		bEnableFabrik = false;
+		return;
+	}
 	
 	// Right hand IK
 	{

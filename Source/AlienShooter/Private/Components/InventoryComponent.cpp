@@ -38,7 +38,7 @@ bool UInventoryComponent::AddItemToInventory(const FItemData ItemData)
 	return false;
 }
 
-bool UInventoryComponent::RemoveItemFromInventory(const TSubclassOf<AInventoryPickup> ItemClass)
+bool UInventoryComponent::RemoveItemFromInventory(const TSubclassOf<AInventoryPickup> ItemClass, bool bShouldDestroy)
 {
 	int Index = HaveItem(ItemClass);
 	if (Index > -1)
@@ -47,18 +47,26 @@ bool UInventoryComponent::RemoveItemFromInventory(const TSubclassOf<AInventoryPi
 		Content[Index].bEmpty = true;
 		Content[Index].ItemData = FItemData();
 		OnInventoryUpdated.Broadcast();
+		if (bShouldDestroy && Index == SelectedItemIndex)
+		{
+			DestroyCurrentItem();
+		}
 		return true;
 
 	}
 	return false;
 }
 
-bool UInventoryComponent::RemoveItemFromInventory(const int32 Index)
+bool UInventoryComponent::RemoveItemFromInventory(const int32 Index, bool bShouldDestroy)
 {
 	if (Index >= Content.Num()) return false;
 	Content[Index].bEmpty = true;
 	Content[Index].ItemData = FItemData();
 	OnInventoryUpdated.Broadcast();
+	if (bShouldDestroy && Index == SelectedItemIndex)
+	{
+		DestroyCurrentItem();
+	}
 	return true;
 }
 
@@ -119,9 +127,11 @@ bool UInventoryComponent::SelectItem(const int Index)
 	ItemSelection->SetOwner((AActor*)OwnerAsCharacter);
 	OnItemSelected.Broadcast(ItemSelection);
 
+	// Item attachment
 	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
 		EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
-	ItemSelection->AttachToComponent(OwnerAsCharacter->GetMesh(), AttachmentTransformRules, FName());
+	ItemSelection->AttachToComponent(OwnerAsCharacter->GetMesh(), AttachmentTransformRules,
+		ItemSelection->GetAttachmentSocketName());
 	ItemInHand = ItemSelection;
 	SelectedItemIndex = Index;
 

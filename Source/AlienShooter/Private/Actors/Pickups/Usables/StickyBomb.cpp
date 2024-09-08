@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Damage/ExplosionDamage.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AStickyBomb::AStickyBomb()
 {
@@ -29,7 +30,8 @@ bool AStickyBomb::UseItem(ACharacter* User)
 	if (!CanUse(User, HitResult)) return false;
 
 	SetActorLocation(HitResult.ImpactPoint);
-	// TODO: Set rotation
+	const FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(HitResult.ImpactPoint, GetActorLocation() + HitResult.ImpactNormal);
+	SetActorRotation(NewRotation);
 
 	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::KeepWorld,
 		EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false);

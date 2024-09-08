@@ -40,9 +40,22 @@ struct FSlotData
 };
 
 USTRUCT(BlueprintType)
+struct FItemProperties
+{
+	GENERATED_USTRUCT_BODY();
+
+public:
+	FItemProperties() {};
+	FItemProperties(FName InAttachSocketName): AttachmentSocketName(InAttachSocketName) {};
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	FName AttachmentSocketName = FName("ItemSocket");
+};
+
+USTRUCT(BlueprintType)
 struct FDamageProperties
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY();
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float BaseDamage = 150.f;

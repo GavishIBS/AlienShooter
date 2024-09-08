@@ -34,8 +34,8 @@ public:
 
 public:
 	bool AddItemToInventory(const FItemData ItemData);
-	bool RemoveItemFromInventory(const TSubclassOf<AInventoryPickup> ItemClass);
-	bool RemoveItemFromInventory(const int32 Index);
+	bool RemoveItemFromInventory(const TSubclassOf<AInventoryPickup> ItemClass, bool bShouldDestroy = false);
+	bool RemoveItemFromInventory(const int32 Index, bool bShouldDestroy = false);
 	int32 HaveEmpltySlot();
 	int HaveItem(const TSubclassOf<AInventoryPickup> ItemClass);
 	void ClearSlot(const int32 Index);

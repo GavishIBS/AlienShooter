@@ -34,7 +34,7 @@ bool ALoakableElectronicDoor::TryUnlockDoor(AActor* Caller)
 	{
 		if (InventoryComponent->HaveItem(DoorKey_Class) > -1)
 		{
-			if (InventoryComponent->RemoveItemFromInventory(DoorKey_Class))
+			if (InventoryComponent->RemoveItemFromInventory(DoorKey_Class, true))
 			{
 				OpenLock();
 				return true;
