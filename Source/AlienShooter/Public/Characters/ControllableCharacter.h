@@ -53,4 +53,5 @@ protected:
 
 public:
 	FORCEINLINE FVector GetCursorTraceHitLocation() const {return CursorTraceHitLocation;}
+	FORCEINLINE APlayerController* GetPlayerController() const { return PlayerController; }
 };

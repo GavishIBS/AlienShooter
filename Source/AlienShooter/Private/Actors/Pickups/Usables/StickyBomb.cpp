@@ -32,6 +32,7 @@ bool AStickyBomb::UseItem(ACharacter* User)
 	SetActorLocation(HitResult.ImpactPoint);
 	const FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(HitResult.ImpactPoint, GetActorLocation() + HitResult.ImpactNormal);
 	SetActorRotation(NewRotation);
+	SetActorScale3D({1.f, 1.f, 1.f});
 
 	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::KeepWorld,
 		EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false);
