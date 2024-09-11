@@ -46,9 +46,7 @@ float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const 
 		UExplosionDamage::StaticClass(), ActorsToIgnore);
 
 	// Destroy
-	ExplosiveMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Ignore);
-	ExplosiveMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Destroy();
 
-	return 100000.0f;
+	return DamageProperties.BaseDamage;
 }

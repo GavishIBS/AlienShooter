@@ -21,8 +21,9 @@ class ALIENSHOOTER_API AProjectile : public AActor
 public:
 	friend AProjectileWeapon;
 	AProjectile();
+	virtual void Tick(float DeltaTime) override;
 
-	void Init(const float& InBulletHealth, const float& InDamage, const float& InDamage_RandomizationFactor);
+	//virtual void Init(const float& InBulletHealth, const float& InDamage, const float& InDamage_RandomizationFactor);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -32,7 +33,8 @@ protected:
 	AActor* WeaponOwner = nullptr;
 	
 	UFUNCTION()
-	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		FVector NormalImpulse, const FHitResult& Hit);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UBoxComponent> BoxCollision;
@@ -40,6 +42,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Components)
-	FProjectileProperties ProjectileProperties;
+protected:
+	FVector TargetLocation;
+	
+public:
+	FORCEINLINE void SetTargetLocation(const FVector& TargetLoc) { TargetLocation = TargetLoc; };
 };

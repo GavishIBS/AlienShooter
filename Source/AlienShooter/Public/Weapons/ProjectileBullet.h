@@ -18,10 +18,17 @@ class ALIENSHOOTER_API AProjectileBullet : public AProjectile
 
 public:
 	AProjectileBullet();
+	//virtual void Init(const float& InBulletHealth, const float& InDamage, const float& InDamage_RandomizationFactor) override;
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		FVector NormalImpulse, const FHitResult& Hit) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UStaticMeshComponent> BulletMesh;
+
+	// Properties
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components)
+	FProjectileProperties ProjectileProperties;
 };

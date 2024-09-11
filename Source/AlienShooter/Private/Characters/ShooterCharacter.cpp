@@ -73,6 +73,8 @@ void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Dama
 	NewHealth = FMath::Clamp(NewHealth, 0.f, AttributeComponent->GetMaxHealth());
 	AttributeComponent->SetHealth(NewHealth);
 
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("NewHealth: %f"), NewHealth));
+
 	if (NewHealth <= 0.f)
 	{
 		OnDeath.Broadcast(DamageCauser);
