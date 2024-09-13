@@ -38,14 +38,24 @@ void AGasCylinder::SpawnEffects()
 
 void AGasCylinder::ApplyDamage()
 {
+	/*
 	TArray<AActor*> ActorsToIgnore;
 	UGameplayStatics::ApplyRadialDamage(this, DamageProperties.BaseDamage,
 		ExplosionOriginPoint->GetComponentLocation(), DamageProperties.DamageInnerRadius,
 		UExplosionDamage::StaticClass(), ActorsToIgnore);
+	*/
 }
 
 void AGasCylinder::DestroyCallback()
 {
 	GetWorldTimerManager().ClearTimer(DestroyTimerHandle);
+	GasCylinderMesh->SetSimulatePhysics(false);
+	GasCylinderMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GasCylinderMesh->DestroyComponent();
+	ExplosionOriginPoint->DestroyComponent();
 	Destroy();
+	if (!IsValid(this))
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString("Actor is pending kill or invalid."));
+	else
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString("Actor is valid"));
 }

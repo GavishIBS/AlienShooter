@@ -31,6 +31,7 @@ protected:
 	void SpawnEffects();
 	void ApplyDamage();
 
+	UFUNCTION()
 	void DestroyCallback();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
