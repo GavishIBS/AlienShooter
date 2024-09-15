@@ -29,3 +29,10 @@ void ATDSHUD::BeginPlay()
 		}
 	}
 }
+
+UTDSUserWidget* ATDSHUD::MakeWidgetInViewport(const TSubclassOf<UTDSUserWidget>& UW_Class)
+{
+	UTDSUserWidget* UW = CreateWidget<UTDSUserWidget>(PlayerController, UW_Class);
+	UW->AddToViewport();
+	return UW;
+}

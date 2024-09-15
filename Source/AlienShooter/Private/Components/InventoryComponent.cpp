@@ -7,6 +7,7 @@
 #include "Actors/Pickups/InventoryPickup.h"
 #include "GameFramework/Character.h"
 #include "Actors/UsableActor.h"
+#include "UI/Widgets/TDS_InventoryMenu.h"
 
 UInventoryComponent::UInventoryComponent()
 {
@@ -167,6 +168,21 @@ void UInventoryComponent::DestroyCurrentItem()
 		ItemInHand->Destroy();
 		ItemInHand = nullptr;
 	}
+}
+
+void UInventoryComponent::SetInventory_UW(UTDS_InventoryMenu* UW)
+{
+	InventoryMenu_UW = UW;
+	if (InventoryMenu_UW)
+	{
+		InventoryMenu_UW->CreateSlots(Content);
+	}
+}
+
+void UInventoryComponent::CloseInventory_UI()
+{
+	if (InventoryMenu_UW)
+		InventoryMenu_UW->RemoveFromParent();
 }
 
 void UInventoryComponent::PrintContent()

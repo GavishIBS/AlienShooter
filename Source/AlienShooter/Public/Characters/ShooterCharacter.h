@@ -52,6 +52,8 @@ protected:
 	void LeftMouseButtonPressed();
 	void MouseWheelUp();
 	void MouseWheelDown();
+	void LeftAltPressed();
+	void LeftAltReleased();
 	/* Input callbacks end */
 	
 	/* Input begin */
@@ -63,9 +65,17 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category=Input)
 	TObjectPtr<UInputAction> MouseWheelDownAction = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> LeftAltAction;
 	/* Input end */
 
 	FShooterProperties ShooterProperties = FShooterProperties();
+
+private:
+	// Inventory UI
+	void OpenInventory_UI();
+	void CloseInventory_UI();
 
 public:
 	FORCEINLINE TObjectPtr<UCombatComponent> GetCombatComponent() const {return CombatComponent;}

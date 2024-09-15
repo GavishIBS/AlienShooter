@@ -21,6 +21,7 @@ class ALIENSHOOTER_API ATDSHUD : public AHUD
 
 public:
 	ATDSHUD();
+	UTDSUserWidget* MakeWidgetInViewport(const TSubclassOf<UTDSUserWidget>& UW_Class);
 
 protected:
 	virtual void BeginPlay() override;

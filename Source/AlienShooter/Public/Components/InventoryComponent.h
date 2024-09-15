@@ -12,6 +12,8 @@
 class ABaseCharacter;
 class AShooterCharacter;
 class AInventoryPickup;
+class UTDSUserWidget;
+class UTDS_InventoryMenu;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemSelected, AActor*, SelectedItem);
@@ -69,4 +71,14 @@ private:
 	AInventoryPickup* ItemInHand = nullptr;
 
 	int32 SelectedItemIndex = -1;  // -1 => Unselected
+
+protected:
+	// Inventory UI
+	UTDS_InventoryMenu* InventoryMenu_UW = nullptr;
+	FORCEINLINE void SetInventory_UW(UTDS_InventoryMenu* UW);
+
+	void CloseInventory_UI();
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UTDSUserWidget> InventoryMenu_UW_Class = nullptr;
 };

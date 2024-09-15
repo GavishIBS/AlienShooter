@@ -23,8 +23,14 @@ struct FItemData
 {
 	GENERATED_USTRUCT_BODY();
 
-	UPROPERTY(EditAnywhere, Category = "Data")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	FName ItemName = FName();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	FString ItemDescription = FString();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	UTexture2D* IconTexture = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Data")
 	TSubclassOf<AActor> ItemClass = nullptr;
@@ -35,14 +41,17 @@ struct FSlotData
 {
 	GENERATED_USTRUCT_BODY();
 
+	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	FItemData ItemData{};
+
+	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	bool bEmpty = true;
 };
 
 USTRUCT(BlueprintType)
 struct FItemProperties
 {
-	GENERATED_USTRUCT_BODY();
+	GENERATED_BODY();
 
 public:
 	FItemProperties() {};

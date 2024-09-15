@@ -10,6 +10,9 @@
 #include "Engine/DamageEvents.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/InventoryComponent.h"
+#include "GameFramework/PlayerController.h"
+#include "HUD/TDSHUD.h"
+#include "UI/Widgets/TDS_InventoryMenu.h"
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -47,8 +50,12 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(LeftMouseButtonPressedAction, ETriggerEvent::Started, this, &AShooterCharacter::LeftMouseButtonPressed);
+		
 		EnhancedInputComponent->BindAction(MouseWheelUpAction, ETriggerEvent::Started, this, &AShooterCharacter::MouseWheelUp);
 		EnhancedInputComponent->BindAction(MouseWheelDownAction, ETriggerEvent::Started, this, &AShooterCharacter::MouseWheelDown);
+		
+		EnhancedInputComponent->BindAction(LeftAltAction, ETriggerEvent::Started, this, &AShooterCharacter::LeftAltPressed);
+		EnhancedInputComponent->BindAction(LeftAltAction, ETriggerEvent::Completed, this, &AShooterCharacter::LeftAltReleased);
 	}
 }
 
@@ -133,6 +140,31 @@ void AShooterCharacter::MouseWheelDown()
 		CombatComponent->UnselectWeapon();
 		InventoryComponent->SelectItem(InventoryComponent->SelectedItemIndex - 1);
 	}
+}
+
+void AShooterCharacter::LeftAltPressed()
+{
+	OpenInventory_UI();
+}
+
+void AShooterCharacter::LeftAltReleased()
+{
+	CloseInventory_UI();
+}
+
+void AShooterCharacter::OpenInventory_UI()
+{
+	if (!PlayerController) return;
+
+	if (ATDSHUD* TDS_HUD = Cast<ATDSHUD>(PlayerController->GetHUD()))
+	{
+		InventoryComponent->SetInventory_UW(Cast<UTDS_InventoryMenu>(TDS_HUD->MakeWidgetInViewport(InventoryComponent->InventoryMenu_UW_Class)));
+	}
+}
+
+void AShooterCharacter::CloseInventory_UI()
+{
+	InventoryComponent->CloseInventory_UI();
 }
 
 void AShooterCharacter::PickupWeapon(AWeaponBase* InWeapon) const
