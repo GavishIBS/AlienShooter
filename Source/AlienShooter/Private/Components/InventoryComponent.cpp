@@ -112,6 +112,22 @@ bool UInventoryComponent::SelectItem(const int Index)
 	// Destroy current item
 	DestroyCurrentItem();
 
+	if (Content[Index].bEmpty)
+	{
+		if (Index > SelectedItemIndex)
+		{
+			if (SelectItem(Index+1))
+				return true;
+			else return false;
+		}
+		else if (Index < SelectedItemIndex)
+		{
+			if (SelectItem(Index - 1))
+				return true;
+			else return false;
+		}
+	}
+
 	const TSubclassOf<AActor> ItemClassSelection = Content[Index].ItemData.ItemClass;
 	FActorSpawnParameters ActorSpawnParameters;
 	ActorSpawnParameters.Instigator = (APawn*)OwnerAsCharacter;
@@ -180,7 +196,11 @@ void UInventoryComponent::SetInventory_UW(UTDS_InventoryMenu* UW)
 	if (InventoryMenu_UW)
 	{
 		InventoryMenu_UW->CreateSlots(Content);
-		InventoryMenu_UW->SetSelectedIndex(SelectedItemIndex);
+		if (SelectedItemIndex >= 0 && SelectedItemIndex < Content.Num())
+		{
+			if (!Content[SelectedItemIndex].bEmpty)
+				InventoryMenu_UW->SetSelectedIndex(SelectedItemIndex);
+		}
 	}
 }
 
