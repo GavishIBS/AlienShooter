@@ -38,12 +38,10 @@ void AGasCylinder::SpawnEffects()
 
 void AGasCylinder::ApplyDamage()
 {
-	/*
 	TArray<AActor*> ActorsToIgnore;
 	UGameplayStatics::ApplyRadialDamage(this, DamageProperties.BaseDamage,
 		ExplosionOriginPoint->GetComponentLocation(), DamageProperties.DamageInnerRadius,
 		UExplosionDamage::StaticClass(), ActorsToIgnore);
-	*/
 }
 
 void AGasCylinder::DestroyCallback()

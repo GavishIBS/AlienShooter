@@ -121,6 +121,8 @@ bool UInventoryComponent::SelectItem(const int Index)
 	if (!ItemSelection)
 	{
 		SelectedItemIndex = Index;
+		if (InventoryMenu_UW)
+			InventoryMenu_UW->SetSelectedIndex(SelectedItemIndex);
 		return false;
 	}
 
@@ -135,6 +137,8 @@ bool UInventoryComponent::SelectItem(const int Index)
 		ItemSelection->GetAttachmentSocketName());
 	ItemInHand = ItemSelection;
 	SelectedItemIndex = Index;
+	if (InventoryMenu_UW)
+		InventoryMenu_UW->SetSelectedIndex(SelectedItemIndex);
 
 	return true;
 }
@@ -176,6 +180,7 @@ void UInventoryComponent::SetInventory_UW(UTDS_InventoryMenu* UW)
 	if (InventoryMenu_UW)
 	{
 		InventoryMenu_UW->CreateSlots(Content);
+		InventoryMenu_UW->SetSelectedIndex(SelectedItemIndex);
 	}
 }
 

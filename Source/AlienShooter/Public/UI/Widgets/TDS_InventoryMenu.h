@@ -11,6 +11,7 @@
 class UInventoryComponent;
 class UHorizontalBox;
 class USizeBox;
+class UTDS_InventorySlot;
 
 /**
  * 
@@ -35,6 +36,8 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void CreateSlots(const TArray<FSlotData>& Content);
 
+	void OnNewSlotSelected(const int OldIndex, const int NewIndex);
+
 protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	USizeBox* SizeBox_Root;
@@ -46,4 +49,17 @@ protected:
 	// Properties
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
 	TSubclassOf<UTDSUserWidget> InventorySlow_UW_Class = nullptr;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Data")
+	TArray<UTDS_InventorySlot*> ItemSlots;
+
+protected:
+	FORCEINLINE void SetSelectedIndex(int Value)
+	{
+		OnNewSlotSelected(SelectedIndex, Value);
+		SelectedIndex = Value;
+	}
+
+private:
+	int SelectedIndex = -1;
 };

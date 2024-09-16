@@ -42,12 +42,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="Properties")
 	bool bSelected = false;
 
-protected:
+public:
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnSelected();
+	void OnSlotSelected();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnUnselected();
+	void OnSlotUnselected();
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -55,7 +55,9 @@ public:
 	{
 		bSelected = Value;
 		if (bSelected)
-			OnSelected();
-		else OnUnselected();
+		{
+			OnSlotSelected();
+		}
+		else OnSlotUnselected();
 	}
 };
