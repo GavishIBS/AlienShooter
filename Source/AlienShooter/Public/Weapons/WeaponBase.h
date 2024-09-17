@@ -85,6 +85,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	FWeaponAnimationData WeaponAnimationData = FWeaponAnimationData();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
+	FWeaponAnimationData_Pawn WeaponAnimationData_Pawn = FWeaponAnimationData_Pawn();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Data)
 	FWeaponData WeaponData = FWeaponData();
 
@@ -93,6 +96,7 @@ public:
 	FORCEINLINE UStaticMeshComponent* GetWeaponMeshAsStaticMesh() const {return WeaponStaticMesh;}
 	FORCEINLINE const FWeaponProperties* GetWeaponProperties() const {return &WeaponProperties;}
 	FORCEINLINE const FWeaponAnimationData* GetWeaponAnimationData() const {return &WeaponAnimationData;}
+	FORCEINLINE const FWeaponAnimationData_Pawn* GetWeaponAnimationData_Pawn() const {return &WeaponAnimationData_Pawn;}
 	FORCEINLINE TSubclassOf<AWeaponBase> GetWeaponClass() const {return WeaponData.WeaponClass;}
 	FORCEINLINE FTransform GetWeaponMuzzleTransform() const;
 	FORCEINLINE int GetTotalAmmoAvailable() const {return WeaponProperties.GetTotalAmmoAvailable();}

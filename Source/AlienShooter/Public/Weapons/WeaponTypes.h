@@ -115,14 +115,19 @@ struct FWeaponAnimationData
 {
 	GENERATED_BODY()
 	
-private:
+public:
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	TArray<TObjectPtr<UAnimationAsset>> WeaponFireAnimations;
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponAnimationData_Pawn
+{
+	GENERATED_BODY()
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	TArray<TObjectPtr<UAnimMontage>> FireAnimationMontages_Pawn;   // Character animations
-
-	UPROPERTY(EditAnywhere, Category = "Animation")
-	TArray<TObjectPtr<UAnimationAsset>> WeaponFireAnimations;
 };
 
 USTRUCT(BlueprintType)

@@ -101,7 +101,7 @@ void AShooterCharacter::LeftMouseButtonPressed()
 	if (CombatComponent && CombatComponent->WeaponInHand && PawnActionState < EPawnActionState::EPAS_Attacking)
 	{
 		CombatComponent->FireButtonPressed();
-		if (AnimationLibrary::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData()->FireAnimationMontages_Pawn))
+		if (AnimationLibrary::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData_Pawn()->FireAnimationMontages_Pawn))
 			PawnActionState = EPawnActionState::EPAS_Attacking;
 	}
 	else if (InventoryComponent && InventoryComponent->ItemInHand)
