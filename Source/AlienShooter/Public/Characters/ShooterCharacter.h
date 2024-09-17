@@ -72,6 +72,10 @@ protected:
 
 	FShooterProperties ShooterProperties = FShooterProperties();
 
+protected:
+	UFUNCTION(BlueprintCallable)
+	void EndAttack();
+
 private:
 	// Inventory UI
 	void OpenInventory_UI();

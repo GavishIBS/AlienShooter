@@ -40,4 +40,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UInventoryComponent> InventoryComponent;
+
+	// Properites
+	EPawnActionState PawnActionState = EPawnActionState::EPAS_Idle;
 };

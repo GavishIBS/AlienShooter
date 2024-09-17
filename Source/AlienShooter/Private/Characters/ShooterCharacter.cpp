@@ -97,10 +97,17 @@ void AShooterCharacter::OnDeathCallback(AActor* Killer)
 
 void AShooterCharacter::LeftMouseButtonPressed()
 {
-	if (CombatComponent && CombatComponent->WeaponInHand)
+	if (CombatComponent && CombatComponent->WeaponInHand && PawnActionState < EPawnActionState::EPAS_Attacking)
+	{
 		CombatComponent->FireButtonPressed();
+		if (AnimationUtils::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData()->FireAnimationMontages_Pawn))
+			PawnActionState = EPawnActionState::EPAS_Attacking;
+	}
 	else if (InventoryComponent && InventoryComponent->ItemInHand)
+	{
 		InventoryComponent->UseButtonPressed();
+		// TODO: play animation if item is used
+	}
 }
 
 void AShooterCharacter::MouseWheelUp()
@@ -150,6 +157,12 @@ void AShooterCharacter::LeftAltPressed()
 void AShooterCharacter::LeftAltReleased()
 {
 	CloseInventory_UI();
+}
+
+void AShooterCharacter::EndAttack()
+{
+	if (PawnActionState > EPawnActionState::EPAS_Attacking) return;
+	PawnActionState = EPawnActionState::EPAS_Idle;
 }
 
 void AShooterCharacter::OpenInventory_UI()

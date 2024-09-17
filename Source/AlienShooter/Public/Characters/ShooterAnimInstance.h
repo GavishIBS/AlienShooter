@@ -29,6 +29,7 @@ protected:
 	void CalculateIK();
 	
 protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Ownership")
 	TObjectPtr<AShooterCharacter> ShooterCharacter;
 	TObjectPtr<UCharacterMovementComponent> MovementComponent;
 

@@ -97,6 +97,11 @@ void AWeaponBase::Fire()
 {
 	OnWeaponFired.Broadcast();
 
+	if (WeaponSkeletalMesh)
+	{
+		AnimationUtils::PlayAnimation(WeaponSkeletalMesh, WeaponAnimationData.WeaponFireAnimations);
+	}
+
 	if (WeaponData.BulletShellClass)
 		SpawnBulletShell();
 }
