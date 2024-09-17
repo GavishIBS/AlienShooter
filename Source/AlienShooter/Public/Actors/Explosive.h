@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/HittableActor.h"
-#include "Utilities.h"
+#include "DamageTypes.h"
 #include "Explosive.generated.h"
 
 class UNiagaraSystem;

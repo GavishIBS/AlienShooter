@@ -5,7 +5,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Utilities.h"
+#include "DamageTypes.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/HitInterface.h"
 #include "GasCylinder.generated.h"

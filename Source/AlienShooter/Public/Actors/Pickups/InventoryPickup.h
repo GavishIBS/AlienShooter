@@ -6,7 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Pickups/Pickup.h"
-#include "Utilities.h"
+#include "InventoryTypes.h"
 #include "InventoryPickup.generated.h"
 
 /**

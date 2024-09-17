@@ -6,7 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/UsableActor.h"
-#include "Utilities.h"
+#include "DamageTypes.h"
 #include "StickyBomb.generated.h"
 
 /**

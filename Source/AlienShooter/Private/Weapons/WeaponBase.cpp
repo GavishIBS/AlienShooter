@@ -8,6 +8,7 @@
 #include "Components/ArrowComponent.h"
 #include "Components/SphereComponent.h"
 #include "Weapons/BulletShell.h"
+#include "AnimationLibrary.h"
 
 AWeaponBase::AWeaponBase()
 {
@@ -99,7 +100,7 @@ void AWeaponBase::Fire()
 
 	if (WeaponSkeletalMesh)
 	{
-		AnimationUtils::PlayAnimation(WeaponSkeletalMesh, WeaponAnimationData.WeaponFireAnimations);
+		AnimationLibrary::PlayAnimation(WeaponSkeletalMesh, WeaponAnimationData.WeaponFireAnimations);
 	}
 
 	if (WeaponData.BulletShellClass)

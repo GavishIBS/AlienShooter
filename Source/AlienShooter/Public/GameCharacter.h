@@ -6,7 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Utilities.h"
+#include "CharacterTypes.h"
 #include "GameCharacter.generated.h"
 
 class UNiagaraSystem;

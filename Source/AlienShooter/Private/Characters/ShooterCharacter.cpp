@@ -13,6 +13,7 @@
 #include "GameFramework/PlayerController.h"
 #include "HUD/TDSHUD.h"
 #include "UI/Widgets/TDS_InventoryMenu.h"
+#include "AnimationLibrary.h"
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -100,7 +101,7 @@ void AShooterCharacter::LeftMouseButtonPressed()
 	if (CombatComponent && CombatComponent->WeaponInHand && PawnActionState < EPawnActionState::EPAS_Attacking)
 	{
 		CombatComponent->FireButtonPressed();
-		if (AnimationUtils::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData()->FireAnimationMontages_Pawn))
+		if (AnimationLibrary::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData()->FireAnimationMontages_Pawn))
 			PawnActionState = EPawnActionState::EPAS_Attacking;
 	}
 	else if (InventoryComponent && InventoryComponent->ItemInHand)

@@ -6,7 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Utilities.h"
+#include "InventoryTypes.h"
 #include "InventoryComponent.generated.h"
 
 class ABaseCharacter;
