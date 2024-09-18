@@ -6,7 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "Weapons/Projectile.h"
-#include "Utilities.h"
+#include "DamageTypes.h"
 #include "ProjectileGrenade.generated.h"
 
 /**

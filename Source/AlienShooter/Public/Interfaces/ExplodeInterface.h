@@ -6,7 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Utilities.h"
+#include "DamageTypes.h"
 #include "ExplodeInterface.generated.h"
 
 // This class does not need to be modified.
