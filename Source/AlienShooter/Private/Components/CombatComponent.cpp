@@ -97,6 +97,12 @@ bool UCombatComponent::SelectWeapon(const int Index)
 	WeaponSelection->AttachToComponent(OwnerAsShooterCharacter->GetMesh(),
 		AttachmentTransformRules, WeaponSelection->GetWeaponProperties()->InHandAttachmentSocketName);
 	WeaponInHand = WeaponSelection;
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("WeaponInHandSet: %s"), *WeaponInHand->GetName()));
+	}
+
 	WeaponIndex = Index;
 	OnWeaponSelected();
 	OnWeaponUpdated.Broadcast();

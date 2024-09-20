@@ -34,7 +34,7 @@ protected:
 	TObjectPtr<UCharacterMovementComponent> MovementComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
-	FName RightHandSocketName = FName("hand_r");
+	FName RightHandSocketName = FName("RightHandSocket");
 	
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
 	FName RightHandBoneName = FName("hand_r");
