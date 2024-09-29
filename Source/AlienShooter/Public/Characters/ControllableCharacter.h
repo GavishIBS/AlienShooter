@@ -32,6 +32,8 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Controller)
 	TObjectPtr<APlayerController> PlayerController;
 
+	void CheckCursorLocation();
+
 	/* Character rotation begin */
 	void UpdateCharacterRotationToCursor();
 	/* Character rotation end */
@@ -48,6 +50,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
 	TObjectPtr<UInputAction> MoveAction;
 	/* Input end */
+
+	// Properties
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float RestrictedRadius = 100.0f;
+
 
 	FVector CursorTraceHitLocation = FVector();
 
