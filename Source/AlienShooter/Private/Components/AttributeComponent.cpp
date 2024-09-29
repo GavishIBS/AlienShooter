@@ -18,8 +18,8 @@ void UAttributeComponent::BeginPlay()
 
 bool UAttributeComponent::CanTakeArmor(const EArmorColorCode ArmorColorCode)
 {
-	if (ArmorEquipped->GetArmorColorCode() == EArmorColorCode::ECC_None) return false;
 	if (!ArmorEquipped) return true;
+	if (ArmorEquipped->GetArmorColorCode() == EArmorColorCode::ECC_None) return false;
 	if (ArmorEquipped->GetArmorColorCode() < ArmorColorCode) return true;
 	if (ArmorEquipped->GetArmorColorCode() == ArmorColorCode)
 		if (ArmorEquipped->IsDamaged()) return true;

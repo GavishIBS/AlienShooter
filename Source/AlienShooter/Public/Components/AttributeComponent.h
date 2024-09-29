@@ -39,11 +39,15 @@ public:
 	FORCEINLINE float GetHealth() const {return Health;}
 
 	FORCEINLINE void SetMaxHealth(const float Value) {MaxHealth = Value;}
-	FORCEINLINE void SetHealth(const float Value) {Health = Value;}
+	FORCEINLINE void SetHealth(const float Value)
+	{
+		Health = FMath::Clamp(Value, 0.f, MaxHealth);
+	}
 
-	FORCEINLINE void AddHealth(const float Value) { Health += Value; }
+	FORCEINLINE void AddHealth(const float Value)
+	{
+		Health = FMath::Clamp(Health + Value, 0.f, MaxHealth);
+	}
 
 	FORCEINLINE bool CanTakeArmor(const EArmorColorCode ArmorColorCode);
-
-	// TODO: Clamp Health
 };
