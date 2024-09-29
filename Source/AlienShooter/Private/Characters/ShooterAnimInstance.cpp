@@ -75,10 +75,6 @@ void UShooterAnimInstance::CalculateIK()
 		{
 			RightHandRotation = ShooterCharacter->GetMesh()->GetSocketRotation(RightHandSocketName);
 			const FVector RightHandLocation = ShooterCharacter->GetMesh()->GetSocketLocation(RightHandSocketName);
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("LocationSize: %f"), RightHandRotation.Roll + RightHandRotation.Yaw + RightHandRotation.Pitch));
-			}
 
 			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(RightHandLocation,
 				RightHandLocation + (RightHandLocation - ShooterCharacter->GetCursorTraceHitLocation()));
