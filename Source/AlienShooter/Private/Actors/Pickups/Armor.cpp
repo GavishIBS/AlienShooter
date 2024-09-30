@@ -39,3 +39,12 @@ void AArmor::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 		}
 	}
 }
+
+void AArmor::TakeDamage(const float InDamage)
+{
+	ArmorProperties.CurrentArmorHealth = FMath::Clamp(ArmorProperties.CurrentArmorHealth - InDamage, 0.f, ArmorProperties.MaxArmorHealth);
+}
+
+void AArmor::Break()
+{
+}

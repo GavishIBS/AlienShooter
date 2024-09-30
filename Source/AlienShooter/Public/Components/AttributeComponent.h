@@ -18,7 +18,11 @@ class ALIENSHOOTER_API UAttributeComponent : public UActorComponent
 
 public:	
 	UAttributeComponent();
+
+	void TakeDamage(const float InDamage);
+
 	void TakeArmor(AArmor* InArmor);
+	void BreakArmor();
 
 protected:
 	virtual void BeginPlay() override;

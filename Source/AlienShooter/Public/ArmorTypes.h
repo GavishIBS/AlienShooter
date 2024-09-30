@@ -21,7 +21,7 @@ struct FArmorProperties
 	float MaxArmorHealth = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties", meta = (ClampMin = "0", ClampMax = "100"))
-	float ArmorAbsorption = 65.f;
+	float ArmorDamageAbsorption = 65.f;
 };
 
 UENUM(BlueprintType)
