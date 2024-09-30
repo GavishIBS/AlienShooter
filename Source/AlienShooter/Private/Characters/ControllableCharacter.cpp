@@ -45,6 +45,7 @@ void AControllableCharacter::BeginPlay()
 void AControllableCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	CheckCursorLocation();
 	UpdateCharacterRotationToCursor();
 }
 
@@ -79,6 +80,26 @@ void AControllableCharacter::UpdateCharacterRotationToCursor()
 
 		// Update rotation
 		GetMesh()->SetWorldRotation(NewRotation);
+	}
+}
+
+void AControllableCharacter::CheckCursorLocation()
+{
+	FVector2D CursorPosition;
+	if (PlayerController->GetMousePosition(CursorPosition.X, CursorPosition.Y))
+	{
+		FVector CharacterWorldPosition = GetActorLocation();
+		FVector2D CharacterScreenPosition;
+
+		if (PlayerController->ProjectWorldLocationToScreen(CharacterWorldPosition, CharacterScreenPosition))
+		{
+			float Distance = FVector2D::Distance(CursorPosition, CharacterScreenPosition);
+			if (Distance < RestrictedRadius)
+			{
+				FVector2D NewCursorPosition = CursorPosition + (CursorPosition - CharacterScreenPosition).GetSafeNormal() * (RestrictedRadius - Distance);
+				PlayerController->SetMouseLocation(NewCursorPosition.X, NewCursorPosition.Y);
+			}
+		}
 	}
 }
 

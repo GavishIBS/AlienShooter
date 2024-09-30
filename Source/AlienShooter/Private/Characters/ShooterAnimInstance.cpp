@@ -73,8 +73,9 @@ void UShooterAnimInstance::CalculateIK()
 		bEnableRightHandIK = ShooterCharacter->GetWeaponInHand()->ShouldEnableRightHandIK();
 		if (bEquipped && bEnableRightHandIK)
 		{
-			const FVector RightHandLocation = ShooterCharacter->GetMesh()->GetSocketLocation(RightHandSocketName);
 			RightHandRotation = ShooterCharacter->GetMesh()->GetSocketRotation(RightHandSocketName);
+			const FVector RightHandLocation = ShooterCharacter->GetMesh()->GetSocketLocation(RightHandSocketName);
+
 			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(RightHandLocation,
 				RightHandLocation + (RightHandLocation - ShooterCharacter->GetCursorTraceHitLocation()));
 			RightHandRotation.Yaw = LookAtRotation.Yaw;
