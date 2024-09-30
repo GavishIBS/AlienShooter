@@ -30,13 +30,13 @@ void UAttributeComponent::TakeDamage(const float InDamage)
 		}
 		ArmorEquipped->TakeDamage(ArmorDamage);
 		GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Red, FString::Printf(TEXT("Amor: %f, Body: %f"), ArmorDamage, BodyDamage));
-		GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Emerald, FString::Printf(TEXT("AmorHealth: %f, BodyHealth: %f"), ArmorEquipped->GetArmorHealth(), Health));
 		if (ArmorEquipped->GetArmorHealth() <= 0.f)
 		{
 			BreakArmor();
 		}
 	}
-	Health = FMath::Clamp(Health - InDamage, 0.f, BodyDamage);
+	Health = FMath::Clamp(Health - BodyDamage, 0.f, MaxHealth);
+	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Emerald, FString::Printf(TEXT("AmorHealth: %f, BodyHealth: %f"), ArmorEquipped->GetArmorHealth(), Health));
 }
 
 bool UAttributeComponent::CanTakeArmor(const EArmorColorCode ArmorColorCode)
