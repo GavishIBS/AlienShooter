@@ -28,7 +28,7 @@ void UAttributeComponent::TakeDamage(const float InDamage)
 		{
 			BodyDamage += ArmorDamage - ArmorEquipped->GetArmorHealth();
 		}
-		ArmorEquipped->TakeDamage(ArmorDamage);
+		ArmorEquipped->AbsorbDamage(ArmorDamage);
 		GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Red, FString::Printf(TEXT("Amor: %f, Body: %f"), ArmorDamage, BodyDamage));
 		if (ArmorEquipped->GetArmorHealth() <= 0.f)
 		{
@@ -59,6 +59,21 @@ void UAttributeComponent::TakeArmor(AArmor* InArmor)
 	{
 		FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
 		ArmorEquipped->AttachToActor(OwnerActor, AttachmentTransformRules, ArmorEquipped->GetAttachmentSocketName());
+
+		// Attaching armor pieces
+		if (ACharacter* OwnerCharacter = Cast<ACharacter>(OwnerActor))
+		{
+			int Counter = 0;
+			for (const FName& SocketName : ArmorEquipped->GetArmorPiecesAttachmentSocketNames())
+			{
+				if (UStaticMeshComponent* MeshComponent = ArmorEquipped->GetArmorPieceMeshComponent_AtIndex(Counter))
+				{
+					MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+					MeshComponent->AttachToComponent(OwnerCharacter->GetMesh(), AttachmentTransformRules, SocketName);
+				}
+				Counter++;
+			}
+		}
 	}
 }
 
