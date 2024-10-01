@@ -5,6 +5,7 @@
 
 #include "Actors/Pickups/Armor.h"
 #include "Components/AttributeComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AArmor::AArmor()
 {
@@ -34,8 +35,8 @@ void AArmor::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 		if (AttributeComponent->CanTakeArmor(ArmorColorCode))
 		{
 			AttributeComponent->TakeArmor(this);
-			Super::OnSphereOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex,
-				bFromSweep, SweepResult);
+			//Super::OnSphereOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex,
+				//bFromSweep, SweepResult);
 		}
 	}
 }
@@ -47,4 +48,7 @@ void AArmor::TakeDamage(const float InDamage)
 
 void AArmor::Break()
 {
+	if (DestructionParticleSystem)
+		UGameplayStatics::SpawnEmitterAtLocation(this, DestructionParticleSystem, GetActorLocation(), GetActorRotation(), true);
+	Destroy();
 }

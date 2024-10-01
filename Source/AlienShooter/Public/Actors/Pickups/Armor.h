@@ -41,6 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
 	EArmorColorCode ArmorColorCode = EArmorColorCode::ECC_None;
 
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	TObjectPtr<UParticleSystem> DestructionParticleSystem;
+
 	// TODO: Make character wear armor
 	//TMap<UStaticMeshComponent, FName> -> TMap<Mesh, SocketName>
 
@@ -51,7 +54,9 @@ public:
 		bool ReturnValue = ArmorProperties.CurrentArmorHealth >= ArmorProperties.MaxArmorHealth ? false : true;
 		return ReturnValue;
 	}
+	
 	FORCEINLINE FArmorProperties GetArmorProperties() const { return ArmorProperties; }
 	FORCEINLINE float GetArmorHealth() const { return ArmorProperties.CurrentArmorHealth; }
 	FORCEINLINE float GetArmorDamageAbsorption() const { return ArmorProperties.ArmorDamageAbsorption; }
+	FORCEINLINE FName GetAttachmentSocketName() const { return ArmorProperties.AttachmentSocketName; }
 };

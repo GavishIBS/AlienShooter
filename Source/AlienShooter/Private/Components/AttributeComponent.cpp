@@ -36,7 +36,8 @@ void UAttributeComponent::TakeDamage(const float InDamage)
 		}
 	}
 	Health = FMath::Clamp(Health - BodyDamage, 0.f, MaxHealth);
-	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Emerald, FString::Printf(TEXT("AmorHealth: %f, BodyHealth: %f"), ArmorEquipped->GetArmorHealth(), Health));
+	if (ArmorEquipped)
+		GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Emerald, FString::Printf(TEXT("AmorHealth: %f, BodyHealth: %f"), ArmorEquipped->GetArmorHealth(), Health));
 }
 
 bool UAttributeComponent::CanTakeArmor(const EArmorColorCode ArmorColorCode)
@@ -52,6 +53,13 @@ bool UAttributeComponent::CanTakeArmor(const EArmorColorCode ArmorColorCode)
 void UAttributeComponent::TakeArmor(AArmor* InArmor)
 {
 	ArmorEquipped = InArmor;
+	if (!ArmorEquipped) return;
+
+	if (AActor* OwnerActor = GetOwner())
+	{
+		FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
+		ArmorEquipped->AttachToActor(OwnerActor, AttachmentTransformRules, ArmorEquipped->GetAttachmentSocketName());
+	}
 }
 
 void UAttributeComponent::BreakArmor()
@@ -59,6 +67,7 @@ void UAttributeComponent::BreakArmor()
 	if (ArmorEquipped)
 	{
 		ArmorEquipped->Break();
+		ArmorEquipped = nullptr;
 	}
 }
 

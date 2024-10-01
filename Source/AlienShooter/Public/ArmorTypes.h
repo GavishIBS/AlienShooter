@@ -22,6 +22,9 @@ struct FArmorProperties
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties", meta = (ClampMin = "0", ClampMax = "100"))
 	float ArmorDamageAbsorption = 65.f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	FName AttachmentSocketName = FName();
 };
 
 UENUM(BlueprintType)
