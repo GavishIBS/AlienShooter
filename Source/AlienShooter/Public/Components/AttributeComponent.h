@@ -6,8 +6,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "ArmorTypes.h"
 #include "AttributeComponent.generated.h"
 
+class AArmor;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API UAttributeComponent : public UActorComponent
@@ -16,6 +18,11 @@ class ALIENSHOOTER_API UAttributeComponent : public UActorComponent
 
 public:	
 	UAttributeComponent();
+
+	void TakeDamage(const float InDamage);
+
+	void TakeArmor(AArmor* InArmor);
+	void BreakArmor();
 
 protected:
 	virtual void BeginPlay() override;
@@ -28,14 +35,23 @@ protected:
 	float Health = 100.f;
 	/* Attributes end */
 
+	// Armor
+	AArmor* ArmorEquipped = nullptr;
+
 public:
 	FORCEINLINE float GetMaxHealth() const {return  MaxHealth;}
 	FORCEINLINE float GetHealth() const {return Health;}
 
 	FORCEINLINE void SetMaxHealth(const float Value) {MaxHealth = Value;}
-	FORCEINLINE void SetHealth(const float Value) {Health = Value;}
+	FORCEINLINE void SetHealth(const float Value)
+	{
+		Health = FMath::Clamp(Value, 0.f, MaxHealth);
+	}
 
-	FORCEINLINE void AddHealth(const float Value) { Health += Value; }
+	FORCEINLINE void AddHealth(const float Value)
+	{
+		Health = FMath::Clamp(Health + Value, 0.f, MaxHealth);
+	}
 
-	// TODO: Clamp Health
+	FORCEINLINE bool CanTakeArmor(const EArmorColorCode ArmorColorCode);
 };

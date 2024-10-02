@@ -8,7 +8,7 @@
 
 APickup::APickup()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickupMesh"));
 	Mesh->SetupAttachment(GetRootComponent());
@@ -25,7 +25,19 @@ void APickup::BeginPlay()
 {
 	Super::BeginPlay();
 	InitCallbacks();
+	if (!bTick) SetActorTickEnabled(false);
 }
+
+void APickup::Tick(float DeltaTime)
+{
+	if (Mesh)
+	{
+		FRotator NewRotation = Mesh->GetComponentRotation();
+		NewRotation.Yaw += RotationSpeed;
+		Mesh->SetWorldRotation(NewRotation);
+	}
+}
+
 
 void APickup::InitCallbacks()
 {
