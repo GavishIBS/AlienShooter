@@ -26,6 +26,9 @@ void AAttributePickup::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent,
 		case EAttribute::HEALTH:
 			AttributeComponent->AddHealth(AdditiveValue);
 			break;
+		case EAttribute::MAX_HEALTH:
+			AttributeComponent->SetMaxHealth(AttributeComponent->GetMaxHealth() + AdditiveValue);
+			break;
 		case EAttribute::NONE:
 		default:
 			break;

@@ -26,6 +26,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void InitCallbacks() override;
 
 	void AbsorbDamage(const float InDamage);
 

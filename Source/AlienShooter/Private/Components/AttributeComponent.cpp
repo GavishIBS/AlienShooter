@@ -52,6 +52,9 @@ bool UAttributeComponent::CanTakeArmor(const EArmorColorCode ArmorColorCode)
 
 void UAttributeComponent::TakeArmor(AArmor* InArmor)
 {
+	// Break last armor
+	BreakArmor();
+
 	ArmorEquipped = InArmor;
 	if (!ArmorEquipped) return;
 

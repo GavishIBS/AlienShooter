@@ -11,7 +11,7 @@
 UENUM()
 enum class EAttribute
 {
-	NONE, HEALTH
+	NONE, HEALTH, MAX_HEALTH
 };
 
 /**

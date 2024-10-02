@@ -17,6 +17,7 @@ class ALIENSHOOTER_API APickup : public AActor
 	
 public:	
 	APickup();
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -33,4 +34,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<USphereComponent> OverlapSphere;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	bool bTick = false;
+	
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float RotationSpeed = 1.f;
 };
