@@ -98,12 +98,13 @@ public:
 	FORCEINLINE const FWeaponAnimationData* GetWeaponAnimationData() const {return &WeaponAnimationData;}
 	FORCEINLINE const FWeaponAnimationData_Pawn* GetWeaponAnimationData_Pawn() const {return &WeaponAnimationData_Pawn;}
 	FORCEINLINE TSubclassOf<AWeaponBase> GetWeaponClass() const {return WeaponData.WeaponClass;}
-	FORCEINLINE FTransform GetWeaponMuzzleTransform() const;
 	FORCEINLINE int GetTotalAmmoAvailable() const {return WeaponProperties.GetTotalAmmoAvailable();}
 	FORCEINLINE bool ShouldEnableRightHandIK() const {return WeaponProperties.bShouldEnableRightHandIK;}
 	FORCEINLINE bool ShouldEnableFabrik() const {return WeaponProperties.bShouldEnableFabrik;}
-	FORCEINLINE FTransform GetLeftHandPlacementTransform() const;
 	FORCEINLINE int GetMaxAmmoCapacity() const { return WeaponProperties.MaxAmmoCapacity; }
+	
+	FTransform GetWeaponMuzzleTransform() const;
+	FTransform GetLeftHandPlacementTransform() const;
 
 	FORCEINLINE void SetTotalAmmoAvailable(const int& Value) {WeaponProperties.SetTotalAmmoAvailable(Value);}
 };
