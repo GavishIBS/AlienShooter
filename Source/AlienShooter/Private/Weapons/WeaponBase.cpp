@@ -165,9 +165,6 @@ void AWeaponBase::UpdateLaser(const FVector& EndLocation)
 	
 	const FVector LaserWorldLocation = LaserMesh->GetComponentLocation();
 
-	// DEBUG
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, FString::Printf(TEXT("Distance: %f"), FMath::Abs(EndLocation.Z - LaserWorldLocation.Z)));
-
 	// Scale correction
 	const float Distance = FVector::Distance(LaserWorldLocation, EndLocation);
 	FVector NewScale3D = LaserMesh->GetComponentScale();
