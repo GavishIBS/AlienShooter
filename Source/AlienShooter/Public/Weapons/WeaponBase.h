@@ -26,6 +26,9 @@ class ALIENSHOOTER_API AWeaponBase : public AActor
 public:	
 	AWeaponBase();
 
+	// TODO: Remove from public section and use delegates
+	void UpdateLaser(const FVector& EndLocation);
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
 	FOnWeaponPicked OnWeaponPicked;
 	
@@ -79,6 +82,10 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UArrowComponent> MuzzleDirection;
 
+	// Laser
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UStaticMeshComponent> LaserMesh = nullptr;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	FWeaponProperties WeaponProperties = FWeaponProperties();
 
@@ -102,6 +109,7 @@ public:
 	FORCEINLINE bool ShouldEnableRightHandIK() const {return WeaponProperties.bShouldEnableRightHandIK;}
 	FORCEINLINE bool ShouldEnableFabrik() const {return WeaponProperties.bShouldEnableFabrik;}
 	FORCEINLINE int GetMaxAmmoCapacity() const { return WeaponProperties.MaxAmmoCapacity; }
+	FORCEINLINE bool EnableLaser() const { return WeaponProperties.bLaser; }
 	
 	FTransform GetWeaponMuzzleTransform() const;
 	FTransform GetLeftHandPlacementTransform() const;

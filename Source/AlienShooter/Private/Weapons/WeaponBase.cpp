@@ -9,6 +9,7 @@
 #include "Components/SphereComponent.h"
 #include "Weapons/BulletShell.h"
 #include "AnimationLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AWeaponBase::AWeaponBase()
 {
@@ -34,6 +35,10 @@ AWeaponBase::AWeaponBase()
 
 	MuzzleDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("MuzzleDirection"));
 	MuzzleDirection->SetupAttachment(OverlapSphere);
+
+	LaserMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LaserMesh"));
+	LaserMesh->SetupAttachment(WeaponStaticMesh);
+	LaserMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AWeaponBase::BeginPlay()
@@ -45,7 +50,9 @@ void AWeaponBase::BeginPlay()
 	{
 		WeaponStaticMesh->DestroyComponent();
 		WeaponMuzzle_S->DestroyComponent();
+		LaserMesh->SetupAttachment(WeaponSkeletalMesh);
 	}
+	if (!WeaponProperties.bLaser) LaserMesh->DestroyComponent();
 }
 
 void AWeaponBase::Init_Callbacks()
@@ -138,6 +145,42 @@ FTransform AWeaponBase::GetLeftHandPlacementTransform() const
 	if (WeaponProperties.bIsSkeletalMesh)
 		return WeaponSkeletalMesh->GetSocketTransform(WeaponProperties.WeaponLeftHandPlacementSocketName, RTS_World);
 	return WeaponStaticMesh->GetSocketTransform(WeaponProperties.WeaponLeftHandPlacementSocketName, RTS_World);
+}
+
+void AWeaponBase::UpdateLaser(const FVector& EndLocation)
+{
+	if (!LaserMesh) return;
+	
+	const FVector LaserWorldLocation = LaserMesh->GetComponentLocation();
+
+	const float Distance = FVector::Distance(LaserWorldLocation, EndLocation);
+	FVector NewScale3D = LaserMesh->GetComponentScale();
+	
+
+	// DEBUG
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, FString::Printf(TEXT("Distance: %f"), FMath::Abs(EndLocation.Z - LaserWorldLocation.Z)));
+
+
+	if (Distance < 200.f)
+	{
+		NewScale3D.X = 0.f;
+		LaserMesh->SetWorldScale3D(NewScale3D);
+		return;
+	}
+	else if (float Z = FMath::Abs(EndLocation.Z - LaserWorldLocation.Z) > 80.f)
+	{
+		NewScale3D.X = 0.f;
+		LaserMesh->SetWorldScale3D(NewScale3D);
+		return;
+	}
+
+	NewScale3D.X = Distance / 200.f;
+	LaserMesh->SetWorldScale3D(NewScale3D);
+
+
+	// Rotation correction
+	const FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(LaserWorldLocation, EndLocation);
+	LaserMesh->SetWorldRotation(TargetRotation);
 }
 
 /*

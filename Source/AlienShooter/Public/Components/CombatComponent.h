@@ -23,6 +23,7 @@ class ALIENSHOOTER_API UCombatComponent : public UActorComponent
 public:
 	friend AShooterCharacter;
 	UCombatComponent();
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
 	FOnWeaponUpdated OnWeaponUpdated;

@@ -63,6 +63,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	FName ShellEjectionSocketName = FName("ShellEjectionSocket");
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects | Laser")
+	bool bLaser = false;
+
 private:
 	bool bShouldEnableRightHandIK = true;
 	bool bShouldEnableFabrik = true;

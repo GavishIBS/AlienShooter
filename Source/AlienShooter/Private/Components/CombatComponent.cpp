@@ -9,13 +9,21 @@
 
 UCombatComponent::UCombatComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 	Weapons.Empty();
 }
 
 void UCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	if (OwnerAsShooterCharacter && WeaponInHand && WeaponInHand->EnableLaser())
+	{
+		WeaponInHand->UpdateLaser(OwnerAsShooterCharacter->GetCursorTraceHitLocation());
+	}
 }
 
 void UCombatComponent::Init_Component()
