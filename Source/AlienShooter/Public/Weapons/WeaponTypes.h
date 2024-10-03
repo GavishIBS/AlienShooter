@@ -171,12 +171,15 @@ struct FProjectileProperties
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Properties)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Properties)
 	float BulletHealth = 100.f;
 	
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Properties)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Properties)
 	float Damage = 20.f;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Properties)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Properties)
 	float Damage_RandomizationFactor = 7.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Motion | Limits")
+	float Limit_DistanceZ = 80.f;
 };
