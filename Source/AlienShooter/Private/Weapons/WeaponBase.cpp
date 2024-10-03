@@ -52,7 +52,19 @@ void AWeaponBase::BeginPlay()
 		WeaponMuzzle_S->DestroyComponent();
 		LaserMesh->SetupAttachment(WeaponSkeletalMesh);
 	}
-	if (!WeaponProperties.bLaser) LaserMesh->DestroyComponent();
+	else {
+		WeaponSkeletalMesh->DestroyComponent();
+	}
+	if (!LaserProperties.bLaser) LaserMesh->DestroyComponent();
+	else {
+		// Update laser color
+		UMaterialInstanceDynamic* DynamicMaterial = LaserMesh->CreateAndSetMaterialInstanceDynamic(0);
+		if (DynamicMaterial)
+		{
+			const FLinearColor NewEmissiveColor = LaserProperties.LaserColor;
+			DynamicMaterial->SetVectorParameterValue(FName("EmissiveColor"), NewEmissiveColor);
+		}
+	}
 }
 
 void AWeaponBase::Init_Callbacks()
@@ -153,27 +165,19 @@ void AWeaponBase::UpdateLaser(const FVector& EndLocation)
 	
 	const FVector LaserWorldLocation = LaserMesh->GetComponentLocation();
 
-	const float Distance = FVector::Distance(LaserWorldLocation, EndLocation);
-	FVector NewScale3D = LaserMesh->GetComponentScale();
-	
-
 	// DEBUG
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, FString::Printf(TEXT("Distance: %f"), FMath::Abs(EndLocation.Z - LaserWorldLocation.Z)));
 
-
-	if (Distance < 200.f)
+	// Scale correction
+	const float Distance = FVector::Distance(LaserWorldLocation, EndLocation);
+	FVector NewScale3D = LaserMesh->GetComponentScale();
+	if (Distance < LaserProperties.Limit_DistanceXY ||
+		FMath::Abs(EndLocation.Z - LaserWorldLocation.Z) > LaserProperties.Limit_DistanceZ)
 	{
 		NewScale3D.X = 0.f;
 		LaserMesh->SetWorldScale3D(NewScale3D);
 		return;
 	}
-	else if (float Z = FMath::Abs(EndLocation.Z - LaserWorldLocation.Z) > 80.f)
-	{
-		NewScale3D.X = 0.f;
-		LaserMesh->SetWorldScale3D(NewScale3D);
-		return;
-	}
-
 	NewScale3D.X = Distance / 200.f;
 	LaserMesh->SetWorldScale3D(NewScale3D);
 

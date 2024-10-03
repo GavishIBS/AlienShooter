@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "WeaponTypes.h"
+#include "SpecialWeaponTypes.h"
 #include "GameFramework/Actor.h"
 #include "WeaponBase.generated.h"
 
@@ -94,6 +95,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	FWeaponAnimationData_Pawn WeaponAnimationData_Pawn = FWeaponAnimationData_Pawn();
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
+	FLaserProperties LaserProperties = FLaserProperties();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Data)
 	FWeaponData WeaponData = FWeaponData();
@@ -109,7 +113,7 @@ public:
 	FORCEINLINE bool ShouldEnableRightHandIK() const {return WeaponProperties.bShouldEnableRightHandIK;}
 	FORCEINLINE bool ShouldEnableFabrik() const {return WeaponProperties.bShouldEnableFabrik;}
 	FORCEINLINE int GetMaxAmmoCapacity() const { return WeaponProperties.MaxAmmoCapacity; }
-	FORCEINLINE bool EnableLaser() const { return WeaponProperties.bLaser; }
+	FORCEINLINE bool EnableLaser() const { return LaserProperties.bLaser; }
 	
 	FTransform GetWeaponMuzzleTransform() const;
 	FTransform GetLeftHandPlacementTransform() const;
