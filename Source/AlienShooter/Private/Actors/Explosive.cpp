@@ -23,6 +23,7 @@ AExplosive::AExplosive()
 
 void AExplosive::BeginPlay()
 {
+	Super::BeginPlay();
 }
 
 float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
@@ -46,10 +47,6 @@ float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const 
 		UExplosionDamage::StaticClass(), ActorsToIgnore);
 
 	// Destroy
-	ExplosiveMesh->SetSimulatePhysics(false);
-	ExplosiveMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	ExplosiveMesh->DestroyComponent();
-	ExplosionOriginPoint->DestroyComponent();
 	Destroy();
 
 	return DamageProperties.BaseDamage;

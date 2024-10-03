@@ -31,9 +31,6 @@ protected:
 	void SpawnEffects();
 	void ApplyDamage();
 
-	UFUNCTION()
-	void DestroyCallback();
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> GasCylinderMesh;
 
