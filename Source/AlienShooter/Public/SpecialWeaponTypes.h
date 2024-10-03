@@ -20,6 +20,6 @@ struct FLaserProperties
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects | Laser | Properties")
 	FLinearColor LaserColor = FLinearColor(1.f, 0.f, 0.f, 1.f);
 
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects | Laser | Properties | Limits")
-	//bool Limit_GlowOnHittableActorsOnly = false;  // TODO (HOLD)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects | Laser | Properties | Limits")
+	bool Limit_GlowOnHittableActorsOnly = false;
 };

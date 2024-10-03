@@ -28,7 +28,7 @@ public:
 	AWeaponBase();
 
 	// TODO: Remove from public section and use delegates
-	void UpdateLaser(const FVector& EndLocation);
+	void UpdateLaser(const FVector& EndLocation, const bool& bHittableAhead);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
 	FOnWeaponPicked OnWeaponPicked;

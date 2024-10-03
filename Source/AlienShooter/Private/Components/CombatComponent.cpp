@@ -22,7 +22,7 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	if (OwnerAsShooterCharacter && WeaponInHand && WeaponInHand->EnableLaser())
 	{
-		WeaponInHand->UpdateLaser(OwnerAsShooterCharacter->GetCursorTraceHitLocation());
+		WeaponInHand->UpdateLaser(OwnerAsShooterCharacter->GetCursorTraceHitLocation(), OwnerAsShooterCharacter->IsCursorOverlappingHittable());
 	}
 }
 

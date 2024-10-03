@@ -159,7 +159,7 @@ FTransform AWeaponBase::GetLeftHandPlacementTransform() const
 	return WeaponStaticMesh->GetSocketTransform(WeaponProperties.WeaponLeftHandPlacementSocketName, RTS_World);
 }
 
-void AWeaponBase::UpdateLaser(const FVector& EndLocation)
+void AWeaponBase::UpdateLaser(const FVector& EndLocation, const bool& bHittableAhead)
 {
 	if (!LaserMesh) return;
 	
@@ -168,7 +168,8 @@ void AWeaponBase::UpdateLaser(const FVector& EndLocation)
 	// Scale correction
 	const float Distance = FVector::Distance(LaserWorldLocation, EndLocation);
 	FVector NewScale3D = LaserMesh->GetComponentScale();
-	if (Distance < LaserProperties.Limit_DistanceXY ||
+	if ((LaserProperties.Limit_GlowOnHittableActorsOnly && !bHittableAhead) ||
+		Distance < LaserProperties.Limit_DistanceXY ||
 		FMath::Abs(EndLocation.Z - LaserWorldLocation.Z) > LaserProperties.Limit_DistanceZ)
 	{
 		NewScale3D.X = 0.f;
