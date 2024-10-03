@@ -19,7 +19,7 @@ void ASpawnStarter::BeginPlay()
 {
 	Super::BeginPlay();
 	if (!Spawner) Destroy();
-	if (OverlapBox)
+	if (IsValid(this) && OverlapBox)
 		OverlapBox->OnComponentBeginOverlap.AddDynamic(this, &ASpawnStarter::OnBoxOverlap);
 }
 
