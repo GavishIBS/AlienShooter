@@ -57,8 +57,10 @@ protected:
 
 
 	FVector CursorTraceHitLocation = FVector();
+	bool CursorOverlappingHittable = false;;
 
 public:
 	FORCEINLINE FVector GetCursorTraceHitLocation() const {return CursorTraceHitLocation;}
+	FORCEINLINE bool IsCursorOverlappingHittable() const { return CursorOverlappingHittable; }
 	FORCEINLINE APlayerController* GetPlayerController() const { return PlayerController; }
 };

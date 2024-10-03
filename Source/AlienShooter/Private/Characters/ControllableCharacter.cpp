@@ -80,6 +80,17 @@ void AControllableCharacter::UpdateCharacterRotationToCursor()
 
 		// Update rotation
 		GetMesh()->SetWorldRotation(NewRotation);
+
+		// Is cursor above a hittable actor
+		//CursorOverlappingHittable = HitResult.GetActor()->Implements<IHitInterface>();
+		if (Cast<IHitInterface>(HitResult.GetActor()))
+		{
+			CursorOverlappingHittable = true;
+		}
+		else CursorOverlappingHittable = false;
+	}
+	else {
+		CursorOverlappingHittable = false;
 	}
 }
 
