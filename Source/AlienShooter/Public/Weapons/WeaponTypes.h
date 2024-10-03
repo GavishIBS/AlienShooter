@@ -179,4 +179,7 @@ struct FProjectileProperties
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	float Damage_RandomizationFactor = 7.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Motion | Limits")
+	float Limit_DistanceZ = 80.f;
 };

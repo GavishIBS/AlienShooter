@@ -57,3 +57,17 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
                         FVector NormalImpulse, const FHitResult& Hit)
 {
 }
+
+void AProjectile::SetTargetLocation(const FVector& TargetLoc)
+{
+	TargetLocation = TargetLoc;
+
+	float DistanceZ = FMath::Abs(TargetLoc.Z - GetActorLocation().Z);
+	if (DistanceZ > ProjectileProperties.Limit_DistanceZ)
+	{
+		TargetLocation.Z = GetActorLocation().Z;
+		if (GetActorLocation().Z > TargetLoc.Z)
+			TargetLocation.Z -= ProjectileProperties.Limit_DistanceZ;
+		else TargetLocation.Z += ProjectileProperties.Limit_DistanceZ;
+	}
+}

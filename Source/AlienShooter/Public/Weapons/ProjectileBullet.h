@@ -27,8 +27,4 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UStaticMeshComponent> BulletMesh;
-
-	// Properties
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components)
-	FProjectileProperties ProjectileProperties;
 };

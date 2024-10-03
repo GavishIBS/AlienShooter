@@ -42,9 +42,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 
+	// Properties
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components)
+	FProjectileProperties ProjectileProperties;
+
 protected:
 	FVector TargetLocation;
 	
 public:
-	FORCEINLINE void SetTargetLocation(const FVector& TargetLoc) { TargetLocation = TargetLoc; };
+	FORCEINLINE void SetTargetLocation(const FVector& TargetLoc);
 };
