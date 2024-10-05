@@ -102,6 +102,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Data)
 	FWeaponData WeaponData = FWeaponData();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Properties)
+	FWeaponFXData WeaponFXData = FWeaponFXData();
+
 public:
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMeshAsSkeletalMesh() const {return WeaponSkeletalMesh;}
 	FORCEINLINE UStaticMeshComponent* GetWeaponMeshAsStaticMesh() const {return WeaponStaticMesh;}

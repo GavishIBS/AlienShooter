@@ -121,6 +121,16 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FWeaponFXData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Properties | FX")
+	TMap<FName, UParticleSystem*> HitParticles;  // TMap<Material_Tag, ParticleSystem>
+};
+
+USTRUCT(BlueprintType)
 struct FWeaponAnimationData_Pawn
 {
 	GENERATED_BODY()
