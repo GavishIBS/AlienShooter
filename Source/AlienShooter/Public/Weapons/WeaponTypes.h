@@ -111,6 +111,14 @@ struct FWeaponData
 };
 
 USTRUCT(BlueprintType)
+struct FWeaponFXData
+{
+	GENERATED_BODY()
+
+public:
+};
+
+USTRUCT(BlueprintType)
 struct FWeaponAnimationData
 {
 	GENERATED_BODY()
@@ -128,6 +136,16 @@ struct FWeaponAnimationData_Pawn
 public:
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	TArray<TObjectPtr<UAnimMontage>> FireAnimationMontages_Pawn;   // Character animations
+};
+
+USTRUCT(BlueprintType)
+struct FTracerWeaponData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data | FX")
+	TMap<FName, UParticleSystem*> HitParticles;  // TMap<Tag, ParticleSystem>
 };
 
 USTRUCT(BlueprintType)
@@ -182,4 +200,14 @@ struct FProjectileProperties
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Motion | Limits")
 	float Limit_DistanceZ = 80.f;
+};
+
+USTRUCT(BlueprintType)
+struct FProjectileBulletData
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties | FX")
+	TMap<FName, UParticleSystem*> HitParticles;  // TMap<Tag, ParticleSystem>
 };

@@ -8,6 +8,7 @@
 #include "Components/ArrowComponent.h"
 #include "Interfaces/HitInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 AHitscanWeapon::AHitscanWeapon()
 {
@@ -48,8 +49,49 @@ void AHitscanWeapon::Fire()
 		{
 			if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
 				BulletHealth -= HitInterface->GetHit(HitResult.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter);
+			
+			// Hit particles
+			OnBulletHit(HitResult.GetActor(), HitResult.ImpactPoint);
+			if (HitResult.GetActor())
+			{
+				/*
+				TArray<FName> ActorTags = HitResult.GetActor()->Tags;
+				ActorTags.Sort();
+				for (auto It = WeaponFXData.HitParticles.CreateIterator(); It; ++It)
+				{
+					// Use binary search to check if the tag exists in ActorTags
+					if (Algo::BinarySearch(ActorTags, It.Key()))
+					{
+						// Spawn particle if the value exists
+						if (It.Value())
+							UGameplayStatics::SpawnEmitterAtLocation(this, It.Value(), HitResult.ImpactPoint);
+						goto END_LOOP; // Exit the loop
+					}
+				}
+				*/
+				/*
+				TArray<FName> ActorTags = HitResult.GetActor()->Tags;
+				for (auto It = WeaponFXData.HitParticles.CreateIterator(); It; ++It)
+				{
+					// Check if the tag exists directly in the ActorTags array
+					if (ActorTags.Contains(It.Key()))
+					{
+						// Spawn particle if the value exists
+						if (It.Value())
+							UGameplayStatics::SpawnEmitterAtLocation(this, It.Value(), HitResult.ImpactPoint);
+						goto END_LOOP; // Exit the loop
+					}
+				}
+				*/
+			}
+
+			//END_LOOP:
+
 			if (BulletHealth <= 0.f)
 				break;
+
+			// TODO: the below break; is breaking the loop even if the bullet health is more than 0.
+			break;
 		}
 	}
 }
