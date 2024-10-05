@@ -7,6 +7,9 @@
 #include "GameFramework/Actor.h"
 #include "Characters/ShooterCharacter.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
+
+// DEBUG
 #include "DrawDebugHelpers.h"
 
 ACursorWeapon::ACursorWeapon()
@@ -38,8 +41,11 @@ void ACursorWeapon::Fire()
 		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
 		{
 			BulletHealth -= HitInterface->GetHit(HitResult.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter);
+
+			// DEBUG
 			DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 5.f, 24, FColor::Green, false, 4.f);
 		}
+		OnBulletHit(HitResult.GetActor(), HitResult.ImpactPoint);
 		if (BulletHealth <= 0.f) {}
 	}
 }

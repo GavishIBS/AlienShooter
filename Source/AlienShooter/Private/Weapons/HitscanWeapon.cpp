@@ -51,25 +51,9 @@ void AHitscanWeapon::Fire()
 				BulletHealth -= HitInterface->GetHit(HitResult.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter);
 			
 			// Hit particles
+			OnBulletHit(HitResult.GetActor(), HitResult.ImpactPoint);
 			if (HitResult.GetActor())
 			{
-				/*
-				TArray<FName> ActorTags = HitResult.GetActor()->Tags;
-				// TODO: Use binary search instead
-				for (auto It = WeaponFXData.HitParticles.CreateIterator(); It; ++It)
-				{
-					for (FName& Tag : ActorTags)
-					{
-						if (Tag == It.Key())
-						{
-							// Spawn particle
-							if (It.Value())
-								UGameplayStatics::SpawnEmitterAtLocation(this, It.Value(), HitResult.ImpactPoint);
-							goto END_LOOP;
-						}
-					}
-				}
-				*/
 				/*
 				TArray<FName> ActorTags = HitResult.GetActor()->Tags;
 				ActorTags.Sort();
@@ -85,6 +69,7 @@ void AHitscanWeapon::Fire()
 					}
 				}
 				*/
+				/*
 				TArray<FName> ActorTags = HitResult.GetActor()->Tags;
 				for (auto It = WeaponFXData.HitParticles.CreateIterator(); It; ++It)
 				{
@@ -97,9 +82,10 @@ void AHitscanWeapon::Fire()
 						goto END_LOOP; // Exit the loop
 					}
 				}
+				*/
 			}
 
-			END_LOOP:
+			//END_LOOP:
 
 			if (BulletHealth <= 0.f)
 				break;
