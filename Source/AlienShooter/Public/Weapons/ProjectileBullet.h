@@ -8,6 +8,8 @@
 #include "Weapons/Projectile.h"
 #include "ProjectileBullet.generated.h"
 
+class UParticleSystemComponent;
+
 /**
  * 
  */
@@ -27,4 +29,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UStaticMeshComponent> BulletMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UParticleSystemComponent> Tracer_FX;
 };

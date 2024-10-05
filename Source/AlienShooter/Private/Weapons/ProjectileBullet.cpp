@@ -5,6 +5,8 @@
 
 #include "Weapons/ProjectileBullet.h"
 #include "Interfaces/HitInterface.h"
+#include "Particles/ParticleSystemComponent.h"
+
 
 AProjectileBullet::AProjectileBullet()
 {
@@ -12,6 +14,9 @@ AProjectileBullet::AProjectileBullet()
 
 	BulletMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BulletMesh"));
 	BulletMesh->SetupAttachment(static_cast<USceneComponent*>(BoxCollision));
+
+	Tracer_FX = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Tracer"));
+	Tracer_FX->SetupAttachment(BulletMesh);
 }
 
 void AProjectileBullet::BeginPlay()
