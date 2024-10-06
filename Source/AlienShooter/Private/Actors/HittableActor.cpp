@@ -19,3 +19,13 @@ float AHittableActor::GetHit(const FVector& HitLocation, const float& Damage, co
 {
 	return 0.f;
 }
+
+void AHittableActor::SetLootData(const FLootData& InLootData)
+{
+	LootData = InLootData;
+}
+
+void AHittableActor::SpawnLoot()
+{
+
+}
