@@ -4,28 +4,12 @@
 
 
 #include "Utils/LootManager.h"
-#include "Interfaces/LootInterface.h"
-#include "Kismet/GameplayStatics.h"
 
 ALootManager::ALootManager()
 {
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 void ALootManager::AddLoot()
 {
-	for (auto It = Items_LootData.CreateIterator(); It; ++It)
-	{
-		TArray<AActor*> OutActors;
-		UGameplayStatics::GetAllActorsOfClass(this, It.Key(), OutActors);
-		for (auto& Actor : OutActors)
-		{
-			if (ILootInterface* LootInterface = Cast<ILootInterface>(Actor))
-			{
-				LootInterface->SetLootData(It.Value());
-			}
-			else {
-				break;
-			}
-		}
-	}
 }
