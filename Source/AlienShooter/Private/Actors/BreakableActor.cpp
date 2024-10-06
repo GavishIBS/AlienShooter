@@ -22,6 +22,7 @@ float ABreakableActor::GetHit(const FVector& HitLocation, const float& Damage, c
 	{
 		GeometryCollectionComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 		CreateField();
+		SpawnLoot();
 	}
 	return 1000000.f;
 }
