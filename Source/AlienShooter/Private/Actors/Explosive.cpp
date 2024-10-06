@@ -46,6 +46,8 @@ float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const 
 		ExplosionOriginPoint->GetComponentLocation(), DamageProperties.DamageInnerRadius,
 		UExplosionDamage::StaticClass(), ActorsToIgnore);
 
+	SpawnLoot();
+
 	// Destroy
 	Destroy();
 
