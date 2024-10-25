@@ -43,7 +43,7 @@ enum class EDamageDuration : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FSpecialWeaponEffectData   // general struct for a special effect
+struct FSpecialEffectData   // general struct for a special effect
 {
 	GENERATED_USTRUCT_BODY()
 
