@@ -30,4 +30,13 @@ protected:
 	TSoftObjectPtr<UNiagaraSystem> DeathParticleSystem;
 
 	ELifeStatus LifeStatus = ELifeStatus::ELS_Alive;
+
+protected:
+	// stopwatch
+	FTimerHandle StopwatchTimerHandle;
+
+	void StartStopwatch();
+	void StopStopwatch();
+
+	virtual void StopwatchTick();
 };

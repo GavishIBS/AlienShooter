@@ -101,6 +101,44 @@ float ABaseAICharacter::GetHit(const FVector& HitLocation, const float& Damage, 
 	return Damage_Calc;
 }
 
+void ABaseAICharacter::GetSpecialHit(const FVector& HitLocation, const FSpecialEffectData& SpecialEffectData,
+	const float& RandomizationFactor, AActor* InDamageCauser)
+{
+	if (LifeStatus != ELifeStatus::ELS_Alive) return;
+
+	if (SpecialEffectData.ApplicationChance < 1.f)
+	{
+		if (SpecialEffectData.ApplicationChance < FMath::RandRange(0.f, 1.f))
+			return;
+	}
+
+	const float Damage_Calc = SpecialEffectData.ImpactDamage +
+		UKismetMathLibrary::RandomFloatInRange(-RandomizationFactor, RandomizationFactor);
+	const FDamageEvent DamageEvent;
+	TakeDamage(Damage_Calc, DamageEvent, nullptr, InDamageCauser);
+
+	if (SpecialEffectData.OverlayMaterial)
+	{
+		int NumMaterials = GetMesh()->GetNumMaterials();
+		for (int i = 0; i < NumMaterials; i++)
+		{
+			GetMesh()->SetMaterial(i, SpecialEffectData.OverlayMaterial);   // TODO: this is replacing the material instead apply overlay material
+		}
+	}
+
+	CustomTimeDilation *= SpecialEffectData.SlowdownFactor;
+
+	AcquiredSpecialEffectData.EffectType = SpecialEffectData.EffectType;
+	AcquiredSpecialEffectData.DamagePerSecond = SpecialEffectData.DamagePerSecond;
+	AcquiredSpecialEffectData.Duration = SpecialEffectData.Duration;
+	AcquiredSpecialEffectData.OverlayMaterial = SpecialEffectData.OverlayMaterial;
+
+	if (SpecialEffectData.DamageDuration > EDamageDuration::Instant)
+	{
+		StartStopwatch();
+	}
+}
+
 void ABaseAICharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
 	AController* InstigatedBy, AActor* DamageCauser)
 {
@@ -121,7 +159,7 @@ void ABaseAICharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Damag
 void ABaseAICharacter::OnDeathCallback(AActor* Killer)
 {
 	if (LifeStatus == ELifeStatus::ELS_Dead) return;
-	if (!AIAnimations.DeathAnimMontage) return;
+	if (AIAnimations.DeathAnimMontage) Destroy();
 	
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 		AnimInstance->Montage_Play(AIAnimations.DeathAnimMontage);
@@ -155,6 +193,24 @@ void ABaseAICharacter::Attack() const
 void ABaseAICharacter::ShouldDestroy()
 {
 	Destroy();
+}
+
+void ABaseAICharacter::StopwatchTick()
+{
+	if (LifeStatus == ELifeStatus::ELS_Dead || AcquiredSpecialEffectData.Duration <= 0.f)
+	{
+		// TODO: character material
+		AcquiredSpecialEffectData = FAcquiredSpecialEffectData();
+		CustomTimeDilation = 1.f;
+		StopStopwatch();
+		return;
+	}
+
+	const float Damage_Calc = AcquiredSpecialEffectData.DamagePerSecond;
+	const FDamageEvent DamageEvent;
+	TakeDamage(Damage_Calc, DamageEvent, nullptr, nullptr);
+
+	AcquiredSpecialEffectData.Duration -= 1.f;
 }
 
 void ABaseAICharacter::StartAttackTrace()

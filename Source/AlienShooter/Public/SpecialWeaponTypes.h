@@ -39,7 +39,6 @@ enum class EDamageDuration : uint8
     None        = 0,
     Instant     = 1,
     Duration    = 2,
-    Infinite    = 3,
 };
 
 USTRUCT(BlueprintType)
@@ -66,13 +65,27 @@ struct FSpecialEffectData   // general struct for a special effect
     float ApplicationChance = 1.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage Effects | Data")
-    float FreezeSlowdownFactor = 1.0f;
+    float SlowdownFactor = 1.0f;
 
     //UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage Effects | Data | Visuals")
     //UParticleSystem* EffectParticle = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage Effects | Data")
     float ImpactDamage = 0.0f;
+};
+
+USTRUCT()
+struct FAcquiredSpecialEffectData
+{
+    GENERATED_USTRUCT_BODY()
+
+public:
+    FAcquiredSpecialEffectData() {}
+
+    ESpecialEffectType EffectType = ESpecialEffectType::None;
+    float DamagePerSecond = 0.0f;
+    float Duration = 0.0f;
+    UMaterialInterface* OverlayMaterial = nullptr;
 };
 
 /*

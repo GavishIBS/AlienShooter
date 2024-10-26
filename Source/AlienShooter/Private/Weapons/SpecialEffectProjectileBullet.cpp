@@ -23,7 +23,7 @@ void ASpecialEffectProjectileBullet::OnHit(UPrimitiveComponent* HitComponent, AA
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor))
 	{
 		//ProjectileProperties.BulletHealth -= HitInterface->GetSpecialHit(SpecialEffectData);
-	    HitInterface->GetSpecialHit(SpecialEffectData);
+	    HitInterface->GetSpecialHit(Hit.ImpactPoint, SpecialEffectData, ProjectileProperties.Damage_RandomizationFactor, WeaponOwner);
 	}
 	Destroy();
 }
