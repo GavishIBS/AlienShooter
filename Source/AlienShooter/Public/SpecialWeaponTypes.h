@@ -58,9 +58,6 @@ struct FSpecialEffectData   // general struct for a special effect
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage Effects | Data")
     float Duration = 0.0f;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage Effects | Data | Visuals")
-    UMaterialInterface* OverlayMaterial = nullptr;
-
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage Effects | Data")
     float ApplicationChance = 1.0f;
 
@@ -85,7 +82,6 @@ public:
     ESpecialEffectType EffectType = ESpecialEffectType::None;
     float DamagePerSecond = 0.0f;
     float Duration = 0.0f;
-    UMaterialInterface* OverlayMaterial = nullptr;
 };
 
 /*

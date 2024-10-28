@@ -117,12 +117,46 @@ void ABaseAICharacter::GetSpecialHit(const FVector& HitLocation, const FSpecialE
 	const FDamageEvent DamageEvent;
 	TakeDamage(Damage_Calc, DamageEvent, nullptr, InDamageCauser);
 
-	if (SpecialEffectData.OverlayMaterial)
+	int NumMaterials = GetMesh()->GetNumMaterials();
+	for (int i = 0; i < NumMaterials; i++)
 	{
-		int NumMaterials = GetMesh()->GetNumMaterials();
-		for (int i = 0; i < NumMaterials; i++)
+		UMaterialInterface* Material = GetMesh()->GetMaterial(i);
+		
+		UMaterialInstanceDynamic* DynamicMaterialInstance = Cast<UMaterialInstanceDynamic>(Material);
+		if (!DynamicMaterialInstance && Material)
 		{
-			GetMesh()->SetMaterial(i, SpecialEffectData.OverlayMaterial);   // TODO: this is replacing the material instead apply overlay material
+
+			DynamicMaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
+			GetMesh()->SetMaterial(i, DynamicMaterialInstance);
+		}
+
+		if (DynamicMaterialInstance)
+		{
+			DynamicMaterialInstance->SetScalarParameterValue(TEXT("SpecialEffect"), 1);
+
+			switch (SpecialEffectData.EffectType)
+			{
+				case ESpecialEffectType::Poison:
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Poisoned"), 1);
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Frozen"), 0);
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Burned"), 0);
+					break;
+				case ESpecialEffectType::Freeze:
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Poisoned"), 0);
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Frozen"), 1);
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Burned"), 0);
+					break;
+				case ESpecialEffectType::Burn:
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Poisoned"), 0);
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Frozen"), 0);
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Burned"), 1);
+					break;
+				default:
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Poisoned"), 0);
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Frozen"), 0);
+					DynamicMaterialInstance->SetScalarParameterValue(TEXT("Burned"), 0);
+					break;
+			}
 		}
 	}
 
@@ -131,7 +165,6 @@ void ABaseAICharacter::GetSpecialHit(const FVector& HitLocation, const FSpecialE
 	AcquiredSpecialEffectData.EffectType = SpecialEffectData.EffectType;
 	AcquiredSpecialEffectData.DamagePerSecond = SpecialEffectData.DamagePerSecond;
 	AcquiredSpecialEffectData.Duration = SpecialEffectData.Duration;
-	AcquiredSpecialEffectData.OverlayMaterial = SpecialEffectData.OverlayMaterial;
 
 	if (SpecialEffectData.DamageDuration > EDamageDuration::Instant)
 	{
@@ -197,11 +230,33 @@ void ABaseAICharacter::ShouldDestroy()
 
 void ABaseAICharacter::StopwatchTick()
 {
-	if (LifeStatus == ELifeStatus::ELS_Dead || AcquiredSpecialEffectData.Duration <= 0.f)
+	if (LifeStatus == ELifeStatus::ELS_Dead) ShouldDestroy();
+
+	if (AcquiredSpecialEffectData.Duration <= 0.f)
 	{
 		// TODO: character material
 		AcquiredSpecialEffectData = FAcquiredSpecialEffectData();
 		CustomTimeDilation = 1.f;
+
+		int NumMaterials = GetMesh()->GetNumMaterials();
+		for (int i = 0; i < NumMaterials; i++)
+		{
+			UMaterialInterface* Material = GetMesh()->GetMaterial(i);
+			UMaterialInstanceDynamic* DynamicMaterialInstance = Cast<UMaterialInstanceDynamic>(Material);
+			if (!DynamicMaterialInstance && Material)
+			{
+
+				DynamicMaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
+				//DynamicMaterialInstance->SetScalarParameterValue(TEXT("SpecialEffect"), 0);
+				GetMesh()->SetMaterial(i, DynamicMaterialInstance);
+			}
+
+			if (DynamicMaterialInstance)
+			{
+				DynamicMaterialInstance->SetScalarParameterValue(TEXT("SpecialEffect"), 0);
+			}
+		}
+
 		StopStopwatch();
 		return;
 	}
