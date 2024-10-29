@@ -8,6 +8,8 @@
 #include "UObject/Interface.h"
 #include "HitInterface.generated.h"
 
+struct FSpecialEffectData;
+
 UINTERFACE(MinimalAPI)
 class UHitInterface : public UInterface
 {
@@ -23,4 +25,6 @@ class ALIENSHOOTER_API IHitInterface
 
 public:
 	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser);
+	virtual void GetSpecialHit(const FVector& HitLocation, const FSpecialEffectData& SpecialEffectData,
+		const float& RandomizationFactor, AActor* InDamageCauser);   // TODO: Instead of directly passing the effect data, pass a tag which fetches the data from a global data pool
 };

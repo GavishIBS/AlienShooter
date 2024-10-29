@@ -9,6 +9,7 @@
 #include "../../GameCharacter.h"
 #include "Interfaces/AIInterface.h"
 #include "Interfaces/HitInterface.h"
+#include "SpecialWeaponTypes.h"
 #include "BaseAICharacter.generated.h"
 
 class AAIControllerBase;
@@ -32,6 +33,8 @@ public:
 	
 	/* Interface begin */
 	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
+	virtual void GetSpecialHit(const FVector& HitLocation, const FSpecialEffectData& SpecialEffectData,
+		const float& RandomizationFactor, AActor* InDamageCauser) override;
 
 	UFUNCTION(BlueprintCallable, Category=Attacking)
 	virtual void StartAttackTrace() override;
@@ -66,6 +69,8 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Death")
 	void ShouldDestroy();
 
+	virtual void StopwatchTick() override;
+
 	UPROPERTY(EditDefaultsOnly, Category=Animations)
 	FAIAnimations AIAnimations;
 
@@ -87,4 +92,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	float DeathDecalLifeSpawn = 5.f;
+
+	FAcquiredSpecialEffectData AcquiredSpecialEffectData;
 };

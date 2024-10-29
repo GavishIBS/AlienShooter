@@ -9,3 +9,9 @@ float IHitInterface::GetHit(const FVector& HitLocation, const float& Damage, con
 {
 	return 0.f;
 }
+
+void IHitInterface::GetSpecialHit(const FVector& HitLocation, const FSpecialEffectData& SpecialEffectData,
+	const float& RandomizationFactor, AActor* InDamageCauser)
+{
+	return;
+}
