@@ -61,7 +61,7 @@ private:
 	bool bOpening = false;
 	bool bClosing = false;
 
-	//UPROPERTY(BlueprintReadWrite, Category = "Properties", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, Category = "Properties", meta = (AllowPrivateAccess = "true"))
 	FVector InitialDoorLocation;
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
