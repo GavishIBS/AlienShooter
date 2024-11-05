@@ -18,9 +18,6 @@ ABaseAICharacter::ABaseAICharacter()
 	Tags.Add(FName("TeamFungus"));
 	
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
 	CollisionTraceComponent = CreateDefaultSubobject<UCollisionTraceComponent>(TEXT("CollisionTraceComponent"));
 }

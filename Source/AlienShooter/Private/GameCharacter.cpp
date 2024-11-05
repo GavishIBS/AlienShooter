@@ -4,11 +4,14 @@
 
 
 #include "GameCharacter.h"
+#include "Components/CapsuleComponent.h"
 
 AGameCharacter::AGameCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
 void AGameCharacter::BeginPlay()
