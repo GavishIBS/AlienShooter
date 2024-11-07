@@ -50,6 +50,7 @@ protected:
 	
 	/* Input callbacks begin */
 	void LeftMouseButtonPressed();
+	void LeftMouseButtonReleased();
 	void MouseWheelUp();
 	void MouseWheelDown();
 	void LeftAltPressed();
@@ -58,7 +59,7 @@ protected:
 	
 	/* Input begin */
 	UPROPERTY(EditDefaultsOnly, Category=Input)
-	TObjectPtr<UInputAction> LeftMouseButtonPressedAction = nullptr;
+	TObjectPtr<UInputAction> LeftMouseButtonAction = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category=Input)
 	TObjectPtr<UInputAction> MouseWheelUpAction = nullptr;

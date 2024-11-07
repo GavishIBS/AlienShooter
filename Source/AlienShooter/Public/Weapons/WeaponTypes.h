@@ -63,6 +63,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	FName ShellEjectionSocketName = FName("ShellEjectionSocket");
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
+	bool bAutoFire = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
+	float AutoFire_Rate = 0.3f;
+
 private:
 	bool bShouldEnableRightHandIK = true;
 	bool bShouldEnableFabrik = true;

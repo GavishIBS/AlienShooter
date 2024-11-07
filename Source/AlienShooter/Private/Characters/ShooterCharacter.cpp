@@ -50,7 +50,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(LeftMouseButtonPressedAction, ETriggerEvent::Started, this, &AShooterCharacter::LeftMouseButtonPressed);
+		EnhancedInputComponent->BindAction(LeftMouseButtonAction, ETriggerEvent::Started, this, &AShooterCharacter::LeftMouseButtonPressed);
+		EnhancedInputComponent->BindAction(LeftMouseButtonAction, ETriggerEvent::Completed, this, &AShooterCharacter::LeftMouseButtonReleased);
 		
 		EnhancedInputComponent->BindAction(MouseWheelUpAction, ETriggerEvent::Started, this, &AShooterCharacter::MouseWheelUp);
 		EnhancedInputComponent->BindAction(MouseWheelDownAction, ETriggerEvent::Started, this, &AShooterCharacter::MouseWheelDown);
@@ -105,6 +106,14 @@ void AShooterCharacter::LeftMouseButtonPressed()
 	{
 		InventoryComponent->UseButtonPressed();
 		// TODO: play animation if item is used
+	}
+}
+
+void AShooterCharacter::LeftMouseButtonReleased()
+{
+	if (CombatComponent && CombatComponent->WeaponInHand && PawnActionState <= EPawnActionState::EPAS_Attacking)
+	{
+		CombatComponent->FireButtonReleased();
 	}
 }
 

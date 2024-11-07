@@ -128,6 +128,31 @@ void UCombatComponent::FireButtonPressed()
 {
 	if (!WeaponInHand) return;
 	WeaponInHand->OnWeaponFirePressed.Broadcast();
+	if (WeaponInHand->HaveAutomaticFire())
+		StartAutomaticFire();
+}
+
+void UCombatComponent::FireButtonReleased()
+{
+	StopAutomaticFire();
+}
+
+void UCombatComponent::StartAutomaticFire()
+{
+	if (!WeaponInHand) return;
+
+	if (AActor* OwnerActor = GetOwner())
+	{
+		OwnerActor->GetWorldTimerManager().SetTimer(AutomaticFireTimerHandle, this, &UCombatComponent::FireButtonPressed, WeaponInHand->GetAutomaticFiringRate(), true, WeaponInHand->GetAutomaticFiringRate());
+	}
+}
+
+void UCombatComponent::StopAutomaticFire()
+{
+	if (AActor* OwnerActor = GetOwner())
+	{
+		OwnerActor->GetWorldTimerManager().ClearTimer(AutomaticFireTimerHandle);
+	}
 }
 
 void UCombatComponent::OnWeaponSelected()

@@ -115,6 +115,8 @@ public:
 	FORCEINLINE int GetTotalAmmoAvailable() const {return WeaponProperties.GetTotalAmmoAvailable();}
 	FORCEINLINE bool ShouldEnableRightHandIK() const {return WeaponProperties.bShouldEnableRightHandIK;}
 	FORCEINLINE bool ShouldEnableFabrik() const {return WeaponProperties.bShouldEnableFabrik;}
+	FORCEINLINE bool HaveAutomaticFire() const { return WeaponProperties.bAutoFire; }
+	FORCEINLINE float GetAutomaticFiringRate() const { return WeaponProperties.AutoFire_Rate; }
 	FORCEINLINE int GetMaxAmmoCapacity() const { return WeaponProperties.MaxAmmoCapacity; }
 	FORCEINLINE bool EnableLaser() const { return LaserProperties.bLaser; }
 	

@@ -43,6 +43,10 @@ protected:
 	bool UnselectWeapon();
 
 	void FireButtonPressed();
+	void FireButtonReleased();
+
+	void StartAutomaticFire();
+	void StopAutomaticFire();
 
 	UFUNCTION()
 	void OnWeaponFiredCallback();
@@ -55,6 +59,9 @@ protected:
 	bool CanTakeAmmo(const TSubclassOf<AWeaponBase>& FitWeaponClass);
 
 	void DestroyCurrentWeapon(); // Destorys weapon currently in hand
+
+private:
+	FTimerHandle AutomaticFireTimerHandle;
 
 public:
 	bool TakeAmmo(const TSubclassOf<AWeaponBase>& FitWeaponClass, const int& AmmoValue);
