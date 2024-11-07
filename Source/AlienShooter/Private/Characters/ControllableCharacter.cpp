@@ -102,10 +102,6 @@ void AControllableCharacter::UpdateCameraBoomOffset(float DeltaTime)
 
 	FVector TargetOffset = FVector();
 
-	int32 ViewportX;
-	int32 ViewportY;
-	PlayerController->GetViewportSize(ViewportX, ViewportY);
-
 	FVector2D CursorPosition = FVector2D(CursorTraceHitLocation.X, CursorTraceHitLocation.Y);
 
 	const float Camera_Cursor_Dist = FVector::Dist(FVector(CameraBoom->GetComponentLocation().X, CameraBoom->GetComponentLocation().Y, 0), FVector(CursorPosition.X, CursorPosition.Y, 0));
@@ -120,7 +116,7 @@ void AControllableCharacter::UpdateCameraBoomOffset(float DeltaTime)
 		CameraBoomTargetLocation = CameraBoom->GetComponentLocation() + TargetOffsetDirection * CameraOffsetFactor;
 	}
 	/*
-	else if (CurrentCameraBoomOffset.Size() > 20.f)  // && check is offse12t is in opposite dorection
+	else if (CurrentCameraBoomOffset.Size() > 20.f)  // && check is offset is in opposite dorection
 	{
 		// Move camera towards actor itself
 		const FVector TargetOffsetDirection = (CameraBoom->GetComponentLocation() - GetActorLocation()).GetSafeNormal();
