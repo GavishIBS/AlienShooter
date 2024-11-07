@@ -37,6 +37,8 @@ protected:
 	/* Character rotation begin */
 	void UpdateCharacterRotationToCursor();
 	/* Character rotation end */
+
+	void UpdateCameraBoomOffset(float DeltaTime);
 	
 protected:
 	/* Input callbacks begin */
@@ -57,7 +59,31 @@ protected:
 
 
 	FVector CursorTraceHitLocation = FVector();
-	bool CursorOverlappingHittable = false;;
+	bool CursorOverlappingHittable = false;
+
+	/* Camera movements begin */
+	FVector2D CursorPosition_LastFrame = FVector2D();
+	FVector CurrentCameraBoomOffset = FVector();
+	FVector CameraBoomOffset_LastFrame = FVector();
+
+	//UPROPERTY(EditAnywhere, Category = "Camera Movements")
+	//int MaxCameraOffsetX = 850; // 1000   // Max offset camera can have in relative X direction
+	
+	//UPROPERTY(EditAnywhere, Category = "Camera Movements")
+	//int MaxCameraOffsetY = 750; // 900    // Max offset camera can have in relative Y direction
+	
+	UPROPERTY(EditAnywhere, Category = "Camera Movements")
+	float CameraOffsetFactor = 300.f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Movements")
+	int CameraResponse_InnerRadius = 420;   // Radius in which camera doesn't respond to cursor position, unless it have a offset in opposite direction
+	
+	UPROPERTY(EditAnywhere, Category = "Camera Movements")
+	float CameraResponse_RadiusLease = 4.f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Movements")
+	float CameraSpeed = 3.f;
+	/* Camera movements end */
 
 public:
 	FORCEINLINE FVector GetCursorTraceHitLocation() const {return CursorTraceHitLocation;}

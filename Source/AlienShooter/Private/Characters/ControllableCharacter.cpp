@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 AControllableCharacter::AControllableCharacter()
 {
@@ -47,6 +48,7 @@ void AControllableCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	CheckCursorLocation();
 	UpdateCharacterRotationToCursor();
+	UpdateCameraBoomOffset(DeltaTime);
 }
 
 void AControllableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -92,6 +94,54 @@ void AControllableCharacter::UpdateCharacterRotationToCursor()
 	else {
 		CursorOverlappingHittable = false;
 	}
+}
+
+void AControllableCharacter::UpdateCameraBoomOffset(float DeltaTime)
+{
+	if (!PlayerController) return;
+
+	FVector TargetOffset = FVector();
+
+	int32 ViewportX;
+	int32 ViewportY;
+	PlayerController->GetViewportSize(ViewportX, ViewportY);
+
+	FVector2D CursorPosition = FVector2D(CursorTraceHitLocation.X, CursorTraceHitLocation.Y);
+
+	const float Camera_Cursor_Dist = FVector::Dist(FVector(CameraBoom->GetComponentLocation().X, CameraBoom->GetComponentLocation().Y, 0), FVector(CursorPosition.X, CursorPosition.Y, 0));
+	if (FMath::Abs(Camera_Cursor_Dist - CameraResponse_InnerRadius) < CameraResponse_RadiusLease) return;  // avoid camera hinderence
+
+	
+	FVector CameraBoomTargetLocation = FVector();
+	if (Camera_Cursor_Dist > CameraResponse_InnerRadius)
+	{
+		// Move the camera based on comparison between cursor position this frame and last frame
+		const FVector TargetOffsetDirection = (CameraBoom->GetComponentLocation() - FVector(CursorPosition.X, CursorPosition.Y, 0.f)).GetSafeNormal();
+		CameraBoomTargetLocation = CameraBoom->GetComponentLocation() + TargetOffsetDirection * CameraOffsetFactor;
+	}
+	/*
+	else if (CurrentCameraBoomOffset.Size() > 20.f)  // && check is offse12t is in opposite dorection
+	{
+		// Move camera towards actor itself
+		const FVector TargetOffsetDirection = (CameraBoom->GetComponentLocation() - GetActorLocation()).GetSafeNormal();
+		CameraBoomTargetLocation = CameraBoom->GetComponentLocation() + TargetOffsetDirection * 1.f;
+	}*/
+	else {
+		// Move camera towards actor itself
+		const FVector TargetOffsetDirection = (CameraBoom->GetComponentLocation() - GetActorLocation()).GetSafeNormal();
+		CameraBoomTargetLocation = CameraBoom->GetComponentLocation() + TargetOffsetDirection * 1.f;
+	}
+
+	CameraBoomTargetLocation.Z = CameraBoom->GetComponentLocation().Z;
+
+	const FVector TargetCameraBoomOffset = CameraBoom->GetComponentLocation() - CameraBoomTargetLocation;
+	CurrentCameraBoomOffset = FMath::VInterpTo(CameraBoomOffset_LastFrame, TargetCameraBoomOffset, DeltaTime, CameraSpeed);
+
+	FVector NewLoc = CameraBoom->GetComponentLocation() + CurrentCameraBoomOffset - CameraBoomOffset_LastFrame;
+	CameraBoom->SetWorldLocation(CameraBoom->GetComponentLocation() + CurrentCameraBoomOffset - CameraBoomOffset_LastFrame);
+
+	CursorPosition_LastFrame = CursorPosition;
+	CameraBoomOffset_LastFrame = CurrentCameraBoomOffset;
 }
 
 void AControllableCharacter::CheckCursorLocation()
