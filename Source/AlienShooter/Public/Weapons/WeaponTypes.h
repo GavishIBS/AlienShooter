@@ -69,6 +69,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	float AutoFire_Rate = 0.3f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties", meta = (ClampMin = "0", ClampMax = "100"))
+	int Accuracy = 20;   // %
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
+	FVector2D HitLocation_RandomizationAdditiveRange = FVector2D(8.f, 8.f);
+
 private:
 	bool bShouldEnableRightHandIK = true;
 	bool bShouldEnableFabrik = true;
@@ -203,6 +209,12 @@ struct FProjectileProperties
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Properties)
 	float Damage_RandomizationFactor = 7.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Properties, meta = (ClampMax = "0"))
+	float SpeedAdditive = -1.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Properties, meta = (ClampMin = "10"))
+	float MinimumProjectileSpeed = 25.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Motion | Limits")
 	float Limit_DistanceZ = 80.f;

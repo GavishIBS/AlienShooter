@@ -49,6 +49,12 @@ protected:
 protected:
 	FVector TargetLocation;
 	
+private:
+	UFUNCTION()
+	void DestroyWrapper();
+
+	FTimerHandle DestroyTimerHandle;
+
 public:
 	FORCEINLINE void SetTargetLocation(const FVector& TargetLoc);
 };

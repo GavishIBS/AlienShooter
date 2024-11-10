@@ -7,6 +7,9 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Interfaces/HitInterface.h"
+#include "Kismet/KismetMathLibrary.h"
+
+#include "DrawDebugHelpers.h"
 
 AProjectile::AProjectile()
 {
@@ -35,11 +38,22 @@ void AProjectile::BeginPlay()
 
 void AProjectile::Tick(float DeltaTime)
 {
+	ProjectileMovementComponent->InitialSpeed = FMath::Clamp(ProjectileMovementComponent->InitialSpeed + ProjectileProperties.SpeedAdditive,
+		ProjectileProperties.MinimumProjectileSpeed, ProjectileMovementComponent->MaxSpeed);
+	
 	FVector Direction = (TargetLocation - GetActorLocation()).GetSafeNormal();
 	ProjectileMovementComponent->Velocity = Direction * ProjectileMovementComponent->InitialSpeed;
-	//FVector Vel = Direction * ProjectileMovementComponent->InitialSpeed;
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("%f : %f"), Vel.X, Vel.Y));
+	//if (GetActorLocation() == TargetLocation)
+	if (GetActorLocation().Equals(TargetLocation, 50.f))
+	{
+		//TargetLocation += ProjectileMovementComponent->Velocity.GetSafeNormal() * 20;
+		//TargetLocation.Z -= 1000.f;
+		TargetLocation += GetActorForwardVector() * 500.f;
+		GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &AProjectile::DestroyWrapper, 3.f, false, 3.f);
+	}
 
+	DrawDebugSphere(GetWorld(), TargetLocation, 10.f, 24, FColor::Emerald, false, 10.f);
+	DrawDebugLine(GetWorld(), TargetLocation, TargetLocation + (Direction * 5), FColor::Red, false, 10.f);
 }
 
 void AProjectile::Destroyed()
@@ -56,6 +70,11 @@ void AProjectile::Init(const float& InBulletHealth, const float& InDamage, const
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
                         FVector NormalImpulse, const FHitResult& Hit)
 {
+}
+
+void AProjectile::DestroyWrapper()
+{
+	Destroy();
 }
 
 void AProjectile::SetTargetLocation(const FVector& TargetLoc)

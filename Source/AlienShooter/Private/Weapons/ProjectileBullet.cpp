@@ -56,6 +56,8 @@ void AProjectileBullet::Init(const float& InBulletHealth, const float& InDamage,
 void AProjectileBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10.f, 24, FColor::Cyan, false, 10.f);
+
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Name: %s"), *OtherActor->GetName()));
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor))
 	{

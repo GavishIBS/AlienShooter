@@ -30,6 +30,17 @@ void AProjectileWeapon::Fire()
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileWeaponData.ProjectileClass, MuzzleTransform, ActorSpawnParameters);
 		//Projectile->Init(WeaponProperties.BulletHealth, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor);
 		Projectile->WeaponOwner = (AActor*)(OwnerAsShooterCharacter);
-		Projectile->SetTargetLocation(OwnerAsShooterCharacter->GetCursorTraceHitLocation());
+
+		if (WeaponProperties.Accuracy >= FMath::RandRange(1, 100))
+		{
+			Projectile->SetTargetLocation(OwnerAsShooterCharacter->GetCursorTraceHitLocation());
+		} else {
+			FVector ProjectileTargetLocation = OwnerAsShooterCharacter->GetCursorTraceHitLocation();
+			ProjectileTargetLocation.X += FMath::RandRange(-WeaponProperties.HitLocation_RandomizationAdditiveRange.X,
+				WeaponProperties.HitLocation_RandomizationAdditiveRange.X);
+			ProjectileTargetLocation.Y += FMath::RandRange(-WeaponProperties.HitLocation_RandomizationAdditiveRange.Y,
+				WeaponProperties.HitLocation_RandomizationAdditiveRange.Y);
+			Projectile->SetTargetLocation(ProjectileTargetLocation);
+		}
 	}
 }
