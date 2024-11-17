@@ -43,26 +43,23 @@ bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 {
 	if (CanTakeWeapon(InWeapon) == false) return false;
 	
-	// Destroy previous weapon
-	if (WeaponInHand)
-	{
-		OnWeaponDestroyBegin(WeaponInHand);
-		WeaponInHand->Destroy();
-	}
+	// Destroy current weapon
+	DestroyCurrentWeapon();
 
-	// Add weapon class to list
+	// Add new weapon class to list
 	Weapons.Add(InWeapon->GetWeaponClass(), InWeapon->GetTotalAmmoAvailable());
 
 	// Update ownership
 	InWeapon->SetOwner(OwnerAsShooterCharacter);
 	
-	// Attach weapon to hand
+	// Attach new weapon to hand
 	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
 		EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
 	InWeapon->AttachToComponent(OwnerAsShooterCharacter->GetMesh(),
 		AttachmentTransformRules, InWeapon->GetWeaponProperties()->InHandAttachmentSocketName);
 	
 	InWeapon->OnWeaponPicked.Broadcast();
+	InWeapon->OnWeaponSelected.Broadcast();
 	
 	WeaponInHand = InWeapon;
 	WeaponIndex = Weapons.Num() - 1;
@@ -90,9 +87,8 @@ bool UCombatComponent::SelectWeapon(const int Index)
 	
 	if (!WeaponSelection) return false;
 
-	// Update ownership and broadcast OnWeaponSelected
+	// Update ownership
 	WeaponSelection->SetOwner(OwnerAsShooterCharacter);
-	WeaponSelection->OnWeaponSelected.Broadcast();
 
 	// Update ammo
 	TArray<int> Values;
@@ -111,6 +107,9 @@ bool UCombatComponent::SelectWeapon(const int Index)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("WeaponInHandSet: %s"), *WeaponInHand->GetName()));
 	}
 
+	// Broadcast OnWeaponSelected
+	WeaponSelection->OnWeaponSelected.Broadcast();
+
 	WeaponIndex = Index;
 	OnWeaponSelected();
 	OnWeaponUpdated.Broadcast();
@@ -126,10 +125,15 @@ bool UCombatComponent::UnselectWeapon()
 
 void UCombatComponent::FireButtonPressed()
 {
-	if (!WeaponInHand) return;
-	WeaponInHand->OnWeaponFirePressed.Broadcast();
+	FireWeapon();
 	if (WeaponInHand->HaveAutomaticFire())
 		StartAutomaticFire();
+}
+
+void UCombatComponent::FireWeapon()
+{
+	if (!WeaponInHand) return;
+	WeaponInHand->OnWeaponFirePressed.Broadcast();
 }
 
 void UCombatComponent::FireButtonReleased()
@@ -143,7 +147,7 @@ void UCombatComponent::StartAutomaticFire()
 
 	if (AActor* OwnerActor = GetOwner())
 	{
-		OwnerActor->GetWorldTimerManager().SetTimer(AutomaticFireTimerHandle, this, &UCombatComponent::FireButtonPressed, WeaponInHand->GetAutomaticFiringRate(), true, WeaponInHand->GetAutomaticFiringRate());
+		OwnerActor->GetWorldTimerManager().SetTimer(AutomaticFireTimerHandle, this, &UCombatComponent::FireWeapon, WeaponInHand->GetAutomaticFiringRate(), true, WeaponInHand->GetAutomaticFiringRate());
 	}
 }
 

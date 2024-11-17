@@ -43,6 +43,7 @@ protected:
 	bool UnselectWeapon();
 
 	void FireButtonPressed();
+	void FireWeapon();
 	void FireButtonReleased();
 
 	void StartAutomaticFire();

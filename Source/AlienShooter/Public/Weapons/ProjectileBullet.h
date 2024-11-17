@@ -37,4 +37,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	FProjectileBulletData ProjectileBulletData = FProjectileBulletData();
+
+public:
+	virtual void SetInUse(const bool InValue) override;
 };

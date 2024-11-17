@@ -8,6 +8,9 @@
 #include "Weapons/WeaponBase.h"
 #include "ProjectileWeapon.generated.h"
 
+template <typename T>
+class UObjectPool;
+
 /**
  * 
  */
@@ -21,6 +24,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Init_Callbacks() override;
+
+	virtual void OnWeaponSelectedCallback() override;
+	virtual void OnWeaponDestroyed(AActor* DestroyedActor) override;
 
 	virtual void Fire() override;
 
@@ -29,4 +36,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Projectile | Data")
 	FProjectileWeaponData ProjectileWeaponData = FProjectileWeaponData();
+
+	UObjectPool<AProjectile>* ProjectilePool;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	int ProjectilePoolSize = 25;
 };

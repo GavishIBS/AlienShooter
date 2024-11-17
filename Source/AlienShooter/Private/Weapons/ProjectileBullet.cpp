@@ -65,5 +65,13 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 			ProjectileProperties.Damage_RandomizationFactor, WeaponOwner);
 		OnBulletHit(Hit.GetActor(), Hit.ImpactPoint);
 	}
-	Destroy();
+	DestroyWrapper();
+}
+
+void AProjectileBullet::SetInUse(const bool InValue)
+{
+	Super::SetInUse(InValue);
+	if (InValue)
+		Tracer_FX->Activate();
+	else Tracer_FX->Deactivate();
 }

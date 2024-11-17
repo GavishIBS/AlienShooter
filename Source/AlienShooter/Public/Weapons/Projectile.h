@@ -5,7 +5,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "PooledActor.h"
 #include "Weapons/WeaponTypes.h"
 #include "Projectile.generated.h"
 
@@ -14,7 +14,7 @@ class UBoxComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
-class ALIENSHOOTER_API AProjectile : public AActor
+class ALIENSHOOTER_API AProjectile : public APooledActor
 {
 	GENERATED_BODY()
 	
@@ -49,12 +49,14 @@ protected:
 protected:
 	FVector TargetLocation;
 	
-private:
 	UFUNCTION()
 	void DestroyWrapper();
 
+private:
 	FTimerHandle DestroyTimerHandle;
 
 public:
+	virtual void SetInUse(const bool InValue) override;
+
 	FORCEINLINE void SetTargetLocation(const FVector& TargetLoc);
 };

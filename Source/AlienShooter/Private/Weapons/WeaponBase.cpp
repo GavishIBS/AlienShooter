@@ -74,6 +74,7 @@ void AWeaponBase::Init_Callbacks()
 	OnWeaponPicked.AddDynamic(this, &AWeaponBase::OnWeaponPickedCallback);
 	OnWeaponSelected.AddDynamic(this, &AWeaponBase::OnWeaponSelectedCallback);
 	OnWeaponFirePressed.AddDynamic(this, &AWeaponBase::OnWeaponFirePressedCallback);
+	OnDestroyed.AddDynamic(this, &AWeaponBase::OnWeaponDestroyed);
 }
 
 void AWeaponBase::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -102,9 +103,12 @@ void AWeaponBase::OnWeaponFirePressedCallback()
 {
 	if (CanFire())
 	{
-		WeaponProperties.DeductAmmo(1);
 		Fire();
 	} else WeaponFiredFailed();
+}
+
+void AWeaponBase::OnWeaponDestroyed(AActor* DestroyedActor)
+{
 }
 
 bool AWeaponBase::CanFire() const
@@ -115,8 +119,8 @@ bool AWeaponBase::CanFire() const
 
 void AWeaponBase::Fire()
 {
-	OnWeaponFired.Broadcast();
-
+	WeaponProperties.DeductAmmo(1);
+	
 	if (WeaponSkeletalMesh)
 	{
 		AnimationLibrary::PlayAnimation(WeaponSkeletalMesh, WeaponAnimationData.WeaponFireAnimations);
@@ -124,6 +128,8 @@ void AWeaponBase::Fire()
 
 	if (WeaponData.BulletShellClass)
 		SpawnBulletShell();
+
+	OnWeaponFired.Broadcast();
 }
 
 void AWeaponBase::WeaponFiredFailed()

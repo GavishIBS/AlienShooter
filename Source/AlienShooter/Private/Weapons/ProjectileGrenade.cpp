@@ -79,5 +79,5 @@ void AProjectileGrenade::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherA
 
 
 
-	Destroy();
+	DestroyWrapper();
 }

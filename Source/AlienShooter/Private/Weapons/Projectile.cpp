@@ -74,7 +74,21 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 void AProjectile::DestroyWrapper()
 {
-	Destroy();
+	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Red, FString("Destroy wrapper called!"));
+	if (WasSpawnedByPool())
+		SetInUse(false);
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Red, FString("Destroying projectile from world!"));
+		Destroy();
+	}
+}
+
+void AProjectile::SetInUse(const bool InValue)
+{
+	Super::SetInUse(InValue);
+	if (IsInUse())
+		ProjectileMovementComponent->Activate();
+	else ProjectileMovementComponent->Deactivate();
 }
 
 void AProjectile::SetTargetLocation(const FVector& TargetLoc)
