@@ -34,10 +34,18 @@ void AProjectileWeapon::OnWeaponSelectedCallback()
 	int PoolSize = ProjectilePoolSize;
 	if (PoolSize > GetTotalAmmoAvailable())
 		PoolSize = GetTotalAmmoAvailable();
-	ProjectilePool = new UObjectPool<AProjectile>(GetWorld(), ProjectileWeaponData.ProjectileClass, PoolSize);
-	int ProjectilePoolValid = ProjectilePool->CreatePool();
-	if (ProjectilePoolValid <= 0)
-		delete ProjectilePool;
+
+	bool bCreateProjectilePoolComponent = true;
+	if (PoolSize <= 0)
+		bCreateProjectilePoolComponent = false;
+
+	if (bCreateProjectilePoolComponent)
+	{
+		ProjectilePool = new UObjectPool<AProjectile>(GetWorld(), ProjectileWeaponData.ProjectileClass, PoolSize);
+		int ProjectilePoolValid = ProjectilePool->CreatePool();
+		if (ProjectilePoolValid <= 0)
+			delete ProjectilePool;
+	}
 }
 
 void AProjectileWeapon::OnWeaponDestroyed(AActor* DestroyedActor)
@@ -75,7 +83,7 @@ void AProjectileWeapon::Fire()
 				Projectile->SetInUse(true);
 			}
 		}
-		if (!Projectile) {
+		if (Projectile == nullptr) {
 			// Spawn projectile if not available from pool
 			GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Yellow, FString("Spawned directly!"));
 			Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileWeaponData.ProjectileClass, MuzzleTransform, ActorSpawnParameters);
