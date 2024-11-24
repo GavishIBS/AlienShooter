@@ -1,0 +1,35 @@
+// Copyright (c) 2024 Gavish Bansal
+// 
+// All rights reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "ReplaceableWall.generated.h"
+
+UCLASS()
+class ALIENSHOOTER_API AReplaceableWall : public AActor
+{
+	GENERATED_BODY()
+	
+public:	
+	AReplaceableWall();
+
+	UFUNCTION(BlueprintCallable)
+	void ReplaceMesh();
+
+	virtual void OnMeshChanged();
+
+protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, Category=Components)
+	TObjectPtr<UStaticMeshComponent> Mesh;
+
+	UPROPERTY(EditAnywhere, Category=Data)
+	TObjectPtr<UStaticMesh> ReservedMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	bool bReverseable = false;
+};
