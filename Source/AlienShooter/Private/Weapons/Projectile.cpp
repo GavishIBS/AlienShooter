@@ -44,6 +44,7 @@ void AProjectile::Destroyed()
 {
 	Super::Destroyed();
 	GetWorldTimerManager().ClearTimer(ProjectileTimerHandle);
+	GetWorldTimerManager().ClearTimer(DestroyTimerHandle);
 }
 
 /*
@@ -84,8 +85,8 @@ void AProjectile::UpdateProjectile()
 		GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &AProjectile::DestroyWrapper, 3.f, false, 3.f);
 	}
 
-	DrawDebugSphere(GetWorld(), TargetLocation, 10.f, 24, FColor::Emerald, false, 10.f);
-	DrawDebugLine(GetWorld(), TargetLocation, TargetLocation + (Direction * 5), FColor::Red, false, 10.f);
+	//DrawDebugSphere(GetWorld(), TargetLocation, 10.f, 24, FColor::Emerald, false, 10.f);
+	//DrawDebugLine(GetWorld(), TargetLocation, TargetLocation + (Direction * 5), FColor::Red, false, 10.f);
 }
 
 void AProjectile::SetInUse(const bool InValue)
