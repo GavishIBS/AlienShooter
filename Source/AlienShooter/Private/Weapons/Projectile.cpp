@@ -38,27 +38,12 @@ void AProjectile::BeginPlay()
 
 void AProjectile::Tick(float DeltaTime)
 {
-	ProjectileMovementComponent->InitialSpeed = FMath::Clamp(ProjectileMovementComponent->InitialSpeed + ProjectileProperties.SpeedAdditive,
-		ProjectileProperties.MinimumProjectileSpeed, ProjectileMovementComponent->MaxSpeed);
-	
-	FVector Direction = (TargetLocation - GetActorLocation()).GetSafeNormal();
-	ProjectileMovementComponent->Velocity = Direction * ProjectileMovementComponent->InitialSpeed;
-	//if (GetActorLocation() == TargetLocation)
-	if (GetActorLocation().Equals(TargetLocation, 50.f))
-	{
-		//TargetLocation += ProjectileMovementComponent->Velocity.GetSafeNormal() * 20;
-		//TargetLocation.Z -= 1000.f;
-		TargetLocation += GetActorForwardVector() * 500.f;
-		GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &AProjectile::DestroyWrapper, 3.f, false, 3.f);
-	}
-
-	DrawDebugSphere(GetWorld(), TargetLocation, 10.f, 24, FColor::Emerald, false, 10.f);
-	DrawDebugLine(GetWorld(), TargetLocation, TargetLocation + (Direction * 5), FColor::Red, false, 10.f);
 }
 
 void AProjectile::Destroyed()
 {
 	Super::Destroyed();
+	GetWorldTimerManager().ClearTimer(ProjectileTimerHandle);
 }
 
 /*
@@ -83,12 +68,39 @@ void AProjectile::DestroyWrapper()
 	}
 }
 
+void AProjectile::UpdateProjectile()
+{
+	ProjectileMovementComponent->InitialSpeed = FMath::Clamp(ProjectileMovementComponent->InitialSpeed + ProjectileProperties.SpeedAdditive,
+		ProjectileProperties.MinimumProjectileSpeed, ProjectileMovementComponent->MaxSpeed);
+
+	FVector Direction = (TargetLocation - GetActorLocation()).GetSafeNormal();
+	ProjectileMovementComponent->Velocity = Direction * ProjectileMovementComponent->InitialSpeed;
+	//if (GetActorLocation() == TargetLocation)
+	if (GetActorLocation().Equals(TargetLocation, 50.f))
+	{
+		//TargetLocation += ProjectileMovementComponent->Velocity.GetSafeNormal() * 20;
+		//TargetLocation.Z -= 1000.f;
+		TargetLocation += GetActorForwardVector() * 500.f;
+		GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &AProjectile::DestroyWrapper, 3.f, false, 3.f);
+	}
+
+	DrawDebugSphere(GetWorld(), TargetLocation, 10.f, 24, FColor::Emerald, false, 10.f);
+	DrawDebugLine(GetWorld(), TargetLocation, TargetLocation + (Direction * 5), FColor::Red, false, 10.f);
+}
+
 void AProjectile::SetInUse(const bool InValue)
 {
 	Super::SetInUse(InValue);
 	if (IsInUse())
+	{
 		ProjectileMovementComponent->Activate();
-	else ProjectileMovementComponent->Deactivate();
+		GetWorldTimerManager().SetTimer(ProjectileTimerHandle, this, &AProjectile::UpdateProjectile, ProjectileUpdateRate, true, 0.f);
+
+	}
+	else {
+		ProjectileMovementComponent->Deactivate();
+		GetWorldTimerManager().ClearTimer(ProjectileTimerHandle);
+	}
 }
 
 void AProjectile::SetTargetLocation(const FVector& TargetLoc)

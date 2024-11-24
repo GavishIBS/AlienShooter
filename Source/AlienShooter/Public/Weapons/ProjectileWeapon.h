@@ -40,5 +40,5 @@ protected:
 	UObjectPool<AProjectile>* ProjectilePool;
 
 	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin="0"))
-	int ProjectilePoolSize = 25;
+	int ProjectilePoolSize = 7;
 };

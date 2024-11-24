@@ -52,8 +52,14 @@ protected:
 	UFUNCTION()
 	void DestroyWrapper();
 
+	virtual void UpdateProjectile();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Properties")
+	float ProjectileUpdateRate = 0.1f;
+
 private:
 	FTimerHandle DestroyTimerHandle;
+	FTimerHandle ProjectileTimerHandle;
 
 public:
 	virtual void SetInUse(const bool InValue) override;

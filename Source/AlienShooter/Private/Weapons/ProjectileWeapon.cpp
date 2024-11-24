@@ -31,7 +31,7 @@ void AProjectileWeapon::OnWeaponSelectedCallback()
 
 	// TODO: Destory pool if ammo is exhausted but weapon is still in hand
 
-	int PoolSize = ProjectilePoolSize;
+	int PoolSize = ProjectilePoolSize;    // TODO: ProjectilePoolSize uses the value initialized in cpp and does not pickup the value changed from BPs
 	if (PoolSize > GetTotalAmmoAvailable())
 		PoolSize = GetTotalAmmoAvailable();
 
@@ -41,6 +41,7 @@ void AProjectileWeapon::OnWeaponSelectedCallback()
 
 	if (bCreateProjectilePoolComponent)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Creating pool of size: %d"), PoolSize));
 		ProjectilePool = new UObjectPool<AProjectile>(GetWorld(), ProjectileWeaponData.ProjectileClass, PoolSize);
 		int ProjectilePoolValid = ProjectilePool->CreatePool();
 		if (ProjectilePoolValid <= 0)
