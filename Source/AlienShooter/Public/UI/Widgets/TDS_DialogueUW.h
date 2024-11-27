@@ -55,7 +55,6 @@ private:
 
 	FORCEINLINE void IncrementCharacter();
 
-	FORCEINLINE void SetDialogueInitiator(APawn* InPawn) { DialogueInitiator = InPawn; }
 	FORCEINLINE void SetTargetText(const FString& InText) { TargetText = InText; };
 	FORCEINLINE void SetDialogueAudio(USoundWave* InSoundWave) { AudioWave = InSoundWave; }
 	
@@ -65,4 +64,6 @@ public:
 		SetDialogueAudio(InSoundWave);
 		StartWritingDialogue();
 	}
+
+	FORCEINLINE void SetDialogueInitiator(APawn* InPawn) { DialogueInitiator = InPawn; }
 };

@@ -6,6 +6,7 @@
 #include "UI/Widgets/TDS_DialogueUW.h"
 #include "Sound/SoundWave.h"
 #include "GameFramework/Pawn.h"
+#include "Kismet/GameplayStatics.h"
 
 UTDS_DialogueUW::UTDS_DialogueUW(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -39,8 +40,15 @@ void UTDS_DialogueUW::StartWritingDialogue()
 	}
 
 	float AudioLength = AudioWave->Duration;
-	float NumChars = (float)TargetText.Len();
-	float CharPrintRate = NumChars / AudioLength;
+	float NumChars = TargetText.Len();
+	float CharPrintRate = AudioLength / NumChars;
+
+	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Emerald, FString::Printf(TEXT("AudioLength: %f\nNumChars: %f\nCharPrintRate: %f"),
+		AudioLength, NumChars, CharPrintRate));
+
+	// TODO: Playing audio should be handled from DialogueComponent, and this UW should not have access to dialogue audio asset
+	if (DialogueInitiator)
+		UGameplayStatics::PlaySoundAtLocation(DialogueInitiator, AudioWave, DialogueInitiator->GetActorLocation());
 
 	// Timer to increment characters one by one
 	if (DialogueInitiator) {
@@ -57,6 +65,7 @@ void UTDS_DialogueUW::IncrementCharacter()
 			DialogueInitiator->GetWorldTimerManager().ClearTimer(PrintingTimerHandle);
 		}
 		OnDialogueCompleted.Broadcast();
+		TextOnScreen = FString();
 		return;
 	}
 	TextOnScreen += TargetText[RequiredIndex];

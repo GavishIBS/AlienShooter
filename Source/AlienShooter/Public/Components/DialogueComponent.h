@@ -9,6 +9,7 @@
 #include "Dialogue_Types.h"
 #include "DialogueComponent.generated.h"
 
+class UTDSUserWidget;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API UDialogueComponent : public UActorComponent
@@ -23,4 +24,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Data")
 	TArray<FDialogueData> ConversationData;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	TSubclassOf<UTDSUserWidget> DialogueScreenUW_Class;
+
+public:
+	FORCEINLINE bool IsConvoEnd(const int InIndex);
+	FORCEINLINE FDialogueData GetNextDialogueData(const int InIndex);
+	FORCEINLINE TSubclassOf<UTDSUserWidget> GetDialogueScreenUWClass() const { return DialogueScreenUW_Class; }
 };
