@@ -57,14 +57,14 @@ void ADialoguePawn::StartConversation(UPrimitiveComponent* OverlappedComponent, 
 
 void ADialoguePawn::OnConversationStarted()
 {
-	DialogueScreenUW->OnDialogueCompleted.AddDynamic(this, &ADialoguePawn::StartNextDialogue);
+	DialogueScreenUW->OnNextButtonDown.AddDynamic(this, &ADialoguePawn::StartNextDialogue);
 	StartNextDialogue();   // Call to trigger first dialogue
 }
 
 void ADialoguePawn::StartNextDialogue()
 {
-	if (DialogueComponent->IsConvoEnd(++CurrentDialogueIndex)) {
-		DialogueScreenUW->OnDialogueCompleted.RemoveDynamic(this, &ADialoguePawn::StartNextDialogue);
+	if (DialogueComponent->IsConvoEnd(++CurrentDialogueIndex) && DialogueScreenUW) {
+		DialogueScreenUW->OnNextButtonDown.RemoveDynamic(this, &ADialoguePawn::StartNextDialogue);
 		DialogueScreenUW->RemoveFromParent();
 		DialogueScreenUW = nullptr;
 		return;

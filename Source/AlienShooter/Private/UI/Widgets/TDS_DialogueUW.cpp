@@ -7,6 +7,7 @@
 #include "Sound/SoundWave.h"
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/Button.h"
 
 UTDS_DialogueUW::UTDS_DialogueUW(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -25,11 +26,19 @@ void UTDS_DialogueUW::NativePreConstruct()
 void UTDS_DialogueUW::NativeConstruct()
 {
 	Super::NativeConstruct();
+	if (NextButton)
+		NextButton->OnClicked.AddDynamic(this, &UTDS_DialogueUW::OnNextButtonClicked);
 }
 
 void UTDS_DialogueUW::NativeDestruct()
 {
 	Super::NativeDestruct();
+}
+
+void UTDS_DialogueUW::OnNextButtonClicked()
+{
+	TextOnScreen = FString();
+	OnNextButtonDown.Broadcast();
 }
 
 void UTDS_DialogueUW::StartWritingDialogue()
@@ -65,7 +74,7 @@ void UTDS_DialogueUW::IncrementCharacter()
 			DialogueInitiator->GetWorldTimerManager().ClearTimer(PrintingTimerHandle);
 		}
 		OnDialogueCompleted.Broadcast();
-		TextOnScreen = FString();
+		//TextOnScreen = FString();
 		return;
 	}
 	TextOnScreen += TargetText[RequiredIndex];

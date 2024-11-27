@@ -10,8 +10,10 @@
 
 class UDialogueComponent;
 class USoundWave;
+class UButton;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDialogueCompleted);  // Refers to completion of dialogue printing
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNextButtonDown);  // Refers next button pressed event
 
 /**
  * 
@@ -30,11 +32,19 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnDialogueCompleted OnDialogueCompleted;
+	UPROPERTY(BlueprintAssignable)
+	FOnNextButtonDown OnNextButtonDown;
 
 protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* NextButton;
+
+	UFUNCTION()
+	virtual void OnNextButtonClicked();
 
 protected:
 	APawn* DialogueInitiator = nullptr;
