@@ -48,6 +48,9 @@ void UTDS_DialogueUW::StartWritingDialogue()
 		return;
 	}
 
+	// Disable next button untill dialogue is complete
+	NextButton->SetIsEnabled(false);
+
 	float AudioLength = AudioWave->Duration;
 	float NumChars = TargetText.Len();
 	float CharPrintRate = AudioLength / NumChars;
@@ -74,6 +77,7 @@ void UTDS_DialogueUW::IncrementCharacter()
 			DialogueInitiator->GetWorldTimerManager().ClearTimer(PrintingTimerHandle);
 		}
 		OnDialogueCompleted.Broadcast();
+		NextButton->SetIsEnabled(true);
 		//TextOnScreen = FString();
 		return;
 	}
