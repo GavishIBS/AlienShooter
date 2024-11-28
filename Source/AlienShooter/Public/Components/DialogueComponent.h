@@ -12,6 +12,8 @@
 class UTDSUserWidget;
 class UTDS_DialogueUW;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConversationEnd);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API UDialogueComponent : public UActorComponent
 {
@@ -21,6 +23,9 @@ public:
 	UDialogueComponent();
 
 	void StartConversation(UTDS_DialogueUW* InDialogueScreenUW);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnConversationEnd OnConversationEnd;
 
 protected:
 	virtual void BeginPlay() override;

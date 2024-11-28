@@ -42,7 +42,7 @@ void UDialogueComponent::StartNextDialogue()
 		DialogueScreenUW->OnNextButtonDown.RemoveDynamic(this, &UDialogueComponent::StartNextDialogue);
 		DialogueScreenUW->RemoveFromParent();
 		DialogueScreenUW = nullptr;
-		CurrentDialogueIndex = -1;
+		OnConversationEnd.Broadcast();
 		return;
 	}
 	const FDialogueData NextDialogueData = GetNextDialogueData(CurrentDialogueIndex);

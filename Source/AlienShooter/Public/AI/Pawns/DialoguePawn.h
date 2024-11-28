@@ -11,6 +11,7 @@
 class UBoxComponent;
 class UDialogueComponent;
 class UTDS_DialogueUW;
+class AControllableCharacter;
 
 UCLASS()
 class ALIENSHOOTER_API ADialoguePawn : public APawn
@@ -28,6 +29,9 @@ protected:
 	void StartConversation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	UFUNCTION()
+	void OnConvoEnd();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USkeletalMeshComponent> PawnMesh;
 
@@ -38,4 +42,6 @@ protected:
 	TObjectPtr<UDialogueComponent> DialogueComponent;
 
 	UTDS_DialogueUW* DialogueScreenUW;
+
+	AControllableCharacter* SecondPerson;
 };
