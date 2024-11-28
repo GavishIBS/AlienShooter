@@ -4,6 +4,7 @@
 
 
 #include "Components/DialogueComponent.h"
+#include "UI/Widgets/TDS_DialogueUW.h"
 
 UDialogueComponent::UDialogueComponent()
 {
@@ -26,4 +27,24 @@ FDialogueData UDialogueComponent::GetNextDialogueData(const int InIndex)
 	if (InIndex < ConversationData.Num())
 		return ConversationData[InIndex];
 	return FDialogueData();
+}
+
+void UDialogueComponent::StartConversation(UTDS_DialogueUW* InDialogueScreenUW)
+{
+	DialogueScreenUW = InDialogueScreenUW;
+	DialogueScreenUW->OnNextButtonDown.AddDynamic(this, &UDialogueComponent::StartNextDialogue);
+	StartNextDialogue();   // Call to trigger first dialogue
+}
+
+void UDialogueComponent::StartNextDialogue()
+{
+	if (IsConvoEnd(++CurrentDialogueIndex) && DialogueScreenUW) {
+		DialogueScreenUW->OnNextButtonDown.RemoveDynamic(this, &UDialogueComponent::StartNextDialogue);
+		DialogueScreenUW->RemoveFromParent();
+		DialogueScreenUW = nullptr;
+		CurrentDialogueIndex = -1;
+		return;
+	}
+	const FDialogueData NextDialogueData = GetNextDialogueData(CurrentDialogueIndex);
+	DialogueScreenUW->SetTargetTextAndDialogueAudio(NextDialogueData.Dialogue, NextDialogueData.DialogueAudio);
 }

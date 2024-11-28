@@ -40,7 +40,6 @@ void ADialoguePawn::StartConversation(UPrimitiveComponent* OverlappedComponent, 
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// TODO: Optimization -> Use a better approach to trigger conversation and create widget in viewport
-	// TODO: ADialoguePawn shouldn't have access to DialogueScreenUW
 
 	if (OtherActor->ActorHasTag("Player")) {
 		if (AShooterCharacter* Character = Cast<AShooterCharacter>(OtherActor)) {
@@ -48,27 +47,9 @@ void ADialoguePawn::StartConversation(UPrimitiveComponent* OverlappedComponent, 
 			if (TDSHUD) {
 				DialogueScreenUW = Cast<UTDS_DialogueUW>(TDSHUD->MakeWidgetInViewport(DialogueComponent->GetDialogueScreenUWClass()));
 				DialogueScreenUW->SetDialogueInitiator(this);
-				OnConversationStarted();
+				DialogueComponent->StartConversation(DialogueScreenUW);
 			}
 		}
 	}
 	else return;
-}
-
-void ADialoguePawn::OnConversationStarted()
-{
-	DialogueScreenUW->OnNextButtonDown.AddDynamic(this, &ADialoguePawn::StartNextDialogue);
-	StartNextDialogue();   // Call to trigger first dialogue
-}
-
-void ADialoguePawn::StartNextDialogue()
-{
-	if (DialogueComponent->IsConvoEnd(++CurrentDialogueIndex) && DialogueScreenUW) {
-		DialogueScreenUW->OnNextButtonDown.RemoveDynamic(this, &ADialoguePawn::StartNextDialogue);
-		DialogueScreenUW->RemoveFromParent();
-		DialogueScreenUW = nullptr;
-		return;
-	}
-	const FDialogueData NextDialogueData = DialogueComponent->GetNextDialogueData(CurrentDialogueIndex);
-	DialogueScreenUW->SetTargetTextAndDialogueAudio(NextDialogueData.Dialogue, NextDialogueData.DialogueAudio);
 }

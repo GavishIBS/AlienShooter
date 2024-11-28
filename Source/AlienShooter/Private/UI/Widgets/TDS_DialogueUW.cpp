@@ -55,9 +55,6 @@ void UTDS_DialogueUW::StartWritingDialogue()
 	float NumChars = TargetText.Len();
 	float CharPrintRate = AudioLength / NumChars;
 
-	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Emerald, FString::Printf(TEXT("AudioLength: %f\nNumChars: %f\nCharPrintRate: %f"),
-		AudioLength, NumChars, CharPrintRate));
-
 	// TODO: Playing audio should be handled from DialogueComponent, and this UW should not have access to dialogue audio asset
 	if (DialogueInitiator)
 		UGameplayStatics::PlaySoundAtLocation(DialogueInitiator, AudioWave, DialogueInitiator->GetActorLocation());
