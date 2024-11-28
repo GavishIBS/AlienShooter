@@ -46,6 +46,7 @@ void ADialoguePawn::StartConversation(UPrimitiveComponent* OverlappedComponent, 
 	// TODO: Optimization -> Use a better approach to trigger conversation and create widget in viewport
 	
 	if (OtherActor->ActorHasTag("Player")) {
+		if (ConversationArea) ConversationArea->DestroyComponent();
 		SecondPerson = Cast<AControllableCharacter>(OtherActor);
 		if (SecondPerson) {
 			SecondPerson->SetActorTickEnabled(false);
@@ -64,6 +65,7 @@ void ADialoguePawn::StartConversation(UPrimitiveComponent* OverlappedComponent, 
 
 void ADialoguePawn::OnConvoEnd()
 {
+	if (DialogueComponent) DialogueComponent->DestroyComponent();
 	if (SecondPerson) {
 		SecondPerson->SetupPlayerInputComponent(SecondPerson->InputComponent);
 		SecondPerson->SetActorTickEnabled(true);
