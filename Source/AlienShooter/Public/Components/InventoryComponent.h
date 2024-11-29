@@ -26,6 +26,7 @@ class ALIENSHOOTER_API UInventoryComponent : public UActorComponent
 public:	
 	friend ABaseCharacter;
 	friend AShooterCharacter;
+	friend class AShooterCharacter_MeleeAttacker;
 	UInventoryComponent();
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category = Delegates)

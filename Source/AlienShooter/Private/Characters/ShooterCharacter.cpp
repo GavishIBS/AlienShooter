@@ -119,6 +119,7 @@ void AShooterCharacter::LeftMouseButtonReleased()
 
 void AShooterCharacter::MouseWheelUp()
 {
+	if (PawnActionState >= EPawnActionState::EPAS_Attacking) return;
 	if (!CombatComponent) return;
 
 	bool bLeftAltDown = PlayerController->IsInputKeyDown(EKeys::LeftAlt);		
@@ -138,6 +139,7 @@ void AShooterCharacter::MouseWheelUp()
 
 void AShooterCharacter::MouseWheelDown()
 {
+	if (PawnActionState >= EPawnActionState::EPAS_Attacking) return;
 	if (!CombatComponent) return;
 
 	bool bLeftAltDown = PlayerController->IsInputKeyDown(EKeys::LeftAlt);
@@ -158,11 +160,13 @@ void AShooterCharacter::MouseWheelDown()
 
 void AShooterCharacter::LeftAltPressed()
 {
+	if (PawnActionState >= EPawnActionState::EPAS_Attacking) return;
 	OpenInventory_UI();
 }
 
 void AShooterCharacter::LeftAltReleased()
 {
+	if (PawnActionState >= EPawnActionState::EPAS_Attacking) return;
 	CloseInventory_UI();
 }
 

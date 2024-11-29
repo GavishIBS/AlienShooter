@@ -22,6 +22,7 @@ class ALIENSHOOTER_API UCombatComponent : public UActorComponent
 
 public:
 	friend AShooterCharacter;
+	friend class AShooterCharacter_MeleeAttacker;
 	UCombatComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
