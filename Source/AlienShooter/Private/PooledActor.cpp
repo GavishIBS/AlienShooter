@@ -20,12 +20,12 @@ void APooledActor::SetInUse(const bool InValue)
 	bInUse = InValue;
 	if (bInUse) {
 		SetActorEnableCollision(true);
-		//SetActorHiddenInGame(false);
+		SetActorHiddenInGame(false);
 		SetActorTickEnabled(true);
 	}
 	else {
 		SetActorEnableCollision(false);
-		//SetActorHiddenInGame(true);
+		SetActorHiddenInGame(true);
 		SetActorTickEnabled(false);
 	}
 }

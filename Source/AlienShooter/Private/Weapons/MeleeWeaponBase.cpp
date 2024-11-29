@@ -5,6 +5,7 @@
 
 #include "Weapons/MeleeWeaponBase.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Interfaces/HitInterface.h"
 
 AMeleeWeaponBase::AMeleeWeaponBase()
 {
@@ -22,6 +23,7 @@ void AMeleeWeaponBase::BeginPlay()
 
 void AMeleeWeaponBase::StartAttackTrace()
 {
+	DamageDealt_ThisAttack = 0.f;
 	GetWorldTimerManager().SetTimer(AttackTraceTimerHandle, this, &AMeleeWeaponBase::PerformAttackTrace, AttackTraceRate, true, 0.f);
 }
 
@@ -44,6 +46,11 @@ void AMeleeWeaponBase::PerformAttackTrace()
 		ActorsToIgnore, EDrawDebugTrace::ForDuration, OutHit, true);
 
 	if (OutHit.bBlockingHit) {
-
+		if (IHitInterface* HitInterface = Cast<IHitInterface>(OutHit.GetActor())) {
+			DamageDealt_ThisAttack += HitInterface->GetHit(OutHit.ImpactPoint, DamagePerTrace, DamagePerTrace_Randomization ,GetOwner());
+		}
+		if (DamageDealt_ThisAttack > MaxDamagePerAttack) {
+			StopAttackTrace();
+		}
 	}
 }

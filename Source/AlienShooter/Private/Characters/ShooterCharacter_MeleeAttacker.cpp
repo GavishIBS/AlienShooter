@@ -59,6 +59,9 @@ void AShooterCharacter_MeleeAttacker::MeleeAttackKeyUp()
 	if (UAnimMontage* AnimMontage = MeleeWeapon->GetAttackMontage(false)) {
 		PlayAnimMontage(AnimMontage);
 		MeleeWeapon->Tags.Add("Attacking");
+		if (MeleeWeapon->ShouldFreezeTickInAttack()) {
+			SetActorTickEnabled(false);
+		}
 	}
 	else {
 		MeleeWeapon->Destroy();
@@ -69,6 +72,9 @@ void AShooterCharacter_MeleeAttacker::MeleeAttackKeyUp()
 
 void AShooterCharacter_MeleeAttacker::EndMeleeAttack()
 {
+	if (MeleeWeapon->ShouldFreezeTickInAttack()) {
+		SetActorTickEnabled(true);
+	}
 	MeleeWeapon->Destroy();
 	CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
 	PawnActionState = EPawnActionState::EPAS_Idle;
@@ -76,14 +82,16 @@ void AShooterCharacter_MeleeAttacker::EndMeleeAttack()
 
 void AShooterCharacter_MeleeAttacker::StartMeleeAttackTrace()
 {
-	if (MeleeWeapon)
+	if (MeleeWeapon) {
 		MeleeWeapon->StartAttackTrace();
+	}
 }
 
 void AShooterCharacter_MeleeAttacker::StopMeleeAttackTrace()
 {
-	if (MeleeWeapon)
+	if (MeleeWeapon) {
 		MeleeWeapon->StopAttackTrace();
+	}
 }
 
 void AShooterCharacter_MeleeAttacker::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

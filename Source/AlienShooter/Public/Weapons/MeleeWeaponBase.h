@@ -48,10 +48,24 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float AttackTraceRate = 0.2f;
 
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float MaxDamagePerAttack = 180.f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float DamagePerTrace = 37.5f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float DamagePerTrace_Randomization = 10.f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	bool bFreezeTick_InAttack = true;
+
 private:
 	FTimerHandle AttackTraceTimerHandle;
+	float DamageDealt_ThisAttack = 0.f;
 
 public:
 	FORCEINLINE FName GetAttachmentSocketName() const { return AttachmentSocketName; }
 	FORCEINLINE UAnimMontage* GetAttackMontage(const bool bPowerAttack) { return bPowerAttack ? nullptr : AttackAnimMontage; }
+	FORCEINLINE bool ShouldFreezeTickInAttack() const { return bFreezeTick_InAttack; }
 };
