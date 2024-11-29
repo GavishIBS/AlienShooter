@@ -110,7 +110,7 @@ bool UInventoryComponent::SelectItem(const int Index)
 	if (Index < 0 || InventorySize - 1 < Index) return false;
 
 	// Destroy current item
-	DestroyCurrentItem();
+	//DestroyCurrentItem();
 
 	if (Content[Index].bEmpty)
 	{
@@ -136,7 +136,7 @@ bool UInventoryComponent::SelectItem(const int Index)
 
 	if (!ItemSelection)
 	{
-		SelectedItemIndex = Index;
+		//SelectedItemIndex = Index;
 		if (InventoryMenu_UW)
 			InventoryMenu_UW->SetSelectedIndex(SelectedItemIndex);
 		return false;
@@ -145,6 +145,9 @@ bool UInventoryComponent::SelectItem(const int Index)
 	// Update ownership and broadcast OnItemSelected
 	ItemSelection->SetOwner((AActor*)OwnerAsCharacter);
 	OnItemSelected.Broadcast(ItemSelection);
+
+	// Destroy current item
+	DestroyCurrentItem();
 
 	// Item attachment
 	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
@@ -166,9 +169,9 @@ bool UInventoryComponent::UnselectItem()
 	return true;
 }
 
-void UInventoryComponent::UseButtonPressed()
+bool UInventoryComponent::UseButtonPressed()
 {
-	if (!ItemInHand) return;
+	if (!ItemInHand) return false;
 
 	if (AUsableActor* UsableActor = Cast<AUsableActor>(ItemInHand))
 	{
@@ -177,8 +180,11 @@ void UInventoryComponent::UseButtonPressed()
 		{
 			RemoveItemFromInventory(SelectedItemIndex);
 			ItemInHand = nullptr;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 void UInventoryComponent::DestroyCurrentItem()

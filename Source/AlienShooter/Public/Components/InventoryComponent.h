@@ -55,7 +55,7 @@ protected:
 	virtual void BeginPlay() override;
 	void InitInventory();
 
-	void UseButtonPressed();
+	bool UseButtonPressed();
 
 	TObjectPtr<ACharacter> OwnerAsCharacter;
 

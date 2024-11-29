@@ -104,8 +104,12 @@ void AShooterCharacter::LeftMouseButtonPressed()
 	}
 	else if (InventoryComponent && InventoryComponent->ItemInHand)
 	{
-		InventoryComponent->UseButtonPressed();
-		// TODO: play animation if item is used
+		if (InventoryComponent->UseButtonPressed()) {
+			// TODO: play animation if item is used -> select weapon after animation is completed
+			if (CombatComponent) {
+				CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
+			}
+		}
 	}
 }
 
@@ -132,8 +136,8 @@ void AShooterCharacter::MouseWheelUp()
 		else CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
 	} else {
 		if (!InventoryComponent) return;
-		CombatComponent->UnselectWeapon();
-		InventoryComponent->SelectItem(InventoryComponent->SelectedItemIndex + 1);
+		if (InventoryComponent->SelectItem(InventoryComponent->SelectedItemIndex + 1))
+			CombatComponent->UnselectWeapon();
 	}
 }
 
@@ -153,8 +157,8 @@ void AShooterCharacter::MouseWheelDown()
 	}
 	else {
 		if (!InventoryComponent) return;
-		CombatComponent->UnselectWeapon();
-		InventoryComponent->SelectItem(InventoryComponent->SelectedItemIndex - 1);
+		if (InventoryComponent->SelectItem(InventoryComponent->SelectedItemIndex - 1))
+			CombatComponent->UnselectWeapon();
 	}
 }
 
