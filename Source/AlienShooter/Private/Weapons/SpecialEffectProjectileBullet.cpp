@@ -25,5 +25,5 @@ void ASpecialEffectProjectileBullet::OnHit(UPrimitiveComponent* HitComponent, AA
 		//ProjectileProperties.BulletHealth -= HitInterface->GetSpecialHit(SpecialEffectData);
 	    HitInterface->GetSpecialHit(Hit.ImpactPoint, SpecialEffectData, ProjectileProperties.Damage_RandomizationFactor, WeaponOwner);
 	}
-	Destroy();
+	DestroyWrapper();
 }

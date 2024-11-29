@@ -19,6 +19,7 @@ enum class EPawnActionState : uint8
 	EPAS_Idle = 1,
 	EPAS_Attacking = 2,
 	EPAS_Attacking_Melee = 3,
-	EPAS_UsingItem = 4,
+	EPAS_SelectingItem = 4,
+	EPAS_UsingItem = 5,
 	EPAS_Max = 99
 };

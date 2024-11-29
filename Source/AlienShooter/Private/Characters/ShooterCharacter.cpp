@@ -123,24 +123,67 @@ void AShooterCharacter::LeftMouseButtonReleased()
 
 void AShooterCharacter::MouseWheelUp()
 {
+	if (!CombatComponent) return;
+
+	if (PawnActionState == EPawnActionState::EPAS_SelectingItem) {
+		if (!InventoryComponent) return;
+		if (InventoryComponent->SelectItem(InventoryComponent->SelectedItemIndex + 1)) {
+			CombatComponent->UnselectWeapon();
+		}
+		return;
+	}
+
+	if (PawnActionState >= EPawnActionState::EPAS_Attacking) return;
+
+	InventoryComponent->UnselectItem();
+	if (CombatComponent->WeaponInHand)
+		CombatComponent->SelectWeapon(CombatComponent->WeaponIndex + 1);
+	else CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
+}
+
+/*
+void AShooterCharacter::MouseWheelUp()
+{
 	if (PawnActionState >= EPawnActionState::EPAS_Attacking) return;
 	if (!CombatComponent) return;
 
-	bool bLeftAltDown = PlayerController->IsInputKeyDown(EKeys::LeftAlt);		
-	
+	bool bLeftAltDown = PlayerController->IsInputKeyDown(EKeys::LeftAlt);
+
 	if (!bLeftAltDown)
 	{
 		InventoryComponent->UnselectItem();
 		if (CombatComponent->WeaponInHand)
 			CombatComponent->SelectWeapon(CombatComponent->WeaponIndex + 1);
 		else CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
-	} else {
+	}
+	else {
 		if (!InventoryComponent) return;
 		if (InventoryComponent->SelectItem(InventoryComponent->SelectedItemIndex + 1))
 			CombatComponent->UnselectWeapon();
 	}
 }
+*/
 
+void AShooterCharacter::MouseWheelDown()
+{
+	if (!CombatComponent) return;
+	
+	if (PawnActionState == EPawnActionState::EPAS_SelectingItem) {
+		if (!InventoryComponent) return;
+		if (InventoryComponent->SelectItem(InventoryComponent->SelectedItemIndex - 1))
+			CombatComponent->UnselectWeapon();
+		return;
+	}
+
+	if (PawnActionState >= EPawnActionState::EPAS_Attacking) return;
+
+	InventoryComponent->UnselectItem();
+	if (CombatComponent->WeaponInHand)
+		CombatComponent->SelectWeapon(CombatComponent->WeaponIndex - 1);
+	else CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
+}
+
+/*
 void AShooterCharacter::MouseWheelDown()
 {
 	if (PawnActionState >= EPawnActionState::EPAS_Attacking) return;
@@ -161,17 +204,21 @@ void AShooterCharacter::MouseWheelDown()
 			CombatComponent->UnselectWeapon();
 	}
 }
+*/
 
 void AShooterCharacter::LeftAltPressed()
 {
 	if (PawnActionState >= EPawnActionState::EPAS_Attacking) return;
 	OpenInventory_UI();
+	PawnActionState = EPawnActionState::EPAS_SelectingItem;
 }
 
 void AShooterCharacter::LeftAltReleased()
 {
-	if (PawnActionState >= EPawnActionState::EPAS_Attacking) return;
+	if (PawnActionState >= EPawnActionState::EPAS_Attacking &&
+		PawnActionState != EPawnActionState::EPAS_SelectingItem) return;
 	CloseInventory_UI();
+	PawnActionState = EPawnActionState::EPAS_Idle;
 }
 
 void AShooterCharacter::EndAttack()
