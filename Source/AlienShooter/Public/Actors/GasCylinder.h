@@ -23,7 +23,7 @@ class ALIENSHOOTER_API AGasCylinder : public AActor, public IHitInterface
 public:
 	AGasCylinder();
 
-	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
+	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass) override;
 
 protected:
 	virtual void BeginPlay() override;

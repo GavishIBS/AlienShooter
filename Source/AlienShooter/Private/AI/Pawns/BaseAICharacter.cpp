@@ -87,7 +87,7 @@ void ABaseAICharacter::InitCallbacks()
 	OnDeath.AddDynamic(this, &ABaseAICharacter::OnDeathCallback);
 }
 
-float ABaseAICharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
+float ABaseAICharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
 {
 	if (LifeStatus != ELifeStatus::ELS_Alive) return 0.f;
 
@@ -308,7 +308,7 @@ void ABaseAICharacter::AttackTrace()
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
 	{
 		HitInterface->GetHit(HitResult.ImpactPoint, AIController->GetAIProperties().AttackDamage,
-			AIController->GetAIProperties().AttackDamageRandomizationFactor, this);
+			AIController->GetAIProperties().AttackDamageRandomizationFactor, this, UDamageType::StaticClass());
 		EndAttackTrace();
 	}
 }

@@ -25,10 +25,14 @@ class ALIENSHOOTER_API AExplosive : public AHittableActor
 public:
 	AExplosive();
 
-	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
+	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass) override;
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void InitCallbacks();
+
+	UFUNCTION()
+	void OnTakeDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> ExplosiveMesh;
@@ -41,4 +45,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	FDamageProperties DamageProperties = FDamageProperties();
+	
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float ExplosionDelay = 0.1f;
+
+private:
+	FTimerHandle ExplosionTimerHandle;
+
+	void Explode();
+	void OnExplosion();
 };

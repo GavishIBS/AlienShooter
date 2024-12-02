@@ -32,7 +32,7 @@ public:
 	virtual void Destroyed() override;
 	
 	/* Interface begin */
-	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
+	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass) override;
 	virtual void GetSpecialHit(const FVector& HitLocation, const FSpecialEffectData& SpecialEffectData,
 		const float& RandomizationFactor, AActor* InDamageCauser) override;
 

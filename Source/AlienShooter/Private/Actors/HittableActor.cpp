@@ -15,7 +15,7 @@ void AHittableActor::BeginPlay()
 	Super::BeginPlay();
 }
 
-float AHittableActor::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
+float AHittableActor::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
 {
 	return 0.f;
 }

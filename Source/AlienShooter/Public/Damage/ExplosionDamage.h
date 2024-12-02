@@ -16,4 +16,6 @@ class ALIENSHOOTER_API UExplosionDamage : public UDamageType
 {
 	GENERATED_BODY()
 	
+public:
+	UExplosionDamage();
 };

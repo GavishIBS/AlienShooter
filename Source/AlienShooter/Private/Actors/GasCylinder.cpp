@@ -22,7 +22,7 @@ void AGasCylinder::BeginPlay()
 	Super::BeginPlay();
 }
 
-float AGasCylinder::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
+float AGasCylinder::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
 {
 	SpawnEffects();
 	ApplyDamage();

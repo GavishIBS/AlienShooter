@@ -6,6 +6,7 @@
 #include "Weapons/MeleeWeaponBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interfaces/HitInterface.h"
+#include "Damage/MeleeAttackDamage.h"
 
 AMeleeWeaponBase::AMeleeWeaponBase()
 {
@@ -47,7 +48,7 @@ void AMeleeWeaponBase::PerformAttackTrace()
 
 	if (OutHit.bBlockingHit) {
 		if (IHitInterface* HitInterface = Cast<IHitInterface>(OutHit.GetActor())) {
-			DamageDealt_ThisAttack += HitInterface->GetHit(OutHit.ImpactPoint, DamagePerTrace, DamagePerTrace_Randomization ,GetOwner());
+			DamageDealt_ThisAttack += HitInterface->GetHit(OutHit.ImpactPoint, DamagePerTrace, DamagePerTrace_Randomization ,GetOwner(), UMeleeAttackDamage::StaticClass());
 		}
 		if (DamageDealt_ThisAttack > MaxDamagePerAttack) {
 			StopAttackTrace();

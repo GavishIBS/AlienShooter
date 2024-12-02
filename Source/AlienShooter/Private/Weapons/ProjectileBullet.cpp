@@ -62,7 +62,7 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor))
 	{
 		ProjectileProperties.BulletHealth -= HitInterface->GetHit(Hit.ImpactPoint, ProjectileProperties.Damage,
-			ProjectileProperties.Damage_RandomizationFactor, WeaponOwner);
+			ProjectileProperties.Damage_RandomizationFactor, WeaponOwner, UDamageType::StaticClass());
 		OnBulletHit(Hit.GetActor(), Hit.ImpactPoint);
 	}
 	DestroyWrapper();

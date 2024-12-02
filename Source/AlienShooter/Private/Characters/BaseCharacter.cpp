@@ -41,7 +41,7 @@ void ABaseCharacter::PostInitializeComponents()
 		InventoryComponent->InitInventory();
 }
 
-float ABaseCharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser)
+float ABaseCharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
 {
-	return IHitInterface::GetHit(HitLocation, Damage, RandomizationFactor, InDamageCauser);
+	return IHitInterface::GetHit(HitLocation, Damage, RandomizationFactor, InDamageCauser, DamageTypeClass);
 }

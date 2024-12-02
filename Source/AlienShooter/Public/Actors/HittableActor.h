@@ -22,7 +22,7 @@ class ALIENSHOOTER_API AHittableActor : public AActor, public IHitInterface, pub
 public:	
 	AHittableActor();
 
-	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser) override;
+	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass) override;
 
 	virtual void SetLootData(const FLootData& InLootData) override;
 	virtual void SpawnLoot() override;

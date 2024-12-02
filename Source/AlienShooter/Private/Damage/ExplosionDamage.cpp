@@ -5,3 +5,6 @@
 
 #include "Damage/ExplosionDamage.h"
 
+UExplosionDamage::UExplosionDamage()
+{
+}
