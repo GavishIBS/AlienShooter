@@ -14,17 +14,27 @@
 #include "HUD/TDSHUD.h"
 #include "UI/Widgets/TDS_InventoryMenu.h"
 #include "AnimationLibrary.h"
+#include "Components/SpecialAbilityComponent.h"
+#include "NiagaraComponent.h"
 
 AShooterCharacter::AShooterCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	SpecialAbilityNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("SpecialAbilityNiagaraComponent"));
+	SpecialAbilityNiagaraComponent->SetupAttachment(GetMesh());
+	SpecialAbilityNiagaraComponent->Deactivate();
+	SpecialAbilityNiagaraComponent->bAutoActivate = false;
+
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+	SpecialAbilityComponent = CreateDefaultSubobject<USpecialAbilityComponent>(TEXT("SpecialAbilityComponent"));
 }
 
 void AShooterCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	if (CombatComponent) CombatComponent->Init_Component();
+	if (SpecialAbilityComponent) SpecialAbilityComponent->Init_Component();
 }
 
 void AShooterCharacter::BeginPlay()
@@ -58,6 +68,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		
 		EnhancedInputComponent->BindAction(LeftAltAction, ETriggerEvent::Started, this, &AShooterCharacter::LeftAltPressed);
 		EnhancedInputComponent->BindAction(LeftAltAction, ETriggerEvent::Completed, this, &AShooterCharacter::LeftAltReleased);
+		
+		EnhancedInputComponent->BindAction(SpecialAbilityAction, ETriggerEvent::Started, this, &AShooterCharacter::AbilityKeyPressed);
 	}
 }
 
@@ -221,6 +233,13 @@ void AShooterCharacter::LeftAltReleased()
 	PawnActionState = EPawnActionState::EPAS_Idle;
 }
 
+void AShooterCharacter::AbilityKeyPressed()
+{
+	if (SpecialAbilityComponent) {
+		SpecialAbilityComponent->UseAbility();
+	}
+}
+
 void AShooterCharacter::EndAttack()
 {
 	if (PawnActionState > EPawnActionState::EPAS_Attacking) return;
@@ -246,4 +265,14 @@ void AShooterCharacter::PickupWeapon(AWeaponBase* InWeapon) const
 {
 	if (!CombatComponent) return;
 	CombatComponent->AddWeapon(InWeapon);
+}
+
+void AShooterCharacter::DeactivateSpecialAbilityNiagaraEffect()
+{
+	SpecialAbilityNiagaraComponent->Deactivate();
+}
+
+void AShooterCharacter::ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSystem) {
+	SpecialAbilityNiagaraComponent->Activate();
+	SpecialAbilityNiagaraComponent->SetAsset(InSystem);
 }

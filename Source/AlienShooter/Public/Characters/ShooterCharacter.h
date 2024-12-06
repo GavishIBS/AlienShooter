@@ -13,6 +13,8 @@
 
 class AWeaponBase;
 class UCombatComponent;
+class USpecialAbilityComponent;
+class UNiagaraComponent;
 
 /**
  * 
@@ -45,9 +47,15 @@ protected:
 	UFUNCTION()
 	virtual void OnDeathCallback(AActor* Killer);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Effects | Components")
+	TObjectPtr<UNiagaraComponent> SpecialAbilityNiagaraComponent;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UCombatComponent> CombatComponent = nullptr;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
+	TObjectPtr<USpecialAbilityComponent> SpecialAbilityComponent;
+
 	/* Input callbacks begin */
 	void LeftMouseButtonPressed();
 	void LeftMouseButtonReleased();
@@ -55,6 +63,7 @@ protected:
 	void MouseWheelDown();
 	void LeftAltPressed();
 	void LeftAltReleased();
+	void AbilityKeyPressed();
 	/* Input callbacks end */
 	
 	/* Input begin */
@@ -69,6 +78,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> LeftAltAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> SpecialAbilityAction;
 	/* Input end */
 
 	FShooterProperties ShooterProperties = FShooterProperties();
@@ -91,4 +103,7 @@ public:
 			CombatComponent->WeaponInHand->GetWeaponProperties()->WeaponName : EWeaponName::EWN_None : EWeaponName::EWN_None;}
 	FORCEINLINE FShooterProperties* GetShooterProperties() {return &ShooterProperties;}
 	FORCEINLINE int GetNumberOfWeapon() const {return CombatComponent ? CombatComponent->Weapons.Num() : 0;}
+
+	FORCEINLINE void DeactivateSpecialAbilityNiagaraEffect();
+	FORCEINLINE void ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSystem);
 };
