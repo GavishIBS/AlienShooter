@@ -19,6 +19,8 @@ void AUsableActor::BeginPlay()
 
 bool AUsableActor::CanUse(ACharacter* User, FHitResult& HitResult)
 {
+	if (UseRange < 0) return true;
+
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(User);
 	FVector Start = User->GetActorLocation() + User->GetMesh()->GetRightVector();
@@ -32,7 +34,7 @@ bool AUsableActor::CanUse(ACharacter* User, FHitResult& HitResult)
 	return false;
 }
 
-bool AUsableActor::UseItem(ACharacter* User)
+AUsableActor* AUsableActor::UseItem(ACharacter* User)
 {
-	return false;
+	return 0;
 }

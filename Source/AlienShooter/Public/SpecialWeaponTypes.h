@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Gavish Bansal
+// 
+// All rights reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
