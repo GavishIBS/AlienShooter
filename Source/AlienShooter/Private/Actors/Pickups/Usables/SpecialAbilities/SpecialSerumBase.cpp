@@ -32,8 +32,11 @@ bool ASpecialSerumBase::UseItem(ACharacter* User)
 	//return EffectImplementation(User);
 	if (USpecialAbilityComponent* SpecialAbilityComponent = User->FindComponentByClass<USpecialAbilityComponent>()) {
 		SpecialAbilityComponent->SetAbilityData(EffectImplementation, EffectData);
+		Destroy();
 		return true;
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Cyan, FString("Failed to find special ability component"));
+	Destroy();
 	return false;
 }
 
