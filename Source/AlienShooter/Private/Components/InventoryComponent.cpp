@@ -169,22 +169,23 @@ bool UInventoryComponent::UnselectItem()
 	return true;
 }
 
-bool UInventoryComponent::UseButtonPressed()
+AUsableActor* UInventoryComponent::UseButtonPressed()
 {
-	if (!ItemInHand) return false;
+	if (!ItemInHand) return 0;
 
 	if (AUsableActor* UsableActor = Cast<AUsableActor>(ItemInHand))
 	{
 		ACharacter* Character = Cast<ACharacter>(GetOwner());
-		if (UsableActor->UseItem(Character))
+		if (AUsableActor* Usable = UsableActor->UseItem(Character))
 		{
 			RemoveItemFromInventory(SelectedItemIndex);
 			ItemInHand = nullptr;
-			return true;
+			ItemBeingUsed = Usable;
+			return Usable;
 		}
 	}
 
-	return false;
+	return 0;
 }
 
 void UInventoryComponent::DestroyCurrentItem()
@@ -193,6 +194,14 @@ void UInventoryComponent::DestroyCurrentItem()
 	{
 		ItemInHand->Destroy();
 		ItemInHand = nullptr;
+	}
+}
+
+void UInventoryComponent::OnItemUsed()
+{
+	if (ItemBeingUsed) {
+		ItemBeingUsed->OnItemUsed();
+		ItemBeingUsed = nullptr;
 	}
 }
 

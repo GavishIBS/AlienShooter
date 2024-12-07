@@ -20,7 +20,8 @@ class ALIENSHOOTER_API ASpecialSerumBase : public AUsableActor, public ISpecialS
 	
 public:
 	ASpecialSerumBase();
-	virtual bool UseItem(ACharacter* User) override;
+	virtual AUsableActor* UseItem(ACharacter* User) override;
+	virtual void OnItemUsed() override;
 
 	//virtual bool ApplyEffect(ACharacter* InCharacter) override;
 

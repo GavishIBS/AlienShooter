@@ -34,7 +34,7 @@ bool AUsableActor::CanUse(ACharacter* User, FHitResult& HitResult)
 	return false;
 }
 
-bool AUsableActor::UseItem(ACharacter* User)
+AUsableActor* AUsableActor::UseItem(ACharacter* User)
 {
-	return false;
+	return 0;
 }
