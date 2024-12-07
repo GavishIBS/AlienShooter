@@ -14,6 +14,7 @@ class AShooterCharacter;
 class AInventoryPickup;
 class UTDSUserWidget;
 class UTDS_InventoryMenu;
+class AUsableActor;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemSelected, AActor*, SelectedItem);
@@ -55,7 +56,7 @@ protected:
 	virtual void BeginPlay() override;
 	void InitInventory();
 
-	bool UseButtonPressed();
+	AUsableActor* UseButtonPressed();
 
 	TObjectPtr<ACharacter> OwnerAsCharacter;
 
@@ -64,7 +65,7 @@ protected:
 	int32 InventorySize = 4;
 
 private:
-	void DestroyCurrentItem(); // Destorys item currently in hand
+	void DestroyCurrentItem(); // Destroys item currently in hand
 
 private:
 	TArray<FSlotData> Content;
@@ -72,6 +73,12 @@ private:
 	AInventoryPickup* ItemInHand = nullptr;
 
 	int32 SelectedItemIndex = -1;  // -1 => Unselected
+
+	AUsableActor* ItemBeingUsed;
+
+protected:
+	UFUNCTION(BlueprintCallable)
+	void OnItemUsed();
 
 protected:
 	// Inventory UI

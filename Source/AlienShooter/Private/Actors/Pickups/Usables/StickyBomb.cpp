@@ -24,10 +24,10 @@ bool AStickyBomb::CanUse(ACharacter* User, FHitResult& HitResult)
 	return Super::CanUse(User, HitResult);
 }
 
-bool AStickyBomb::UseItem(ACharacter* User)
+AUsableActor* AStickyBomb::UseItem(ACharacter* User)
 {
 	FHitResult HitResult;
-	if (!CanUse(User, HitResult)) return false;
+	if (!CanUse(User, HitResult)) return 0;
 
 	SetActorLocation(HitResult.ImpactPoint);
 	const FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(HitResult.ImpactPoint, GetActorLocation() + HitResult.ImpactNormal);
@@ -40,7 +40,7 @@ bool AStickyBomb::UseItem(ACharacter* User)
 
 	StartExplosionTimer();
 
-	return true;
+	return this;
 }
 
 void AStickyBomb::StartExplosionTimer()

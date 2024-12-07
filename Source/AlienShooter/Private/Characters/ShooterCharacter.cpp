@@ -16,6 +16,7 @@
 #include "AnimationLibrary.h"
 #include "Components/SpecialAbilityComponent.h"
 #include "NiagaraComponent.h"
+#include "Actors/UsableActor.h"
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -116,8 +117,8 @@ void AShooterCharacter::LeftMouseButtonPressed()
 	}
 	else if (InventoryComponent && InventoryComponent->ItemInHand)
 	{
-		if (InventoryComponent->UseButtonPressed()) {
-			// TODO: play animation if item is used -> select weapon after animation is completed
+		if (AUsableActor* UseItem = InventoryComponent->UseButtonPressed()) {
+			AnimationLibrary::PlayAnimationMontage(GetMesh(), {UseItem->GetItemUseAnimMontage()});
 			if (CombatComponent) {
 				CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
 			}

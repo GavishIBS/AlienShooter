@@ -20,7 +20,7 @@ class ALIENSHOOTER_API AStickyBomb : public AUsableActor
 public:
 	AStickyBomb();
 	UFUNCTION(BlueprintCallable)
-	virtual bool UseItem(ACharacter* User) override;
+	virtual AUsableActor* UseItem(ACharacter* User) override;
 
 protected:
 	virtual void BeginPlay() override;

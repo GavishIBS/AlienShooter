@@ -24,20 +24,26 @@ bool ASpecialSerumBase::CanUse(ACharacter* User, FHitResult& HitResult)
 	return Super::CanUse(User, HitResult);
 }
 
-// TODO: Destroy after use (after use animation)
+// TODO: Destroy after use (after use UseItemanimation)
 
-bool ASpecialSerumBase::UseItem(ACharacter* User)
+AUsableActor* ASpecialSerumBase::UseItem(ACharacter* User)
 {
 	//return ApplyEffect(User);
 	//return EffectImplementation(User);
 	if (USpecialAbilityComponent* SpecialAbilityComponent = User->FindComponentByClass<USpecialAbilityComponent>()) {
 		SpecialAbilityComponent->SetAbilityData(EffectImplementation, EffectData);
-		Destroy();
-		return true;
+		//Destroy();
+		return this;
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Cyan, FString("Failed to find special ability component"));
 	Destroy();
-	return false;
+	return 0;
+}
+
+void ASpecialSerumBase::OnItemUsed()
+{
+	Super::OnItemUsed();
+	Destroy();
 }
 
 /*

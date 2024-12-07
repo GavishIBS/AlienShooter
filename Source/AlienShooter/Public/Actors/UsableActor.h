@@ -16,7 +16,7 @@ class ALIENSHOOTER_API AUsableActor : public AInventoryPickup, public IUsableInt
 	
 public:	
 	AUsableActor();
-	virtual bool UseItem(ACharacter* User) override;
+	virtual AUsableActor* UseItem(ACharacter* User) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -25,4 +25,10 @@ protected:
 	// Properties
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float UseRange = 150.f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	TObjectPtr<UAnimMontage> ItemUseAnimMontage;
+
+public:
+	FORCEINLINE UAnimMontage* GetItemUseAnimMontage() { return ItemUseAnimMontage; };
 };
