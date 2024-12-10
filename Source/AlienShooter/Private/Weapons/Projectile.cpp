@@ -76,6 +76,10 @@ void AProjectile::UpdateProjectile()
 
 	FVector Direction = (TargetLocation - GetActorLocation()).GetSafeNormal();
 	ProjectileMovementComponent->Velocity = Direction * ProjectileMovementComponent->InitialSpeed;
+	
+	const FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetLocation);
+	SetActorRotation(NewRotation);
+
 	//if (GetActorLocation() == TargetLocation)
 	if (GetActorLocation().Equals(TargetLocation, 50.f))
 	{
