@@ -133,6 +133,9 @@ void UCombatComponent::FireButtonPressed()
 void UCombatComponent::FireWeapon()
 {
 	if (!WeaponInHand) return;
+	if (WeaponInHand->ShouldDoCameraShake()) {
+		OwnerAsShooterCharacter->DoCameraShake(WeaponInHand->GetCameraShakeIntensity(), WeaponInHand->GetCameraShakeTime());
+	}
 	WeaponInHand->OnWeaponFirePressed.Broadcast();
 }
 

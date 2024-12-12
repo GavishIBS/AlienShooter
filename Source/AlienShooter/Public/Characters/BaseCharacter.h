@@ -21,12 +21,16 @@ class ALIENSHOOTER_API ABaseCharacter : public AGameCharacter, public IHitInterf
 
 public:
 	ABaseCharacter();
+	virtual void Tick(float DeltaTime) override;
 	virtual void PostInitializeComponents() override;
+
+	UFUNCTION(BlueprintCallable)
+	void DoCameraShake(const FVector IntensityFactor, const float ShakeTime = 2);
 
 protected:
 	virtual void BeginPlay() override;
 	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass) override;
-	
+
 	/* Camera begin */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	TObjectPtr<USpringArmComponent> CameraBoom;
@@ -43,4 +47,15 @@ protected:
 
 	// Properites
 	EPawnActionState PawnActionState = EPawnActionState::EPAS_Idle;
+
+private:
+	FVector CameraOriginalLocation_Rel;
+	FVector CameraTargetLocation_Rel = CameraOriginalLocation_Rel;
+	FTimerHandle CameraShakeTimerHandle;
+	FTimerHandle CameraShakeStopTimerHandle;
+
+	FVector CameraShakeIntensity = {1, 1, 1};
+
+	void GenerateRandomCameraLocation();
+	void StopCameraShake();
 };

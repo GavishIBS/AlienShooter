@@ -122,6 +122,9 @@ public:
 	FORCEINLINE float GetAutomaticFiringRate() const { return WeaponProperties.AutoFire_Rate; }
 	FORCEINLINE int GetMaxAmmoCapacity() const { return WeaponProperties.MaxAmmoCapacity; }
 	FORCEINLINE bool EnableLaser() const { return LaserProperties.bLaser; }
+	FORCEINLINE bool ShouldDoCameraShake() const { return WeaponProperties.bCameraShake; }
+	FORCEINLINE float GetCameraShakeTime() const { return WeaponProperties.CameraShakeTime; }
+	FORCEINLINE FVector GetCameraShakeIntensity() const { return WeaponProperties.CameraShakeIntensity; }
 	
 	FTransform GetWeaponMuzzleTransform() const;
 	FTransform GetLeftHandPlacementTransform() const;

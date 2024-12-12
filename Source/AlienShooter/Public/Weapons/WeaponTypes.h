@@ -73,6 +73,15 @@ public:
 	int Accuracy = 20;   // %
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
+	bool bCameraShake = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
+	float CameraShakeTime = 0.225f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
+	FVector CameraShakeIntensity = {2.5f, 2.5f, 1.f};
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	FVector2D HitLocation_RandomizationAdditiveRange = FVector2D(8.f, 8.f);
 
 private:
