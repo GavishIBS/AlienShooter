@@ -15,11 +15,11 @@ enum class ELifeStatus : uint8
 UENUM(BlueprintType)
 enum class EPawnActionState : uint8
 {
-	EPAS_None = 0,
-	EPAS_Idle = 1,
-	EPAS_Attacking = 2,
-	EPAS_Attacking_Melee = 3,
-	EPAS_SelectingItem = 4,
-	EPAS_UsingItem = 5,
+	EPAS_None = 0 UMETA(DisplayName="None"),
+	EPAS_Idle = 1 UMETA(DisplayName = "Idle"),
+	EPAS_Attacking = 2 UMETA(DisplayName = "Attacking"),
+	EPAS_Attacking_Melee = 3 UMETA(DisplayName = "Attacking_Melee"),
+	EPAS_SelectingItem = 4 UMETA(DisplayName = "SelectingItem"),
+	EPAS_UsingItem = 5 UMETA(DisplayName = "UsingItem"),
 	EPAS_Max = 99
 };

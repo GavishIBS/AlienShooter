@@ -89,12 +89,20 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void EndAttack();
 
+	UFUNCTION()
+	void OnWeaponInHandUpdated();
+
+	UFUNCTION()
+	void OnWeaponFired();
+
 private:
 	// Inventory UI
 	void OpenInventory_UI();
 	void CloseInventory_UI();
 
 public:
+	bool CanFire();
+
 	FORCEINLINE TObjectPtr<UCombatComponent> GetCombatComponent() const {return CombatComponent;}
 	
 	FORCEINLINE bool IsEquipped() const {return CombatComponent ? CombatComponent->WeaponInHand ? true : false : false;}

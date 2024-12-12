@@ -48,6 +48,9 @@ void AShooterCharacter::InitCallbacks()
 {
 	OnTakeAnyDamage.AddDynamic(this, &AShooterCharacter::OnTakeAnyDamageCallback);
 	OnDeath.AddDynamic(this, &AShooterCharacter::OnDeathCallback);
+	if (CombatComponent) {
+		CombatComponent->OnWeaponUpdated.AddDynamic(this, &AShooterCharacter::OnWeaponInHandUpdated);
+	}
 }
 
 void AShooterCharacter::Tick(float DeltaSeconds)
@@ -109,11 +112,12 @@ void AShooterCharacter::OnDeathCallback(AActor* Killer)
 
 void AShooterCharacter::LeftMouseButtonPressed()
 {
-	if (CombatComponent && CombatComponent->WeaponInHand && PawnActionState < EPawnActionState::EPAS_Attacking)
+	//if (CombatComponent && CombatComponent->WeaponInHand && PawnActionState < EPawnActionState::EPAS_Attacking)
+	if (CanFire())
 	{
 		CombatComponent->FireButtonPressed();
-		if (AnimationLibrary::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData_Pawn()->FireAnimationMontages_Pawn))
-			PawnActionState = EPawnActionState::EPAS_Attacking;
+		//if (AnimationLibrary::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData_Pawn()->FireAnimationMontages_Pawn))
+			//PawnActionState = EPawnActionState::EPAS_Attacking;
 	}
 	else if (InventoryComponent && InventoryComponent->ItemInHand)
 	{
@@ -247,6 +251,21 @@ void AShooterCharacter::EndAttack()
 	PawnActionState = EPawnActionState::EPAS_Idle;
 }
 
+void AShooterCharacter::OnWeaponInHandUpdated()
+{
+	if (CombatComponent && CombatComponent->WeaponInHand) {
+		CombatComponent->WeaponInHand->OnWeaponFired.AddDynamic(this, &AShooterCharacter::OnWeaponFired);
+	}
+}
+
+void AShooterCharacter::OnWeaponFired()
+{
+	if (CombatComponent == nullptr || CombatComponent->WeaponInHand == nullptr) return;
+
+	if (AnimationLibrary::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData_Pawn()->FireAnimationMontages_Pawn))
+		PawnActionState = EPawnActionState::EPAS_Attacking;
+}
+
 void AShooterCharacter::OpenInventory_UI()
 {
 	if (!PlayerController) return;
@@ -260,6 +279,13 @@ void AShooterCharacter::OpenInventory_UI()
 void AShooterCharacter::CloseInventory_UI()
 {
 	InventoryComponent->CloseInventory_UI();
+}
+
+bool AShooterCharacter::CanFire()
+{
+	if (CombatComponent && CombatComponent->WeaponInHand && PawnActionState < EPawnActionState::EPAS_Attacking)
+		return true;
+	else return false;
 }
 
 void AShooterCharacter::PickupWeapon(AWeaponBase* InWeapon) const

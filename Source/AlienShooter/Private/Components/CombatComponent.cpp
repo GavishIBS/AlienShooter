@@ -130,9 +130,14 @@ void UCombatComponent::FireButtonPressed()
 		StartAutomaticFire();
 }
 
+bool UCombatComponent::CanFire()
+{
+	return OwnerAsShooterCharacter ? OwnerAsShooterCharacter->CanFire() : false;
+}
+
 void UCombatComponent::FireWeapon()
 {
-	if (!WeaponInHand) return;
+	if (WeaponInHand == nullptr || CanFire() == false) return;
 	if (WeaponInHand->ShouldDoCameraShake()) {
 		OwnerAsShooterCharacter->DoCameraShake(WeaponInHand->GetCameraShakeIntensity(), WeaponInHand->GetCameraShakeTime(), true, OwnerAsShooterCharacter->GetMesh()->GetForwardVector());
 	}

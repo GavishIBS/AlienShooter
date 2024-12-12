@@ -44,6 +44,7 @@ protected:
 	bool UnselectWeapon();
 
 	void FireButtonPressed();
+	bool CanFire();
 	void FireWeapon();
 	void FireButtonReleased();
 
