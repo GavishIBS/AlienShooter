@@ -57,7 +57,16 @@ void ABaseCharacter::DoCameraShake(const FVector IntensityFactor, const float Sh
 	CameraShakeIntensity = IntensityFactor;
 	bShakeInDirection = bShakeInDir;
 	ShakeDirection = Direction;
-	GetWorldTimerManager().SetTimer(CameraShakeTimerHandle, this, &ABaseCharacter::GenerateRandomCameraLocation, 0.05, true, 0);
+	if (!bShakeInDirection) {
+		GetWorldTimerManager().SetTimer(CameraShakeTimerHandle, this, &ABaseCharacter::GenerateRandomCameraLocation, 0.05, true, 0);
+	}
+	else {
+		CameraTargetLocation_Rel = CameraOriginalLocation_Rel + FVector(
+			CameraShakeIntensity.X * ShakeDirection.X,
+			CameraShakeIntensity.Y * ShakeDirection.Y,
+			CameraShakeIntensity.Z * ShakeDirection.Z
+		);
+	}
 	GetWorldTimerManager().SetTimer(CameraShakeStopTimerHandle, this, &ABaseCharacter::StopCameraShake, ShakeTime, false, ShakeTime);
 }
 
@@ -70,6 +79,7 @@ void ABaseCharacter::GenerateRandomCameraLocation()
 			FMath::RandRange(-5, 10) * CameraShakeIntensity.Z
 		);
 	}
+	/*
 	else {
 		CameraTargetLocation_Rel = CameraOriginalLocation_Rel + FVector(
 			CameraShakeIntensity.X * ShakeDirection.X,
@@ -77,6 +87,7 @@ void ABaseCharacter::GenerateRandomCameraLocation()
 			CameraShakeIntensity.Z * ShakeDirection.Z
 		);
 	}
+	*/
 }
 
 void ABaseCharacter::StopCameraShake()
