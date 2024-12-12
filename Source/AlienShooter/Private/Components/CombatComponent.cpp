@@ -134,7 +134,7 @@ void UCombatComponent::FireWeapon()
 {
 	if (!WeaponInHand) return;
 	if (WeaponInHand->ShouldDoCameraShake()) {
-		OwnerAsShooterCharacter->DoCameraShake(WeaponInHand->GetCameraShakeIntensity(), WeaponInHand->GetCameraShakeTime());
+		OwnerAsShooterCharacter->DoCameraShake(WeaponInHand->GetCameraShakeIntensity(), WeaponInHand->GetCameraShakeTime(), true, OwnerAsShooterCharacter->GetMesh()->GetForwardVector());
 	}
 	WeaponInHand->OnWeaponFirePressed.Broadcast();
 }

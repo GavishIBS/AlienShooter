@@ -25,7 +25,7 @@ public:
 	virtual void PostInitializeComponents() override;
 
 	UFUNCTION(BlueprintCallable)
-	void DoCameraShake(const FVector IntensityFactor, const float ShakeTime = 2);
+	void DoCameraShake(const FVector IntensityFactor, const float ShakeTime, const bool bShakeInDir, const FVector Direction);
 
 protected:
 	virtual void BeginPlay() override;
@@ -55,6 +55,8 @@ private:
 	FTimerHandle CameraShakeStopTimerHandle;
 
 	FVector CameraShakeIntensity = {1, 1, 1};
+	bool bShakeInDirection = false;
+	FVector ShakeDirection = FVector(0, 0, 0);
 
 	void GenerateRandomCameraLocation();
 	void StopCameraShake();

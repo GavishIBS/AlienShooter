@@ -20,11 +20,11 @@ ABaseCharacter::ABaseCharacter()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
 	CameraBoom->TargetArmLength = 1000.f;
-	CameraOriginalLocation_Rel = CameraBoom->GetRelativeLocation();
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(CameraBoom);
-	
+	CameraOriginalLocation_Rel = ViewCamera->GetRelativeLocation();
+
 	AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 }
@@ -36,7 +36,7 @@ void ABaseCharacter::BeginPlay()
 
 void ABaseCharacter::Tick(float DeltaTime)
 {
-	CameraBoom->SetRelativeLocation(FMath::VInterpTo(CameraBoom->GetRelativeLocation(), CameraTargetLocation_Rel, DeltaTime, 3.f));
+	ViewCamera->SetRelativeLocation(FMath::VInterpTo(ViewCamera->GetRelativeLocation(), CameraTargetLocation_Rel, DeltaTime, 3.f));
 }
 
 void ABaseCharacter::PostInitializeComponents()
@@ -52,22 +52,31 @@ float ABaseCharacter::GetHit(const FVector& HitLocation, const float& Damage, co
 	return IHitInterface::GetHit(HitLocation, Damage, RandomizationFactor, InDamageCauser, DamageTypeClass);
 }
 
-void ABaseCharacter::DoCameraShake(const FVector IntensityFactor, const float ShakeTime)
+void ABaseCharacter::DoCameraShake(const FVector IntensityFactor, const float ShakeTime, const bool bShakeInDir, const FVector Direction)
 {
-	// TODO: Define specific shake direction for specific tasks
-
 	CameraShakeIntensity = IntensityFactor;
+	bShakeInDirection = bShakeInDir;
+	ShakeDirection = Direction;
 	GetWorldTimerManager().SetTimer(CameraShakeTimerHandle, this, &ABaseCharacter::GenerateRandomCameraLocation, 0.05, true, 0);
 	GetWorldTimerManager().SetTimer(CameraShakeStopTimerHandle, this, &ABaseCharacter::StopCameraShake, ShakeTime, false, ShakeTime);
 }
 
 void ABaseCharacter::GenerateRandomCameraLocation()
 {
-	CameraTargetLocation_Rel = CameraOriginalLocation_Rel + FVector(
-		FMath::RandRange(-15, 20) * CameraShakeIntensity.X,
-		FMath::RandRange(-20, 20) * CameraShakeIntensity.Y,
-		FMath::RandRange(-5, 10) * CameraShakeIntensity.Z
-	);
+	if (!bShakeInDirection) {
+		CameraTargetLocation_Rel = CameraOriginalLocation_Rel + FVector(
+			FMath::RandRange(-15, 20) * CameraShakeIntensity.X,
+			FMath::RandRange(-20, 20) * CameraShakeIntensity.Y,
+			FMath::RandRange(-5, 10) * CameraShakeIntensity.Z
+		);
+	}
+	else {
+		CameraTargetLocation_Rel = CameraOriginalLocation_Rel + FVector(
+			CameraShakeIntensity.X * ShakeDirection.X,
+			CameraShakeIntensity.Y * ShakeDirection.Y,
+			CameraShakeIntensity.Z * ShakeDirection.Z
+		);
+	}
 }
 
 void ABaseCharacter::StopCameraShake()
