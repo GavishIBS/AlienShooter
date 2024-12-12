@@ -10,6 +10,8 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Damage/ExplosionDamage.h"
 
+#include "Characters/BaseCharacter.h"
+
 AExplosive::AExplosive()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -68,6 +70,16 @@ float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const 
 	// Destroy
 	Destroy();
 	*/
+
+	// Camera shake // TEMPORARY -> Use a better approach to trigger camera shake, don't access character class directly here
+	if (InDamageCauser) {
+		if (FVector::Dist(GetActorLocation(), InDamageCauser->GetActorLocation()) < 700) {
+			if (ABaseCharacter* BaseChar = Cast<ABaseCharacter>(InDamageCauser)) {
+				BaseChar->DoCameraShake(FVector(7, 7, 2.5), 1, false, FVector());
+			}
+		}
+	}
+
 	GetWorldTimerManager().SetTimer(ExplosionTimerHandle, this, &AExplosive::Explode, ExplosionDelay, false, ExplosionDelay);
 	return DamageProperties.BaseDamage;
 }
