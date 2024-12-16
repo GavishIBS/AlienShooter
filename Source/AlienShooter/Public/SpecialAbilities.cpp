@@ -9,12 +9,13 @@
 bool Dash(ACharacter* InCharacter) {
 	if (!InCharacter) return false;
 
-	// TODO: Decide which direction to dash into, forward direction or direction of velocity
-
+	/*
 	FRotator ForwardDirectionRot = InCharacter->GetMesh()->GetComponentRotation();
 	ForwardDirectionRot.Yaw += 90.f;
-	const FVector ForwardDirec = UKismetMathLibrary::GetForwardVector(ForwardDirectionRot);
-	InCharacter->LaunchCharacter(ForwardDirec * 3250.f, false, false);
+	FVector LaunchDirection = UKismetMathLibrary::GetForwardVector(ForwardDirectionRot);
+	*/
+	FVector LaunchDirection = InCharacter->GetVelocity().GetSafeNormal();
+	InCharacter->LaunchCharacter(LaunchDirection * 3250.f, false, false);
 	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Red, FString("I am dashing"));
 	return true;
 }
