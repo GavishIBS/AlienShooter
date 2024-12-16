@@ -260,6 +260,7 @@ void UCombatComponent::DestroyCurrentWeapon()
 {
 	if (WeaponInHand)
 	{
+		StopAutomaticFire();
 		OnWeaponDestroyBegin(WeaponInHand);
 		WeaponInHand->Destroy();
 		WeaponInHand = nullptr;
