@@ -8,7 +8,7 @@
 #include "PooledActor.h"
 
 template <typename T>
-class UObjectPool
+class ALIENSHOOTER_API UObjectPool
 {
 public:
 	UObjectPool() = default;
