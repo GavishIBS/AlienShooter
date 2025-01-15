@@ -18,6 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponPicked);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponSelected);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFirePressed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFired);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReload);
 
 UCLASS()
 class ALIENSHOOTER_API AWeaponBase : public AActor
@@ -41,8 +42,12 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
 	FOnWeaponFired OnWeaponFired;
-	
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
+	FOnWeaponReload OnWeaponReload;
+
 	//bool TakeWeapon(const ACharacter* InstigatorCharacter);
+	void TryReload();
 
 protected:
 	virtual void BeginPlay() override;
@@ -67,6 +72,7 @@ protected:
 	virtual void Fire();
 	virtual void WeaponFiredFailed();
 	void SpawnBulletShell() const;
+	void UpdateMagazine();
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Ownership)
 	TObjectPtr<AShooterCharacter> OwnerAsShooterCharacter = nullptr;
@@ -116,6 +122,7 @@ public:
 	FORCEINLINE const FWeaponAnimationData_Pawn* GetWeaponAnimationData_Pawn() const {return &WeaponAnimationData_Pawn;}
 	FORCEINLINE TSubclassOf<AWeaponBase> GetWeaponClass() const {return WeaponData.WeaponClass;}
 	FORCEINLINE int GetTotalAmmoAvailable() const {return WeaponProperties.GetTotalAmmoAvailable();}
+	FORCEINLINE int GetAmmoInBag() const {return WeaponProperties.GetAmmoInBag();}
 	FORCEINLINE bool ShouldEnableRightHandIK() const {return WeaponProperties.bShouldEnableRightHandIK;}
 	FORCEINLINE bool ShouldEnableFabrik() const {return WeaponProperties.bShouldEnableFabrik;}
 	FORCEINLINE bool HaveAutomaticFire() const { return WeaponProperties.bAutoFire; }
@@ -125,6 +132,7 @@ public:
 	FORCEINLINE bool ShouldDoCameraShake() const { return WeaponProperties.bCameraShake; }
 	FORCEINLINE float GetCameraShakeTime() const { return WeaponProperties.CameraShakeTime; }
 	FORCEINLINE FVector GetCameraShakeIntensity() const { return WeaponProperties.CameraShakeIntensity; }
+	FORCEINLINE bool IsMagazineEmpty() const { return WeaponProperties.IsEmpty(); }
 	
 	FTransform GetWeaponMuzzleTransform() const;
 	FTransform GetLeftHandPlacementTransform() const;

@@ -19,7 +19,8 @@ enum class EPawnActionState : uint8
 	EPAS_Idle = 1 UMETA(DisplayName = "Idle"),
 	EPAS_Attacking = 2 UMETA(DisplayName = "Attacking"),
 	EPAS_Attacking_Melee = 3 UMETA(DisplayName = "Attacking_Melee"),
-	EPAS_SelectingItem = 4 UMETA(DisplayName = "SelectingItem"),
-	EPAS_UsingItem = 5 UMETA(DisplayName = "UsingItem"),
+	EPAS_Reloading = 4 UMETA(DisplayName = "Reloading"),
+	EPAS_SelectingItem = 5 UMETA(DisplayName = "SelectingItem"),
+	EPAS_UsingItem = 6 UMETA(DisplayName = "UsingItem"),
 	EPAS_Max = 99
 };

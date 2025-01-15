@@ -49,10 +49,16 @@ public:
 	float Damage_RandomizationFactor = 7.5f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties, meta=(ClampMin=0))
-	int AmmoAvailable = 100.f;
+	int AmmoAvailable = 100; // AmmoInBag
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties, meta=(ClampMin=0))
-	int MaxAmmoCapacity = 1000.f;
+	int AmmoInMagazine = 50;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties, meta=(ClampMin=0))
+	int MagazineMaxSize = 50;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties, meta=(ClampMin=0))
+	int MaxAmmoCapacity = 1000.f; // MaxAmmoInBag
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	TObjectPtr<UTexture2D> WeaponIcon = nullptr;
@@ -89,22 +95,27 @@ private:
 	bool bShouldEnableFabrik = true;
 
 private:
-	bool bIsEmpty = AmmoAvailable <= 0;
+	bool bIsEmpty = AmmoInMagazine <= 0;
 	
-	int GetTotalAmmoAvailable() const {return AmmoAvailable;}
+	int GetTotalAmmoAvailable() const {return AmmoAvailable + AmmoInMagazine;}
 	void SetTotalAmmoAvailable(const int& Value)
 	{
 		AmmoAvailable = Value > MaxAmmoCapacity ? MaxAmmoCapacity : Value;
 	}
-	void DeductAmmo(const int Value)
+	int GetAmmoInBag() const { return AmmoAvailable; }
+	void SetAmmoInBag(const int& Value) {
+		AmmoAvailable = FMath::Clamp(Value, 0, MaxAmmoCapacity);
+	}
+	void DeductAmmoFromBag(const int Value)
 	{
 		AmmoAvailable -= Value;
 		AmmoAvailable = FMath::Clamp(AmmoAvailable, 0, MaxAmmoCapacity);
-
-		if (AmmoAvailable <= 0)
-		{
-			bIsEmpty = true;
-		}
+	}
+	void DeductAmmo(const int Value)
+	{
+		AmmoInMagazine -= Value;
+		AmmoInMagazine = FMath::Clamp(AmmoInMagazine, 0, MagazineMaxSize);
+		bIsEmpty = AmmoInMagazine <= 0;
 	}
 	void AddAmmo(const int Value)
 	{
@@ -115,6 +126,10 @@ private:
 		{
 			bIsEmpty = false;
 		}		
+	}
+	void SetAmmoInMag(const int& Value) {
+		AmmoInMagazine = FMath::Clamp(Value, 0, MagazineMaxSize);
+		bIsEmpty = AmmoInMagazine <= 0;
 	}
 	bool IsEmpty() const {return bIsEmpty;}
 };
@@ -147,6 +162,9 @@ struct FWeaponAnimationData
 public:
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	TArray<TObjectPtr<UAnimationAsset>> WeaponFireAnimations;
+	
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	TArray<TObjectPtr<UAnimMontage>> WeaponReloadAnimations;
 };
 
 USTRUCT(BlueprintType)
@@ -155,8 +173,12 @@ struct FWeaponAnimationData_Pawn
 	GENERATED_BODY()
 
 public:
+	// Character animations
 	UPROPERTY(EditAnywhere, Category = "Animation")
-	TArray<TObjectPtr<UAnimMontage>> FireAnimationMontages_Pawn;   // Character animations
+	TArray<TObjectPtr<UAnimMontage>> FireAnimationMontages_Pawn;
+	
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	TArray<TObjectPtr<UAnimMontage>> ReloadAnimationMontages_Pawn;
 };
 
 USTRUCT(BlueprintType)

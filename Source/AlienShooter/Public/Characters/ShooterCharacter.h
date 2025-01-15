@@ -89,11 +89,17 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void EndAttack();
 
+	UFUNCTION(BlueprintCallable)
+	void EndReload();
+
 	UFUNCTION()
 	void OnWeaponInHandUpdated();
 
 	UFUNCTION()
 	void OnWeaponFired();
+
+	UFUNCTION()
+	void OnWeaponReload();
 
 private:
 	// Inventory UI
