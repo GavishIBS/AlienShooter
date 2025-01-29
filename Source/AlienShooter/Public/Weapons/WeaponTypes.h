@@ -102,6 +102,7 @@ private:
 	{
 		AmmoAvailable = Value > MaxAmmoCapacity ? MaxAmmoCapacity : Value;
 	}
+	int GetAmmoInMag() const { return AmmoInMagazine; }
 	int GetAmmoInBag() const { return AmmoAvailable; }
 	void SetAmmoInBag(const int& Value) {
 		AmmoAvailable = FMath::Clamp(Value, 0, MaxAmmoCapacity);

@@ -41,7 +41,7 @@ AWeaponBase::AWeaponBase()
 	LaserMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-void AWeaponBase::TryReload()
+bool AWeaponBase::TryReload()
 {
 	if (WeaponProperties.AmmoAvailable > 0) {
 		if (WeaponProperties.bIsSkeletalMesh) {
@@ -50,7 +50,8 @@ void AWeaponBase::TryReload()
 		}
 		OnWeaponReload.Broadcast();
 		UpdateMagazine();
-	}
+	} else return false;
+	return true;
 }
 
 void AWeaponBase::BeginPlay()

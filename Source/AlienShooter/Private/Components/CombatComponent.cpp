@@ -141,7 +141,9 @@ void UCombatComponent::FireWeapon()
 
 	if (WeaponInHand == nullptr || CanFire() == false) return;
 	if (WeaponInHand->IsMagazineEmpty()) {
-		WeaponInHand->TryReload();
+		if (WeaponInHand->TryReload()) {
+			OnWeaponUpdated.Broadcast();
+		}
 		StopAutomaticFire();
 		return;
 	}

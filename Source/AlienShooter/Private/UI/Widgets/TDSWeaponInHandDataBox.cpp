@@ -62,7 +62,10 @@ void UTDSWeaponInHandDataBox::OnWeaponUpdatedCallback()
 			WeaponIcon->SetRenderOpacity(1.f);
 			SizeBox_AmmoBox->SetRenderOpacity(1.f);
 			WeaponIcon->SetBrushFromTexture(OwnerAsShooterCharacter->GetWeaponInHand()->GetWeaponProperties()->WeaponIcon);
-			AmmoText->SetText(FText::AsNumber(OwnerAsShooterCharacter->GetWeaponInHand()->GetTotalAmmoAvailable()));
+			FText FormattedText = FText::FromString(FString::Printf(TEXT("%d / %d"), OwnerAsShooterCharacter->GetWeaponInHand()->GetAmmoInMag(),
+				OwnerAsShooterCharacter->GetWeaponInHand()->GetAmmoInBag()));
+			AmmoText->SetText(FormattedText);
+			//AmmoText->SetText(FText::AsNumber(OwnerAsShooterCharacter->GetWeaponInHand()->GetTotalAmmoAvailable()));
 		} else
 		{
 			WeaponIcon->SetRenderOpacity(0.f);
