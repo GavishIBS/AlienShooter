@@ -41,6 +41,19 @@ AWeaponBase::AWeaponBase()
 	LaserMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+bool AWeaponBase::TryReload()
+{
+	if (WeaponProperties.AmmoAvailable > 0) {
+		if (WeaponProperties.bIsSkeletalMesh) {
+			checkf(WeaponSkeletalMesh, TEXT("bIsSkeletalMesh is set to false but, WeaponSkeletalMesh is not valid on reload"));
+			AnimationLibrary::PlayAnimationMontage(WeaponSkeletalMesh, WeaponAnimationData.WeaponReloadAnimations);
+		}
+		OnWeaponReload.Broadcast();
+		UpdateMagazine();
+	} else return false;
+	return true;
+}
+
 void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -145,6 +158,21 @@ void AWeaponBase::SpawnBulletShell() const
 		WeaponStaticMesh->GetSocketTransform(WeaponProperties.ShellEjectionSocketName);
 
 	GetWorld()->SpawnActor<ABulletShell>(WeaponData.BulletShellClass, EjectionSocketTransform);
+}
+
+void AWeaponBase::UpdateMagazine()
+{
+	/*
+	const int AmmoToFeed = GetTotalAmmoAvailable() >= WeaponProperties.MagazineMaxSize ? WeaponProperties.MagazineMaxSize : GetTotalAmmoAvailable();
+	WeaponProperties.AmmoInMagazine = AmmoToFeed;
+	SetTotalAmmoAvailable(GetTotalAmmoAvailable() - AmmoToFeed);
+	*/
+	
+	//WeaponProperties.AmmoInMagazine = GetTotalAmmoAvailable() >= WeaponProperties.MagazineMaxSize ? WeaponProperties.MagazineMaxSize : GetTotalAmmoAvailable();
+	//SetTotalAmmoAvailable(GetTotalAmmoAvailable() - WeaponProperties.AmmoInMagazine);
+	
+	WeaponProperties.SetAmmoInMag(GetAmmoInBag() >= WeaponProperties.MagazineMaxSize ? WeaponProperties.MagazineMaxSize : GetAmmoInBag());
+	WeaponProperties.SetAmmoInBag(GetAmmoInBag() - WeaponProperties.AmmoInMagazine);
 }
 
 FTransform AWeaponBase::GetWeaponMuzzleTransform() const

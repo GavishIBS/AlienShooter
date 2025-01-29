@@ -125,9 +125,9 @@ bool UCombatComponent::UnselectWeapon()
 
 void UCombatComponent::FireButtonPressed()
 {
-	FireWeapon();
 	if (WeaponInHand->HaveAutomaticFire())
 		StartAutomaticFire();
+	else FireWeapon();
 }
 
 bool UCombatComponent::CanFire()
@@ -137,11 +137,22 @@ bool UCombatComponent::CanFire()
 
 void UCombatComponent::FireWeapon()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
+
 	if (WeaponInHand == nullptr || CanFire() == false) return;
+	if (WeaponInHand->IsMagazineEmpty()) {
+		if (WeaponInHand->TryReload()) {
+			OnWeaponUpdated.Broadcast();
+		}
+		StopAutomaticFire();
+		return;
+	}
 	if (WeaponInHand->ShouldDoCameraShake()) {
 		OwnerAsShooterCharacter->DoCameraShake(WeaponInHand->GetCameraShakeIntensity(), WeaponInHand->GetCameraShakeTime(), true, OwnerAsShooterCharacter->GetMesh()->GetForwardVector());
 	}
 	WeaponInHand->OnWeaponFirePressed.Broadcast();
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
 }
 
 void UCombatComponent::FireButtonReleased()
@@ -155,7 +166,7 @@ void UCombatComponent::StartAutomaticFire()
 
 	if (AActor* OwnerActor = GetOwner())
 	{
-		OwnerActor->GetWorldTimerManager().SetTimer(AutomaticFireTimerHandle, this, &UCombatComponent::FireWeapon, WeaponInHand->GetAutomaticFiringRate(), true, WeaponInHand->GetAutomaticFiringRate());
+		OwnerActor->GetWorldTimerManager().SetTimer(AutomaticFireTimerHandle, this, &UCombatComponent::FireWeapon, WeaponInHand->GetAutomaticFiringRate(), true, 0.f);
 	}
 }
 
