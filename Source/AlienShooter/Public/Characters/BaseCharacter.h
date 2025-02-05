@@ -13,6 +13,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UAttributeComponent;
 class UInventoryComponent;
+class URadioPhoneComponent;
 
 UCLASS()
 class ALIENSHOOTER_API ABaseCharacter : public AGameCharacter, public IHitInterface
@@ -44,6 +45,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UInventoryComponent> InventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<URadioPhoneComponent> RadioPhoneComponent;
 
 	// Properites
 	EPawnActionState PawnActionState = EPawnActionState::EPAS_Idle;
