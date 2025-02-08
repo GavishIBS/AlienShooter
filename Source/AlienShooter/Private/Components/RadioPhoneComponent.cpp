@@ -10,6 +10,7 @@ URadioPhoneComponent::URadioPhoneComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetVisibility(false);
 }
 
 void URadioPhoneComponent::BeginPlay()
@@ -19,6 +20,7 @@ void URadioPhoneComponent::BeginPlay()
 
 void URadioPhoneComponent::OnPhonePicked()
 {
+	SetVisibility(true);
 	bHavePhone = true;
 }
 
