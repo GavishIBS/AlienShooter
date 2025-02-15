@@ -74,6 +74,11 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(LeftAltAction, ETriggerEvent::Completed, this, &AShooterCharacter::LeftAltReleased);
 		
 		EnhancedInputComponent->BindAction(SpecialAbilityAction, ETriggerEvent::Started, this, &AShooterCharacter::AbilityKeyPressed);
+
+		EnhancedInputComponent->BindAction(InventorySlot_1_Action, ETriggerEvent::Started, this, &AShooterCharacter::InventorySlotPressed_1);
+		EnhancedInputComponent->BindAction(InventorySlot_2_Action, ETriggerEvent::Started, this, &AShooterCharacter::InventorySlotPressed_2);
+		EnhancedInputComponent->BindAction(InventorySlot_3_Action, ETriggerEvent::Started, this, &AShooterCharacter::InventorySlotPressed_3);
+		EnhancedInputComponent->BindAction(InventorySlot_4_Action, ETriggerEvent::Started, this, &AShooterCharacter::InventorySlotPressed_4);
 	}
 }
 
@@ -245,6 +250,26 @@ void AShooterCharacter::AbilityKeyPressed()
 	}
 }
 
+void AShooterCharacter::InventorySlotPressed_1()
+{
+	TryUseInventoryItemAtIndex(0);
+}
+
+void AShooterCharacter::InventorySlotPressed_2()
+{
+	TryUseInventoryItemAtIndex(1);
+}
+
+void AShooterCharacter::InventorySlotPressed_3()
+{
+	TryUseInventoryItemAtIndex(2);
+}
+
+void AShooterCharacter::InventorySlotPressed_4()
+{
+	TryUseInventoryItemAtIndex(3);
+}
+
 void AShooterCharacter::EndAttack()
 {
 	if (PawnActionState > EPawnActionState::EPAS_Attacking) return;
@@ -255,6 +280,16 @@ void AShooterCharacter::EndReload()
 {
 	if (PawnActionState > EPawnActionState::EPAS_Reloading) return;
 	PawnActionState = EPawnActionState::EPAS_Idle;
+}
+
+void AShooterCharacter::OnInventoryItemSuccessfullyUsed()
+{
+	if (InventoryComponent) {
+		InventoryComponent->OnItemUsed();
+	}
+	if (CombatComponent != nullptr && CombatComponent->WeaponInHand == nullptr) {
+		CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
+	}
 }
 
 void AShooterCharacter::OnWeaponInHandUpdated()
@@ -307,6 +342,29 @@ void AShooterCharacter::PickupWeapon(AWeaponBase* InWeapon) const
 {
 	if (!CombatComponent) return;
 	CombatComponent->AddWeapon(InWeapon);
+}
+
+void AShooterCharacter::TryUseInventoryItemAtIndex(const int Index)
+{
+	if (!InventoryComponent || InventoryComponent->InventorySize < (Index + 1)) return;
+
+	if (InventoryComponent->IsItemUsableOnIndex(Index)) {
+		if (CombatComponent)
+			CombatComponent->UnselectWeapon();
+		InventoryComponent->SelectItem(Index);
+
+		bool bUsed = false;
+		if (AUsableActor* UseItem = InventoryComponent->UseButtonPressed()) {
+			AnimationLibrary::PlayAnimationMontage(GetMesh(), { UseItem->GetItemUseAnimMontage() });
+			bUsed = true;
+		}
+
+		if (bUsed == false) {
+			InventoryComponent->UnselectItem();
+			if (CombatComponent)
+				CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
+		}
+	}
 }
 
 void AShooterCharacter::DeactivateSpecialAbilityNiagaraEffect()

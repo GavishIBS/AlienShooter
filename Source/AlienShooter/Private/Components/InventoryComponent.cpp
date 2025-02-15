@@ -169,6 +169,15 @@ bool UInventoryComponent::UnselectItem()
 	return true;
 }
 
+bool UInventoryComponent::IsItemUsableOnIndex(const int Index)
+{
+	if (Index >= Content.Num()) return false;
+
+	if (Content[Index].bEmpty == false &&
+		Content[Index].ItemData.bUsable == true) return true;
+	else return false;
+}
+
 AUsableActor* UInventoryComponent::UseButtonPressed()
 {
 	if (!ItemInHand) return 0;
@@ -232,8 +241,8 @@ void UInventoryComponent::PrintContent()
 	{
 		if (GEngine)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Item number: %d -> %s"),
-				Counter, *Slot.ItemData.ItemName.ToString()));
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("bEmpty: %d\nItem number: %d -> %s"),
+				Slot.bEmpty, Counter, *Slot.ItemData.ItemName.ToString()));
 		}
 		Counter++;
 	}

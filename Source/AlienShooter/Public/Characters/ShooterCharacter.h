@@ -36,6 +36,8 @@ public:
 	
 	void PickupWeapon(AWeaponBase* InWeapon) const;
 
+	void TryUseInventoryItemAtIndex(const int Index);
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -64,6 +66,10 @@ protected:
 	void LeftAltPressed();
 	void LeftAltReleased();
 	void AbilityKeyPressed();
+	void InventorySlotPressed_1();
+	void InventorySlotPressed_2();
+	void InventorySlotPressed_3();
+	void InventorySlotPressed_4();
 	/* Input callbacks end */
 	
 	/* Input begin */
@@ -77,10 +83,22 @@ protected:
 	TObjectPtr<UInputAction> MouseWheelDownAction = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	TObjectPtr<UInputAction> LeftAltAction;
+	TObjectPtr<UInputAction> LeftAltAction = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	TObjectPtr<UInputAction> SpecialAbilityAction;
+	TObjectPtr<UInputAction> SpecialAbilityAction = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> InventorySlot_1_Action = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> InventorySlot_2_Action = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> InventorySlot_3_Action = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> InventorySlot_4_Action = nullptr;
 	/* Input end */
 
 	FShooterProperties ShooterProperties = FShooterProperties();
@@ -91,6 +109,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void EndReload();
+
+	UFUNCTION(BlueprintCallable)
+	void OnInventoryItemSuccessfullyUsed();
 
 	UFUNCTION()
 	void OnWeaponInHandUpdated();

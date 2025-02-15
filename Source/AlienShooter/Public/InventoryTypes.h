@@ -23,6 +23,9 @@ struct FItemData
 
 	UPROPERTY(EditAnywhere, Category = "Data")
 	TSubclassOf<AActor> ItemClass = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Data")
+	bool bUsable = false;
 };
 
 USTRUCT(BlueprintType)
