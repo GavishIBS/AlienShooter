@@ -17,6 +17,8 @@
 #include "Components/SpecialAbilityComponent.h"
 #include "NiagaraComponent.h"
 #include "Actors/UsableActor.h"
+#include "Components/RadioPhoneComponent.h"
+#include "UI/Widgets/TDSOverlay.h"
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -50,6 +52,9 @@ void AShooterCharacter::InitCallbacks()
 	OnDeath.AddDynamic(this, &AShooterCharacter::OnDeathCallback);
 	if (CombatComponent) {
 		CombatComponent->OnWeaponUpdated.AddDynamic(this, &AShooterCharacter::OnWeaponInHandUpdated);
+	}
+	if (RadioPhoneComponent) {
+		RadioPhoneComponent->OnAudioTriggered.AddDynamic(this, &AShooterCharacter::OnRadioPhoneAudioTriggered);
 	}
 }
 
@@ -383,4 +388,13 @@ void AShooterCharacter::DeactivateSpecialAbilityNiagaraEffect()
 void AShooterCharacter::ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSystem) {
 	SpecialAbilityNiagaraComponent->Activate();
 	SpecialAbilityNiagaraComponent->SetAsset(InSystem);
+}
+
+void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo) {
+	if (!PlayerController) return;
+
+	if (ATDSHUD* TDS_HUD = Cast<ATDSHUD>(PlayerController->GetHUD()))  // TODO: Save TDS_HUD at BeginPlay
+	{
+		TDS_HUD->GetOverlayWidget()->SetEnvironmentDialogue_Subtitles_Text(FText::FromString(AudioInfo));
+	}
 }

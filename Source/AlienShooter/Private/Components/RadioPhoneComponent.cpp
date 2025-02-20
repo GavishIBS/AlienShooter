@@ -24,7 +24,7 @@ void URadioPhoneComponent::OnPhonePicked()
 	bHavePhone = true;
 }
 
-bool URadioPhoneComponent::TriggerAudio(USoundBase* InAudio)   // TODO: make FRadioPhoneAudio -> take in thi struct as argument
+bool URadioPhoneComponent::TriggerAudio(USoundBase* InAudio, const EAudioType AudioType)   // TODO: make FRadioPhoneAudio -> take in the struct as argument containing all the information
 {
 	if (bAudioInProgress) return false;
 	if (InAudio == nullptr) return false;
@@ -32,6 +32,7 @@ bool URadioPhoneComponent::TriggerAudio(USoundBase* InAudio)   // TODO: make FRa
 
 	UGameplayStatics::PlaySoundAtLocation(this, InAudio, GetComponentLocation());
 	bAudioInProgress = true;
+	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, "Hello this is a sample text");
 
 	GetOwner()->GetWorldTimerManager().SetTimer(AudioTimerHandle, this, &URadioPhoneComponent::EndAudio, InAudio->Duration, false, InAudio->Duration);
 

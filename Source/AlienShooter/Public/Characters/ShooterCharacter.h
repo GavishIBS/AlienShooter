@@ -9,6 +9,7 @@
 #include "Characters/ControllableCharacter.h"
 #include "Components/CombatComponent.h"
 #include "Weapons/WeaponBase.h"
+#include "../CustomAudioTypes.h"
 #include "ShooterCharacter.generated.h"
 
 class AWeaponBase;
@@ -42,6 +43,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	void InitCallbacks();
+
+	UFUNCTION()
+	virtual void OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo);
 
 	UFUNCTION()
 	void OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);

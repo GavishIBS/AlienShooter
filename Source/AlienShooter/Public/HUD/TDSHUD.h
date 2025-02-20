@@ -10,6 +10,7 @@
 
 class UUserWidget;
 class UTDSUserWidget;
+class UTDSOverlay;
 
 /**
  * 
@@ -32,4 +33,7 @@ protected:
 	TSubclassOf<UUserWidget> OverlayWidgetClass;
 
 	TObjectPtr<UTDSUserWidget> OverlayWidget;
+
+public:
+	FORCEINLINE TObjectPtr<UTDSOverlay> GetOverlayWidget() const;
 };

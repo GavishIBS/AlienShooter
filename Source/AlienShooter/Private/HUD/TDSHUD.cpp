@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Characters/ShooterCharacter.h"
 #include "UI/Widgets/TDSUserWidget.h"
+#include "UI/Widgets/TDSOverlay.h"
 
 ATDSHUD::ATDSHUD()
 {
@@ -35,4 +36,9 @@ UTDSUserWidget* ATDSHUD::MakeWidgetInViewport(const TSubclassOf<UTDSUserWidget>&
 	UTDSUserWidget* UW = CreateWidget<UTDSUserWidget>(PlayerController, UW_Class);
 	UW->AddToViewport();
 	return UW;
+}
+
+TObjectPtr<UTDSOverlay> ATDSHUD::GetOverlayWidget() const
+{
+	return Cast<UTDSOverlay>(OverlayWidget);
 }

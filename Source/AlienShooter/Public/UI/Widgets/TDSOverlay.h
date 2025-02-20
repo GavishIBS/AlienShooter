@@ -40,4 +40,11 @@ protected:
 
 	//UPROPERTY(meta=(BindWidget))
 	//TObjectPtr<UTDSWeaponBoxList> WeaponBoxList;
+	
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Data")
+	FText EnvironmentDialogue_Subtitles_Text = FText();
+
+public:
+	FORCEINLINE void SetEnvironmentDialogue_Subtitles_Text(const FText InText) { EnvironmentDialogue_Subtitles_Text = InText; }
 };
