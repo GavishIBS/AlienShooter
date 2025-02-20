@@ -353,17 +353,25 @@ void AShooterCharacter::TryUseInventoryItemAtIndex(const int Index)
 			CombatComponent->UnselectWeapon();
 		InventoryComponent->SelectItem(Index);
 
-		bool bUsed = false;
+		//bool bUsed = false;
 		if (AUsableActor* UseItem = InventoryComponent->UseButtonPressed()) {
 			AnimationLibrary::PlayAnimationMontage(GetMesh(), { UseItem->GetItemUseAnimMontage() });
-			bUsed = true;
+			//bUsed = true;
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("Failed to use item"));
+			InventoryComponent->UnselectItem();
+			if (CombatComponent)
+				CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
 		}
 
+		/*
 		if (bUsed == false) {
 			InventoryComponent->UnselectItem();
 			if (CombatComponent)
 				CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
 		}
+		*/
 	}
 }
 

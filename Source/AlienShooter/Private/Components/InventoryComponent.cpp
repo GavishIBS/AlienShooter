@@ -105,9 +105,11 @@ void UInventoryComponent::ClearSlot(const int32 Index)
 
 bool UInventoryComponent::SelectItem(const int Index)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString("Try select item"));
 	if (Index == SelectedItemIndex) return false;
 	if (!OwnerAsCharacter || !GetWorld()) return false;
 	if (Index < 0 || InventorySize - 1 < Index) return false;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString("Selecting item"));
 
 	// Destroy current item
 	//DestroyCurrentItem();
@@ -166,7 +168,16 @@ bool UInventoryComponent::UnselectItem()
 {
 	// Destroy current item
 	DestroyCurrentItem();
+
+	ItemInHand = nullptr;
+	SelectedItemIndex = -1;
+	
 	return true;
+}
+
+void UInventoryComponent::ClearItemBeingUsed()
+{
+	ItemBeingUsed = nullptr;
 }
 
 bool UInventoryComponent::IsItemUsableOnIndex(const int Index)
@@ -181,16 +192,22 @@ bool UInventoryComponent::IsItemUsableOnIndex(const int Index)
 AUsableActor* UInventoryComponent::UseButtonPressed()
 {
 	if (!ItemInHand) return 0;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("ITEM_HAND is valid!"));
 
 	if (AUsableActor* UsableActor = Cast<AUsableActor>(ItemInHand))
 	{
 		ACharacter* Character = Cast<ACharacter>(GetOwner());
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("Trying to use item now"));
 		if (AUsableActor* Usable = UsableActor->UseItem(Character))
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("AUsableActor::UseItem is called with return = true"));
 			RemoveItemFromInventory(SelectedItemIndex);
 			ItemInHand = nullptr;
 			ItemBeingUsed = Usable;
 			return Usable;
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("AUsableActor::UseItem is called with return = false"));
 		}
 	}
 

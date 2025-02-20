@@ -47,6 +47,8 @@ public:
 	bool SelectItem(const int Index);
 	bool UnselectItem();
 
+	void ClearItemBeingUsed();
+
 	bool IsItemUsableOnIndex(const int Index);
 
 	// DEBUG
