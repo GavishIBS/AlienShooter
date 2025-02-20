@@ -47,6 +47,10 @@ public:
 	bool SelectItem(const int Index);
 	bool UnselectItem();
 
+	void ClearItemBeingUsed();
+
+	bool IsItemUsableOnIndex(const int Index);
+
 	// DEBUG
 	UFUNCTION(BlueprintCallable)
 	void PrintContent();
@@ -77,7 +81,7 @@ private:
 	AUsableActor* ItemBeingUsed;
 
 protected:
-	UFUNCTION(BlueprintCallable)
+	//UFUNCTION(BlueprintCallable)
 	void OnItemUsed();
 
 protected:
