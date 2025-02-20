@@ -39,6 +39,21 @@ bool URadioPhoneComponent::TriggerAudio(USoundBase* InAudio, const EAudioType Au
 	return true;
 }
 
+bool URadioPhoneComponent::TriggerAudio_WithParams(const FAudioEvent AudioEvent)
+{
+	if (bAudioInProgress) return false;
+	if (AudioEvent.AudioAsset == nullptr) return false;
+	if (bHavePhone == false) return false;
+
+	UGameplayStatics::PlaySoundAtLocation(this, AudioEvent.AudioAsset, GetComponentLocation());
+	bAudioInProgress = true;
+	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, AudioEvent.AudioInfo);
+
+	GetOwner()->GetWorldTimerManager().SetTimer(AudioTimerHandle, this, &URadioPhoneComponent::EndAudio, AudioEvent.AudioAsset->Duration, false, AudioEvent.AudioAsset->Duration);
+
+	return true;
+}
+
 void URadioPhoneComponent::EndAudio()
 {
 	bAudioInProgress = false;

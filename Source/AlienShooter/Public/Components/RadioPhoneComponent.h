@@ -31,6 +31,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	bool TriggerAudio(USoundBase* InAudio, const EAudioType AudioType);
+	
+	UFUNCTION(BlueprintCallable)
+	bool TriggerAudio_WithParams(const FAudioEvent AudioEvent);
 
 	void EndAudio();
 

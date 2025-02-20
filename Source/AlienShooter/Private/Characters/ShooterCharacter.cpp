@@ -391,6 +391,7 @@ void AShooterCharacter::ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSy
 }
 
 void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo) {
+	if (AudioType != EAudioType::EAT_Dialogue) return;
 	if (!PlayerController) return;
 
 	if (ATDSHUD* TDS_HUD = Cast<ATDSHUD>(PlayerController->GetHUD()))  // TODO: Save TDS_HUD at BeginPlay
