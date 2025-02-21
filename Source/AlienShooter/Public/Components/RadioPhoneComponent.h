@@ -5,9 +5,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../CustomAudioTypes.h"
 #include "RadioPhoneComponent.generated.h"
 
 class USoundBase;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAudioTriggered, const EAudioType, AudioType, const FString, AudioInfo, const float, AudioDuration);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API URadioPhoneComponent : public USkeletalMeshComponent
@@ -17,6 +20,9 @@ class ALIENSHOOTER_API URadioPhoneComponent : public USkeletalMeshComponent
 public:	
 	URadioPhoneComponent();
 
+	UPROPERTY(BlueprintAssignable)
+	FOnAudioTriggered OnAudioTriggered;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -24,7 +30,10 @@ protected:
 	void OnPhonePicked();
 
 	UFUNCTION(BlueprintCallable)
-	bool TriggerAudio(USoundBase* InAudio);
+	bool TriggerAudio(USoundBase* InAudio, const EAudioType AudioType);
+	
+	UFUNCTION(BlueprintCallable)
+	bool TriggerAudio_WithParams(const FAudioEvent AudioEvent);
 
 	void EndAudio();
 

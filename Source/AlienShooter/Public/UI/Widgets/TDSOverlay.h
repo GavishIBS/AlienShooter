@@ -40,4 +40,23 @@ protected:
 
 	//UPROPERTY(meta=(BindWidget))
 	//TObjectPtr<UTDSWeaponBoxList> WeaponBoxList;
+	
+protected:
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float Environment_Subtitles_Text_ClearDelay = 2.f;
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Data")
+	FText EnvironmentDialogue_Subtitles_Text = FText();
+
+private:
+	FTimerHandle EnvironmentDialogueText_Subtitles_TimerHandle;
+	void OnEnvironmentDialogueCompleted() { EnvironmentDialogue_Subtitles_Text = FText(); }
+
+	FTimerHandle TypeEnvironmentDialogue_Subtitles_Text_TimerHandle;
+	FText Target_Subtitles_Text = FText();
+	void IncrementCharacter_To_Subtitles_Text();
+
+public:
+	FORCEINLINE void SetEnvironmentDialogue_Subtitles_Text(const FText InText, const float& DialogueAudioDuration);
 };
