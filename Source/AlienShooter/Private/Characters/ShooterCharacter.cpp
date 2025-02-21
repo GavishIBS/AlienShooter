@@ -390,12 +390,12 @@ void AShooterCharacter::ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSy
 	SpecialAbilityNiagaraComponent->SetAsset(InSystem);
 }
 
-void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo) {
+void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration) {
 	if (AudioType != EAudioType::EAT_Dialogue) return;
 	if (!PlayerController) return;
 
 	if (ATDSHUD* TDS_HUD = Cast<ATDSHUD>(PlayerController->GetHUD()))  // TODO: Save TDS_HUD at BeginPlay
 	{
-		TDS_HUD->GetOverlayWidget()->SetEnvironmentDialogue_Subtitles_Text(FText::FromString(AudioInfo));
+		TDS_HUD->GetOverlayWidget()->SetEnvironmentDialogue_Subtitles_Text(FText::FromString(AudioInfo), AudioDuration);
 	}
 }

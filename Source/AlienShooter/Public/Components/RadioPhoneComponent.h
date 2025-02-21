@@ -10,7 +10,7 @@
 
 class USoundBase;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAudioTriggered, const EAudioType, AudioType, const FString, AudioInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAudioTriggered, const EAudioType, AudioType, const FString, AudioInfo, const float, AudioDuration);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API URadioPhoneComponent : public USkeletalMeshComponent

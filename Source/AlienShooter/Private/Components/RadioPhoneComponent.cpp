@@ -32,7 +32,7 @@ bool URadioPhoneComponent::TriggerAudio(USoundBase* InAudio, const EAudioType Au
 
 	UGameplayStatics::PlaySoundAtLocation(this, InAudio, GetComponentLocation());
 	bAudioInProgress = true;
-	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, "Hello this is a sample text");
+	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, "Hello this is a sample text", InAudio->Duration);
 
 	GetOwner()->GetWorldTimerManager().SetTimer(AudioTimerHandle, this, &URadioPhoneComponent::EndAudio, InAudio->Duration, false, InAudio->Duration);
 
@@ -47,7 +47,7 @@ bool URadioPhoneComponent::TriggerAudio_WithParams(const FAudioEvent AudioEvent)
 
 	UGameplayStatics::PlaySoundAtLocation(this, AudioEvent.AudioAsset, GetComponentLocation());
 	bAudioInProgress = true;
-	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, AudioEvent.AudioInfo);
+	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, AudioEvent.AudioInfo, AudioEvent.AudioAsset->Duration);
 
 	GetOwner()->GetWorldTimerManager().SetTimer(AudioTimerHandle, this, &URadioPhoneComponent::EndAudio, AudioEvent.AudioAsset->Duration, false, AudioEvent.AudioAsset->Duration);
 

@@ -45,7 +45,7 @@ protected:
 	void InitCallbacks();
 
 	UFUNCTION()
-	virtual void OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo);
+	virtual void OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration);
 
 	UFUNCTION()
 	void OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);

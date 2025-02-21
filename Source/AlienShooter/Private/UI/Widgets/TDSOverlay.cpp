@@ -45,3 +45,10 @@ void UTDSOverlay::InitComponents()
 		WeaponBoxList->InitComponent();
 	}*/
 }
+
+void UTDSOverlay::SetEnvironmentDialogue_Subtitles_Text(const FText InText, const float& DialogueAudioDuration)
+{
+	EnvironmentDialogue_Subtitles_Text = InText;
+	GetWorld()->GetTimerManager().
+		SetTimer(EnvironmentDialogueText_Subtitles_Timer, this, &UTDSOverlay::OnEnvironmentDialogueCompleted, DialogueAudioDuration, false, DialogueAudioDuration);
+}
