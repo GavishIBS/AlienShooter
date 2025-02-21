@@ -48,7 +48,25 @@ void UTDSOverlay::InitComponents()
 
 void UTDSOverlay::SetEnvironmentDialogue_Subtitles_Text(const FText InText, const float& DialogueAudioDuration)
 {
-	EnvironmentDialogue_Subtitles_Text = InText;
+	//EnvironmentDialogue_Subtitles_Text = InText;
+	
+	Target_Subtitles_Text = InText;
+	float TypingSpeed = DialogueAudioDuration / InText.ToString().Len();
 	GetWorld()->GetTimerManager().
-		SetTimer(EnvironmentDialogueText_Subtitles_Timer, this, &UTDSOverlay::OnEnvironmentDialogueCompleted, DialogueAudioDuration, false, DialogueAudioDuration);
+		SetTimer(TypeEnvironmentDialogue_Subtitles_Text_TimerHandle, this, &UTDSOverlay::IncrementCharacter_To_Subtitles_Text, TypingSpeed, true, 0.f);
+	
+	GetWorld()->GetTimerManager().   // Adding 1 for delay
+		SetTimer(EnvironmentDialogueText_Subtitles_TimerHandle, this, &UTDSOverlay::OnEnvironmentDialogueCompleted, DialogueAudioDuration + 1, false, DialogueAudioDuration + 1);
+}
+
+void UTDSOverlay::IncrementCharacter_To_Subtitles_Text()
+{
+	if (Target_Subtitles_Text.ToString().Len() <= EnvironmentDialogue_Subtitles_Text.ToString().Len()) {
+		GetWorld()->GetTimerManager().ClearTimer(TypeEnvironmentDialogue_Subtitles_Text_TimerHandle);
+		return;
+	}
+
+	FString NewText_AsString = EnvironmentDialogue_Subtitles_Text.ToString();
+	NewText_AsString += Target_Subtitles_Text.ToString()[EnvironmentDialogue_Subtitles_Text.ToString().Len()];
+	EnvironmentDialogue_Subtitles_Text = FText::FromString(NewText_AsString);
 }
