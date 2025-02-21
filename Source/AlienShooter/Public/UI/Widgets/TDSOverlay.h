@@ -42,6 +42,10 @@ protected:
 	//TObjectPtr<UTDSWeaponBoxList> WeaponBoxList;
 	
 protected:
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float Environment_Subtitles_Text_ClearDelay = 2.f;
+
+protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	FText EnvironmentDialogue_Subtitles_Text = FText();
 

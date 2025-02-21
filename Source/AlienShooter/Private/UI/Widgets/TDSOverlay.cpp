@@ -55,8 +55,8 @@ void UTDSOverlay::SetEnvironmentDialogue_Subtitles_Text(const FText InText, cons
 	GetWorld()->GetTimerManager().
 		SetTimer(TypeEnvironmentDialogue_Subtitles_Text_TimerHandle, this, &UTDSOverlay::IncrementCharacter_To_Subtitles_Text, TypingSpeed, true, 0.f);
 	
-	GetWorld()->GetTimerManager().   // Adding 1 for delay
-		SetTimer(EnvironmentDialogueText_Subtitles_TimerHandle, this, &UTDSOverlay::OnEnvironmentDialogueCompleted, DialogueAudioDuration + 1, false, DialogueAudioDuration + 1);
+	GetWorld()->GetTimerManager().SetTimer(EnvironmentDialogueText_Subtitles_TimerHandle, this, &UTDSOverlay::OnEnvironmentDialogueCompleted,
+		DialogueAudioDuration + Environment_Subtitles_Text_ClearDelay, false, DialogueAudioDuration + Environment_Subtitles_Text_ClearDelay);
 }
 
 void UTDSOverlay::IncrementCharacter_To_Subtitles_Text()
