@@ -5,6 +5,7 @@
 
 #include "Events/EventArea.h"
 #include "Components/BoxComponent.h"
+#include "Components/BillboardComponent.h"
 
 AEventArea::AEventArea()
 {
@@ -12,6 +13,9 @@ AEventArea::AEventArea()
 
 	OverlapArea = CreateDefaultSubobject<UBoxComponent>(TEXT("OverlapArea"));
 	OverlapArea->SetupAttachment(GetRootComponent());
+
+	Billboard = CreateDefaultSubobject<UBillboardComponent>(TEXT("Billboard"));
+	Billboard->SetupAttachment(OverlapArea);
 }
 
 void AEventArea::BeginPlay()

@@ -40,6 +40,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UBoxComponent> OverlapArea;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UBillboardComponent> Billboard;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Properties)
 	FName TagToLook = FName("Player");
 };
