@@ -9,6 +9,7 @@
 #include "EventArea.generated.h"
 
 class UBoxComponent;
+class UBillboardComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnterArea, AActor*, OtherActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnExitArea, AActor*, OtherActor);

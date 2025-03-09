@@ -25,7 +25,7 @@ struct FSpecialSerumEffectData
 	EEffectApplicationPolicy EffectApplicationPolicy = EEffectApplicationPolicy::EEAP_None;
 
 	UPROPERTY(EditAnywhere, Category="Data")
-	class UNiagaraSystem* CharacterStateFX;
+	class UNiagaraSystem* CharacterStateFX = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="Data")
 	float Duration = 7.f;
