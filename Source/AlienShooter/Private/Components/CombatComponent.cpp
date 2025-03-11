@@ -125,6 +125,7 @@ bool UCombatComponent::UnselectWeapon()
 
 void UCombatComponent::StartAiming()
 {
+	GetWorld()->GetTimerManager().ClearTimer(EndAimTimer);
 	bAiming = true;
 }
 
@@ -152,7 +153,12 @@ bool UCombatComponent::CanFire()
 
 void UCombatComponent::FireWeapon()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
+	if (bAiming == false) {
+		StartAiming();
+		return;
+	}
+
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
 
 	if (WeaponInHand == nullptr || CanFire() == false) return;
 	if (WeaponInHand->IsMagazineEmpty()) {
@@ -167,12 +173,13 @@ void UCombatComponent::FireWeapon()
 	}
 	WeaponInHand->OnWeaponFirePressed.Broadcast();
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
 }
 
 void UCombatComponent::FireButtonReleased()
 {
 	StopAutomaticFire();
+	EndAimingWithDelay();
 }
 
 void UCombatComponent::StartAutomaticFire()
