@@ -121,6 +121,8 @@ public:
 	FORCEINLINE const FWeaponAnimationData* GetWeaponAnimationData() const { return &WeaponAnimationData; }
 	FORCEINLINE const FWeaponAnimationData_Pawn* GetWeaponAnimationData_Pawn() const { return &WeaponAnimationData_Pawn; }
 	FORCEINLINE TSubclassOf<AWeaponBase> GetWeaponClass() const { return WeaponData.WeaponClass; }
+	FORCEINLINE bool CanAim() const { return WeaponProperties.bCanAim; }
+	FORCEINLINE bool ShouldForceAutomaticAim() const { return WeaponProperties.bForceAim; }
 	FORCEINLINE int GetTotalAmmoAvailable() const { return WeaponProperties.GetTotalAmmoAvailable(); }
 	FORCEINLINE int GetAmmoInMag() const { return WeaponProperties.GetAmmoInMag(); }
 	FORCEINLINE int GetAmmoInBag() const {return WeaponProperties.GetAmmoInBag();}

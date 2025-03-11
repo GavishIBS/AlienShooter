@@ -123,6 +123,22 @@ bool UCombatComponent::UnselectWeapon()
 	return true;
 }
 
+void UCombatComponent::StartAiming()
+{
+	GetWorld()->GetTimerManager().ClearTimer(EndAimTimer);
+	bAiming = true;
+}
+
+void UCombatComponent::EndAiming()
+{
+	bAiming = false;
+}
+
+void UCombatComponent::EndAimingWithDelay()
+{
+	GetWorld()->GetTimerManager().SetTimer(EndAimTimer, this, &ThisClass::EndAiming, EndAimDelay, false, EndAimDelay);
+}
+
 void UCombatComponent::FireButtonPressed()
 {
 	if (WeaponInHand->HaveAutomaticFire())
@@ -137,9 +153,16 @@ bool UCombatComponent::CanFire()
 
 void UCombatComponent::FireWeapon()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
+	//if (WeaponInHand == nullptr) return;
+	if (CanFire() == false) return;
 
-	if (WeaponInHand == nullptr || CanFire() == false) return;
+	if (WeaponInHand->CanAim() && WeaponInHand->ShouldForceAutomaticAim() && bAiming == false) {
+		StartAiming();
+		return;
+	}
+
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
+	
 	if (WeaponInHand->IsMagazineEmpty()) {
 		if (WeaponInHand->TryReload()) {
 			OnWeaponUpdated.Broadcast();
@@ -152,11 +175,14 @@ void UCombatComponent::FireWeapon()
 	}
 	WeaponInHand->OnWeaponFirePressed.Broadcast();
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
 }
 
 void UCombatComponent::FireButtonReleased()
 {
+	if (WeaponInHand->CanAim() && WeaponInHand->ShouldForceAutomaticAim()) {
+		EndAimingWithDelay();
+	}
 	StopAutomaticFire();
 }
 
