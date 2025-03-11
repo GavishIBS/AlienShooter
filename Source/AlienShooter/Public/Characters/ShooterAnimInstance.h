@@ -63,6 +63,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Combat)
 	EWeaponName WeaponInHand_Name = EWeaponName::EWN_None;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Combat)
+	bool bAiming = false;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
 	bool bEnableFabrik = false;
 

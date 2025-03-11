@@ -123,6 +123,21 @@ bool UCombatComponent::UnselectWeapon()
 	return true;
 }
 
+void UCombatComponent::StartAiming()
+{
+	bAiming = true;
+}
+
+void UCombatComponent::EndAiming()
+{
+	bAiming = false;
+}
+
+void UCombatComponent::EndAimingWithDelay()
+{
+	GetWorld()->GetTimerManager().SetTimer(EndAimTimer, this, &ThisClass::EndAiming, EndAimDelay, false, EndAimDelay);
+}
+
 void UCombatComponent::FireButtonPressed()
 {
 	if (WeaponInHand->HaveAutomaticFire())

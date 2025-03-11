@@ -72,6 +72,9 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(LeftMouseButtonAction, ETriggerEvent::Started, this, &AShooterCharacter::LeftMouseButtonPressed);
 		EnhancedInputComponent->BindAction(LeftMouseButtonAction, ETriggerEvent::Completed, this, &AShooterCharacter::LeftMouseButtonReleased);
 		
+		EnhancedInputComponent->BindAction(RightMouseButtonAction, ETriggerEvent::Started, this, &AShooterCharacter::RightMouseButtonPressed);
+		EnhancedInputComponent->BindAction(RightMouseButtonAction, ETriggerEvent::Completed, this, &AShooterCharacter::RightMouseButtonReleased);
+
 		EnhancedInputComponent->BindAction(MouseWheelUpAction, ETriggerEvent::Started, this, &AShooterCharacter::MouseWheelUp);
 		EnhancedInputComponent->BindAction(MouseWheelDownAction, ETriggerEvent::Started, this, &AShooterCharacter::MouseWheelDown);
 		
@@ -146,6 +149,18 @@ void AShooterCharacter::LeftMouseButtonReleased()
 	{
 		CombatComponent->FireButtonReleased();
 	}
+}
+
+void AShooterCharacter::RightMouseButtonPressed()
+{
+	if (CombatComponent && CombatComponent->WeaponInHand)
+		CombatComponent->StartAiming();
+}
+
+void AShooterCharacter::RightMouseButtonReleased()
+{
+	if (CombatComponent && CombatComponent->WeaponInHand)
+		CombatComponent->EndAimingWithDelay();
 }
 
 void AShooterCharacter::MouseWheelUp()

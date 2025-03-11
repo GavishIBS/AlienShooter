@@ -43,6 +43,10 @@ protected:
 	bool SelectWeapon(const int Index);
 	bool UnselectWeapon();
 
+	void StartAiming();
+	void EndAiming();
+	void EndAimingWithDelay();
+
 	void FireButtonPressed();
 	bool CanFire();
 	void FireWeapon();
@@ -78,7 +82,17 @@ public:
 	UPROPERTY(VisibleAnywhere, Category=Combat)
 	int8 WeaponIndex = -1;
 
+	UPROPERTY(BlueprintReadOnly, Category=Combat)
+	bool bAiming = false;
+
+	FTimerHandle EndAimTimer;
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category=Ownership)
 	AShooterCharacter* OwnerAsShooterCharacter = nullptr;
+
+protected:
+	// Properties
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat Properties")
+	float EndAimDelay = 2.75f;
 };

@@ -53,6 +53,7 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bEquipped = ShooterCharacter->IsEquipped();
 		WeaponInHand = ShooterCharacter->GetWeaponInHand();
 		WeaponInHand_Name = ShooterCharacter->GetWeaponInHand_Name();
+		bAiming = ShooterCharacter->IsAiming();
 	}
 
 	// IK

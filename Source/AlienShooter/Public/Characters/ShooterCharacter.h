@@ -65,6 +65,8 @@ protected:
 	/* Input callbacks begin */
 	void LeftMouseButtonPressed();
 	void LeftMouseButtonReleased();
+	void RightMouseButtonPressed();
+	void RightMouseButtonReleased();
 	void MouseWheelUp();
 	void MouseWheelDown();
 	void LeftAltPressed();
@@ -79,6 +81,9 @@ protected:
 	/* Input begin */
 	UPROPERTY(EditDefaultsOnly, Category=Input)
 	TObjectPtr<UInputAction> LeftMouseButtonAction = nullptr;
+	
+	UPROPERTY(EditDefaultsOnly, Category=Input)
+	TObjectPtr<UInputAction> RightMouseButtonAction = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category=Input)
 	TObjectPtr<UInputAction> MouseWheelUpAction = nullptr;
@@ -142,6 +147,7 @@ public:
 			CombatComponent->WeaponInHand->GetWeaponProperties()->WeaponName : EWeaponName::EWN_None : EWeaponName::EWN_None;}
 	FORCEINLINE FShooterProperties* GetShooterProperties() {return &ShooterProperties;}
 	FORCEINLINE int GetNumberOfWeapon() const {return CombatComponent ? CombatComponent->Weapons.Num() : 0;}
+	FORCEINLINE bool IsAiming() const { return CombatComponent ? CombatComponent->bAiming : false; }
 
 	FORCEINLINE void DeactivateSpecialAbilityNiagaraEffect();
 	FORCEINLINE void ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSystem);
