@@ -9,6 +9,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Damage/ExplosionDamage.h"
+#include "Interfaces/PhysicsActorInterface.h"
+//#include "DrawDebugHelpers.h"
 
 #include "Characters/BaseCharacter.h"
 
@@ -21,11 +23,16 @@ AExplosive::AExplosive()
 
 	ExplosionOriginPoint = CreateDefaultSubobject<USceneComponent>(TEXT("ExplosionOriginPoint"));
 	ExplosionOriginPoint->SetupAttachment(ExplosiveMesh);
+
+	ForceAffectingAreaCollision = CreateDefaultSubobject<USphereComponent>(TEXT("ForceAffectingAreaCollision"));
+	ForceAffectingAreaCollision->SetupAttachment(ExplosionOriginPoint);
 }
 
 void AExplosive::BeginPlay()
 {
 	Super::BeginPlay();
+	ForceAffectingAreaCollision->SetSphereRadius(ForceAffectingSphereRadius);
+	//DrawDebugSphere(GetWorld(), ForceAffectingAreaCollision->GetComponentLocation(), ForceAffectingSphereRadius, 24, FColor::Green, true);
 	InitCallbacks();
 }
 
@@ -107,6 +114,19 @@ void AExplosive::Explode()
 	UGameplayStatics::ApplyRadialDamage(this, DamageProperties.BaseDamage,
 		ExplosionOriginPoint->GetComponentLocation(), DamageProperties.DamageInnerRadius,
 		UExplosionDamage::StaticClass(), ActorsToIgnore);
+
+	TArray<AActor*> OutOverlappingActors;
+	ForceAffectingAreaCollision->GetOverlappingActors(OutOverlappingActors);
+	for (int i = 0; i < OutOverlappingActors.Num(); i++) {
+		if (OutOverlappingActors[i] == nullptr) continue;
+		if (IPhysicsActorInterface* PAI = Cast<IPhysicsActorInterface>(OutOverlappingActors[i])) {
+			if (PAI && PAI->GetPhysicsComponent()) {
+				FVector Direction = OutOverlappingActors[i]->GetActorLocation() - ExplosionOriginPoint->GetComponentLocation();
+				Direction = Direction / FVector(FMath::Abs(Direction.X), FMath::Abs(Direction.Y), FMath::Abs(Direction.Z));
+				PAI->GetPhysicsComponent()->AddImpulse(Direction * ForceMagnitude);
+			}
+		}
+	}
 
 	OnExplosion();
 }

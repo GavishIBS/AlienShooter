@@ -40,6 +40,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USceneComponent> ExplosionOriginPoint;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<USphereComponent> ForceAffectingAreaCollision;
+
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	TSoftObjectPtr<UNiagaraSystem> ExplosionParticleSystem;
 
@@ -51,6 +54,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float CameraShakeRange = 700.f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float ForceAffectingSphereRadius = 200.f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float ForceMagnitude = 2500.f;
 
 private:
 	FTimerHandle ExplosionTimerHandle;
