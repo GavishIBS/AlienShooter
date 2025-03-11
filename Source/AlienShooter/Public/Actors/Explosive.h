@@ -49,6 +49,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float ExplosionDelay = 0.1f;
 
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float CameraShakeRange = 700.f;
+
 private:
 	FTimerHandle ExplosionTimerHandle;
 

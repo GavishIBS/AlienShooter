@@ -73,7 +73,7 @@ float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const 
 
 	// Camera shake // TEMPORARY -> Use a better approach to trigger camera shake, don't access character class directly here
 	if (InDamageCauser) {
-		if (FVector::Dist(GetActorLocation(), InDamageCauser->GetActorLocation()) < 700) {
+		if (FVector::Dist(GetActorLocation(), InDamageCauser->GetActorLocation()) < CameraShakeRange) {
 			if (ABaseCharacter* BaseChar = Cast<ABaseCharacter>(InDamageCauser)) {
 				BaseChar->DoCameraShake(FVector(7, 7, 2.5), 1, false, FVector());
 			}
