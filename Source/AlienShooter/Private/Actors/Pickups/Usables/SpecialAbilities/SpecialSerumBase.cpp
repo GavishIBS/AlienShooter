@@ -11,7 +11,7 @@
 ASpecialSerumBase::ASpecialSerumBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
-	EffectImplementation = Dash;
+	EffectImplementation = Abilities::Dash;
 }
 
 void ASpecialSerumBase::BeginPlay()

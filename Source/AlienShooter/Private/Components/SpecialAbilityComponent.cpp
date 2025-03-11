@@ -5,6 +5,7 @@
 
 #include "Components/SpecialAbilityComponent.h"
 #include "Characters/ShooterCharacter.h"
+#include "Components/CapsuleComponent.h"
 
 USpecialAbilityComponent::USpecialAbilityComponent()
 {
@@ -24,7 +25,7 @@ void USpecialAbilityComponent::Init_Component()
 void USpecialAbilityComponent::UseAbility()
 {
 	if (EffectImplementation) {
-		EffectImplementation((ACharacter*)OwnerAsShooterCharacter);
+		EffectImplementation((ACharacter*)OwnerAsShooterCharacter, EffectData.ExecutionDuration);
 	}
 }
 

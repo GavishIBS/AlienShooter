@@ -28,7 +28,23 @@ struct FSpecialSerumEffectData
 	class UNiagaraSystem* CharacterStateFX = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="Data")
-	float Duration = 7.f;
+	float Duration = 7.f;    // Duration through which the player can use ability
+
+	UPROPERTY(EditAnywhere, Category="Data")
+	float ExecutionDuration = 1.25f;    // Actual use time of a ability
 };
 
-bool Dash(class ACharacter* InCharacter);
+class Abilities
+{
+public:
+	Abilities();
+	~Abilities();
+
+	static bool Dash(class ACharacter* InCharacter, float ExecutionDuration = 1.25f);
+	static void OnDashExecutionEnd();
+	static FTimerHandle DashExecutionEndTimerHandle;
+	static class ACharacter* Char;
+
+private:
+
+};

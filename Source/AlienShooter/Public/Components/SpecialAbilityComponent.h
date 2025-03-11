@@ -24,7 +24,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	bool (*EffectImplementation)(ACharacter*);
+	bool (*EffectImplementation)(ACharacter*, float);
 	FSpecialSerumEffectData EffectData;
 
 protected:
@@ -40,7 +40,7 @@ private:
 public:
 	//FORCEINLINE void SetEffectImplementation(bool(*InImplementation)(ACharacter*)) { EffectImplementation = InImplementation; }
 	//FORCEINLINE void SetEffectData(const FSpecialEffectData& InEffectData) { EffectData = InEffectData; }
-	FORCEINLINE void SetAbilityData(bool(*InImplementation)(ACharacter*), const FSpecialSerumEffectData& InEffectData) {
+	FORCEINLINE void SetAbilityData(bool(*InImplementation)(ACharacter*, float), const FSpecialSerumEffectData& InEffectData) {
 		EffectImplementation = InImplementation;
 		EffectData = InEffectData;
 		OnAbilityDataSet();

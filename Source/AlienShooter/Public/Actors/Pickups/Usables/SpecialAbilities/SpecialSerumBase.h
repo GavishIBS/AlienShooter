@@ -25,7 +25,7 @@ public:
 
 	//virtual bool ApplyEffect(ACharacter* InCharacter) override;
 
-	bool (*EffectImplementation)(ACharacter* InCharacter);
+	bool (*EffectImplementation)(ACharacter* InCharacter, float Duration);
 
 protected:
 	virtual void BeginPlay() override;
