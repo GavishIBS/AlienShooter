@@ -153,13 +153,13 @@ void AShooterCharacter::LeftMouseButtonReleased()
 
 void AShooterCharacter::RightMouseButtonPressed()
 {
-	if (CombatComponent && CombatComponent->WeaponInHand)
+	if (CombatComponent && CombatComponent->WeaponInHand && CombatComponent->WeaponInHand->CanAim())
 		CombatComponent->StartAiming();
 }
 
 void AShooterCharacter::RightMouseButtonReleased()
 {
-	if (CombatComponent && CombatComponent->WeaponInHand)
+	if (CombatComponent && CombatComponent->WeaponInHand && CombatComponent->WeaponInHand->CanAim())
 		CombatComponent->EndAimingWithDelay();
 }
 

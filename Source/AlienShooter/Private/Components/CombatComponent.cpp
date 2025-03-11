@@ -153,14 +153,16 @@ bool UCombatComponent::CanFire()
 
 void UCombatComponent::FireWeapon()
 {
-	if (bAiming == false) {
+	//if (WeaponInHand == nullptr) return;
+	if (CanFire() == false) return;
+
+	if (WeaponInHand->CanAim() && WeaponInHand->ShouldForceAutomaticAim() && bAiming == false) {
 		StartAiming();
 		return;
 	}
 
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
-
-	if (WeaponInHand == nullptr || CanFire() == false) return;
+	
 	if (WeaponInHand->IsMagazineEmpty()) {
 		if (WeaponInHand->TryReload()) {
 			OnWeaponUpdated.Broadcast();
@@ -178,8 +180,10 @@ void UCombatComponent::FireWeapon()
 
 void UCombatComponent::FireButtonReleased()
 {
+	if (WeaponInHand->CanAim() && WeaponInHand->ShouldForceAutomaticAim()) {
+		EndAimingWithDelay();
+	}
 	StopAutomaticFire();
-	EndAimingWithDelay();
 }
 
 void UCombatComponent::StartAutomaticFire()

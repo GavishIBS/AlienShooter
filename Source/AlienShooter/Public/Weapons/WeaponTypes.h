@@ -39,6 +39,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	FName WeaponMuzzleSocketName = FName();
 
+	UPROPERTY(EditDefaultsOnly, Category = "Properties")
+	bool bCanAim = true;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Properties")
+	bool bForceAim = true;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Properties)
 	float BulletHealth = 100.f;
 	
