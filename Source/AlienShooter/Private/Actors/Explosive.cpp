@@ -10,7 +10,8 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Damage/ExplosionDamage.h"
 #include "Interfaces/PhysicsActorInterface.h"
-//#include "DrawDebugHelpers.h"
+#include "Interfaces/HitInterface.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 #include "Characters/BaseCharacter.h"
 
@@ -23,16 +24,11 @@ AExplosive::AExplosive()
 
 	ExplosionOriginPoint = CreateDefaultSubobject<USceneComponent>(TEXT("ExplosionOriginPoint"));
 	ExplosionOriginPoint->SetupAttachment(ExplosiveMesh);
-
-	ForceAffectingAreaCollision = CreateDefaultSubobject<USphereComponent>(TEXT("ForceAffectingAreaCollision"));
-	ForceAffectingAreaCollision->SetupAttachment(ExplosionOriginPoint);
 }
 
 void AExplosive::BeginPlay()
 {
 	Super::BeginPlay();
-	ForceAffectingAreaCollision->SetSphereRadius(ForceAffectingSphereRadius);
-	//DrawDebugSphere(GetWorld(), ForceAffectingAreaCollision->GetComponentLocation(), ForceAffectingSphereRadius, 24, FColor::Green, true);
 	InitCallbacks();
 }
 
@@ -115,10 +111,27 @@ void AExplosive::Explode()
 		ExplosionOriginPoint->GetComponentLocation(), DamageProperties.DamageInnerRadius,
 		UExplosionDamage::StaticClass(), ActorsToIgnore);
 
+	// TODO: Instead of applying damage and calling GetHit separately combine both
+
+	TArray<FHitResult> OutHits;
+	UKismetSystemLibrary::SphereTraceMulti(this, ExplosionOriginPoint->GetComponentLocation(), ExplosionOriginPoint->GetComponentLocation(),
+		ForceAffectingSphereRadius, ETraceTypeQuery::TraceTypeQuery1, false, ActorsToIgnore, EDrawDebugTrace::ForDuration,
+		OutHits, true);
+
 	TArray<AActor*> OutOverlappingActors;
-	ForceAffectingAreaCollision->GetOverlappingActors(OutOverlappingActors);
+	for (auto Hit : OutHits) {
+		if (Hit.bBlockingHit) {
+			OutOverlappingActors.Add(Hit.GetActor());
+		}
+	}
+
 	for (int i = 0; i < OutOverlappingActors.Num(); i++) {
+		if (OutOverlappingActors[i] == this) continue;
 		if (OutOverlappingActors[i] == nullptr) continue;
+		if (IHitInterface* HI = Cast<IHitInterface>(OutOverlappingActors[i])) {
+			GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Emerald, FString::Printf(TEXT("Name: %s"), *OutOverlappingActors[i]->GetName()));
+			HI->GetHit(OutOverlappingActors[i]->GetActorLocation(), DamageProperties.BaseDamage, 1.f, this, UExplosionDamage::StaticClass());
+		}
 		if (IPhysicsActorInterface* PAI = Cast<IPhysicsActorInterface>(OutOverlappingActors[i])) {
 			if (PAI && PAI->GetPhysicsComponent()) {
 				FVector Direction = OutOverlappingActors[i]->GetActorLocation() - ExplosionOriginPoint->GetComponentLocation();
@@ -134,7 +147,5 @@ void AExplosive::Explode()
 void AExplosive::OnExplosion()
 {
 	SpawnLoot();
-
-	// Destroy
 	Destroy();
 }

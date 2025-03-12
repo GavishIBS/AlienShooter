@@ -40,9 +40,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USceneComponent> ExplosionOriginPoint;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	TObjectPtr<USphereComponent> ForceAffectingAreaCollision;
-
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	TSoftObjectPtr<UNiagaraSystem> ExplosionParticleSystem;
 
