@@ -26,4 +26,7 @@ struct FDamageProperties
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float DamageFalloff = 2.f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float ForceMag = 500000.f;
 };

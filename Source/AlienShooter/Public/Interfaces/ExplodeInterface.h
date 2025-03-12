@@ -25,5 +25,6 @@ class ALIENSHOOTER_API IExplodeInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void Explode(const FDamageProperties& DamageProperties);
+	virtual void Explode(AActor* ThisObject, class UParticleSystem* InExplosionParticleSystem, const FDamageProperties& InDamageProperties,
+		const FVector& Loc, const FRotator& Rot, const TArray<AActor*> InActorsToIgnore/* = TArray<AActor*>() */);
 };

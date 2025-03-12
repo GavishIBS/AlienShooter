@@ -11,7 +11,9 @@
 #include "Damage/ExplosionDamage.h"
 #include "Interfaces/PhysicsActorInterface.h"
 #include "Interfaces/HitInterface.h"
+#include "Interfaces/ExplodeInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
+
 
 #include "Characters/BaseCharacter.h"
 
@@ -85,12 +87,19 @@ float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const 
 		}
 	}
 
-	GetWorldTimerManager().SetTimer(ExplosionTimerHandle, this, &AExplosive::Explode, ExplosionDelay, false, ExplosionDelay);
+	GetWorldTimerManager().SetTimer(ExplosionTimerHandle, this, &AExplosive::ExplodeWrapper, ExplosionDelay, false, ExplosionDelay);
 	return DamageProperties.BaseDamage;
 }
 
-void AExplosive::Explode()
+void AExplosive::Explode(AActor* ThisObject, UParticleSystem* InExplosionParticleSystem, const FDamageProperties& InDamageProperties,
+	const FVector& Loc, const FRotator& Rot, const TArray<AActor*> InActorsToIgnore)
 {
+	IExplodeInterface::Explode(ThisObject, InExplosionParticleSystem, InDamageProperties, Loc, Rot, InActorsToIgnore);
+}
+
+void AExplosive::ExplodeWrapper()
+{
+	/*
 	// Spawn effects
 	UNiagaraSystem* NiagaraSystem = nullptr;
 	if (!ExplosionParticleSystem.Get())
@@ -131,7 +140,6 @@ void AExplosive::Explode()
 		if (OutOverlappingActors[i] == this) continue;
 		if (OutOverlappingActors[i] == nullptr) continue;
 		if (IHitInterface* HI = Cast<IHitInterface>(OutOverlappingActors[i])) {
-			GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Emerald, FString::Printf(TEXT("Name: %s"), *OutOverlappingActors[i]->GetName()));
 			HI->GetHit(OutOverlappingActors[i]->GetActorLocation(), DamageProperties.BaseDamage, 1.f, this, UExplosionDamage::StaticClass());
 		}
 		if (IPhysicsActorInterface* PAI = Cast<IPhysicsActorInterface>(OutOverlappingActors[i])) {
@@ -142,7 +150,11 @@ void AExplosive::Explode()
 			}
 		}
 	}
-
+	*/
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(this);
+	Explode(this, ExplosionParticleSystem_C, DamageProperties, ExplosionOriginPoint->GetComponentLocation(),
+		ExplosionOriginPoint->GetComponentRotation(), ActorsToIgnore);
 	OnExplosion();
 }
 

@@ -8,6 +8,7 @@
 #include "CoreMinimal.h"
 #include "Actors/HittableActor.h"
 #include "DamageTypes.h"
+#include "../Interfaces/ExplodeInterface.h"
 #include "Explosive.generated.h"
 
 class UNiagaraSystem;
@@ -18,14 +19,15 @@ class AGameCharacter;
  * 
  */
 UCLASS()
-class ALIENSHOOTER_API AExplosive : public AHittableActor
+class ALIENSHOOTER_API AExplosive : public AHittableActor, public IExplodeInterface
 {
 	GENERATED_BODY()
 	
 public:
 	AExplosive();
-
 	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass) override;
+	virtual void Explode(AActor* ThisObject, class UParticleSystem* InExplosionParticleSystem, const FDamageProperties& InDamageProperties,
+		const FVector& Loc, const FRotator& Rot, const TArray<AActor*> InActorsToIgnore) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -55,12 +57,20 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float ForceAffectingSphereRadius = 200.f;
 
-	UPROPERTY(EditAnywhere, Category = "Properties")
-	float ForceMagnitude = 2500.f;
+	//UPROPERTY(EditAnywhere, Category = "Properties")
+	//float ForceMagnitude = 2500.f;
 
 private:
 	FTimerHandle ExplosionTimerHandle;
 
-	void Explode();
+	void ExplodeWrapper();
 	void OnExplosion();
+
+
+
+
+public:
+	// TEMP - Don't use cascade particle systems
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	UParticleSystem* ExplosionParticleSystem_C = nullptr;
 };

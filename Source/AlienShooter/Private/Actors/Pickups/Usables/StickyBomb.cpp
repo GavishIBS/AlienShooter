@@ -9,9 +9,16 @@
 #include "Kismet/GameplayStatics.h"
 #include "Damage/ExplosionDamage.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Interfaces/ExplodeInterface.h"
 
 AStickyBomb::AStickyBomb()
 {
+}
+
+void AStickyBomb::Explode(AActor* ThisObject, UParticleSystem* InExplosionParticleSystem, const FDamageProperties& InDamageProperties,
+	const FVector& Loc, const FRotator& Rot, const TArray<AActor*> InActorsToIgnore)
+{
+	IExplodeInterface::Explode(ThisObject, InExplosionParticleSystem, InDamageProperties, Loc, Rot, InActorsToIgnore);
 }
 
 void AStickyBomb::BeginPlay()
@@ -45,11 +52,12 @@ AUsableActor* AStickyBomb::UseItem(ACharacter* User)
 
 void AStickyBomb::StartExplosionTimer()
 {
-	GetWorldTimerManager().SetTimer(ExplosionTimerHandle, this, &AStickyBomb::Explode, ExplosionDelay, false, ExplosionDelay);
+	GetWorldTimerManager().SetTimer(ExplosionTimerHandle, this, &AStickyBomb::ExplodeWrapper, ExplosionDelay, false, ExplosionDelay);
 }
 
-void AStickyBomb::Explode()
+void AStickyBomb::ExplodeWrapper()
 {
+	/*
 	if (ExplosionParticleSystem)
 		UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticleSystem, GetActorLocation(), GetActorRotation(), true);
 
@@ -58,6 +66,8 @@ void AStickyBomb::Explode()
 		UExplosionDamage::StaticClass(), TArray<AActor*>());
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString("Explosion"));
+	*/
 
+	Explode(this, ExplosionParticleSystem, DamageProperties, GetActorLocation(), GetActorRotation(), TArray<AActor*>());
 	Destroy();
 }
