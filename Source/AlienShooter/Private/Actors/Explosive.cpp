@@ -34,14 +34,16 @@ void AExplosive::BeginPlay()
 
 void AExplosive::InitCallbacks()
 {
-	OnTakeAnyDamage.AddDynamic(this, &AExplosive::OnTakeDamageCallback);
+	//OnTakeAnyDamage.AddDynamic(this, &AExplosive::OnTakeDamageCallback);
 }
 
+/*
 void AExplosive::OnTakeDamageCallback(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	if (DamageCauser == this) return;
 	GetHit(GetActorLocation(), Damage, 0.f, DamageCauser, DamageType->GetClass());
 }
+*/
 
 float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
 {
@@ -98,7 +100,7 @@ void AExplosive::Explode()
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, GetActorLocation(),
 			GetActorRotation(), GetActorScale3D(), true, true);
 
-	OnTakeAnyDamage.RemoveDynamic(this, &AExplosive::OnTakeDamageCallback);
+	//OnTakeAnyDamage.RemoveDynamic(this, &AExplosive::OnTakeDamageCallback);
 
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(this);

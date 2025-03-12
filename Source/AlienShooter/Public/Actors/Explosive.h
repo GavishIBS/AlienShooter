@@ -31,8 +31,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void InitCallbacks();
 
-	UFUNCTION()
-	void OnTakeDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	//UFUNCTION()
+	//void OnTakeDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> ExplosiveMesh;
