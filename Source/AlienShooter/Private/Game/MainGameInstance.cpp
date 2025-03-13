@@ -4,9 +4,3 @@
 
 
 #include "Game/MainGameInstance.h"
-#include "MainGameInstance.h"
-
-void UMainGameInstance::BeginPlay()
-{
-	Super::BeginPlay();
-}

@@ -17,5 +17,10 @@ class ALIENSHOOTER_API UMainGameInstance : public UGameInstance
 	GENERATED_BODY()
 	
 protected:
-	virtual void BeginPlay() override;
+	// Data
+	unsigned int AvailableCashAmount = 0;
+
+public:
+	FORCEINLINE void AddCash(unsigned int InAmount) { AvailableCashAmount += InAmount; }
+	FORCEINLINE void DeductCash(unsigned int InAmount) { AvailableCashAmount -= InAmount; }
 };
