@@ -23,4 +23,9 @@ protected:
 public:
 	FORCEINLINE void AddCash(unsigned int InAmount) { AvailableCashAmount += InAmount; }
 	FORCEINLINE void DeductCash(unsigned int InAmount) { AvailableCashAmount -= InAmount; }
+
+
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int GetAvailableCash() { return (int)AvailableCashAmount; }
 };
