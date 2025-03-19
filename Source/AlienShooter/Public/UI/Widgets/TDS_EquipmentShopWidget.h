@@ -13,6 +13,7 @@
 class UTextBlock;
 class UButton;
 class UHorizontalBox;
+class UTDS_EquipmentShop_Slot;
 
 /**
  * 
@@ -33,10 +34,13 @@ protected:
 	void CreateItemSlots();
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	UUserWidget* CreateInventoryItemSlot(const int& Index);
+	UTDS_EquipmentShop_Slot* CreateInventoryItemSlot(const int& Index);
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	UUserWidget* CreateWeaponSlot(const int& Index);
+	UTDS_EquipmentShop_Slot* CreateWeaponSlot(const int& Index);
+
+	UFUNCTION()
+	void SetItemInfo(FText InItemInfoText);
 
 	// Components
 	UPROPERTY(meta=(BindWidget))
@@ -55,4 +59,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
 	FEquipmentDataToSell EquipmentDataToSell = FEquipmentDataToSell();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Data")
+	FText CurrentItemInfoText = FText();
 };

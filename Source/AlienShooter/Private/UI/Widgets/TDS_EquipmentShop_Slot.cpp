@@ -21,6 +21,7 @@ void UTDS_EquipmentShop_Slot::NativePreConstruct()
 void UTDS_EquipmentShop_Slot::NativeConstruct()
 {
 	Super::NativeConstruct();
+	BindCallbacks();
 	ItemName_Text->SetText(FText::FromString(ItemName.ToString()));
 	Price_Text->SetText(FText::FromString(FString::Printf(TEXT("%d"), Price)));
 	if (Icon) {
@@ -35,9 +36,17 @@ void UTDS_EquipmentShop_Slot::NativeDestruct()
 
 void UTDS_EquipmentShop_Slot::BindCallbacks()
 {
+	if (WholeButton) {
+		WholeButton->OnHovered.AddDynamic(this, &UTDS_EquipmentShop_Slot::HoverCallback);
+	}
 	if (BuyButton) {
 		BuyButton->OnClicked.AddDynamic(this, &UTDS_EquipmentShop_Slot::BuyButtonCallback);
 	}
+}
+
+void UTDS_EquipmentShop_Slot::HoverCallback()
+{
+	OnItemHover.Broadcast(ItemInfoText);
 }
 
 void UTDS_EquipmentShop_Slot::BuyButtonCallback()
