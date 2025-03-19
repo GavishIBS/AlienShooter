@@ -28,5 +28,8 @@ protected:
 protected:
 	// Data
 	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
+	FName PlayerName;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
 	int AvailableCash = 0.f;
 };
