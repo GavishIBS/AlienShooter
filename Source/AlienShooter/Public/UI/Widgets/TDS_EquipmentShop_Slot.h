@@ -10,6 +10,7 @@
 
 class UTextBlock;
 class UButton;
+class UImage;
 
 /**
  * 
@@ -42,6 +43,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemName_Text;
 
+	UPROPERTY(meta = (BindWidget))
+	UImage* Icon_Image;
+
 protected:
 	// Data
 	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
@@ -49,4 +53,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
 	int Price = 0;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
+	UTexture2D* Icon = nullptr;
 };

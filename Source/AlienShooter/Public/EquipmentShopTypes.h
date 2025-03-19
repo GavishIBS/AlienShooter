@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "EquipmentShopTypes.generated.h"
 
 class AWeaponBase;
@@ -12,9 +13,12 @@ struct FEquipmentDataToSell
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Data)
-	TArray<TSubclassOf<AInventoryPickup>> InventoryItemsToSell;
+	//UDataTable* ItemsDataTable;
+	// FName RowName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Data)
-	TArray<TSubclassOf<AWeaponBase>> WeaponsToSell;
+	TArray<FDataTableRowHandle> InventoryItemsToSell;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Data)
+	TArray<FDataTableRowHandle> WeaponsToSell;
 };

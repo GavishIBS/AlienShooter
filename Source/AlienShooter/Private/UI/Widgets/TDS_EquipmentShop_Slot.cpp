@@ -6,6 +6,7 @@
 #include "UI/Widgets/TDS_EquipmentShop_Slot.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Components/Image.h"
 
 UTDS_EquipmentShop_Slot::UTDS_EquipmentShop_Slot(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -22,6 +23,9 @@ void UTDS_EquipmentShop_Slot::NativeConstruct()
 	Super::NativeConstruct();
 	ItemName_Text->SetText(FText::FromString(ItemName.ToString()));
 	Price_Text->SetText(FText::FromString(FString::Printf(TEXT("%d"), Price)));
+	if (Icon) {
+		Icon_Image->SetBrushFromTexture(Icon, true);
+	}
 }
 
 void UTDS_EquipmentShop_Slot::NativeDestruct()
