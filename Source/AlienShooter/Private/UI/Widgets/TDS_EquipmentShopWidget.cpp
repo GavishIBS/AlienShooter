@@ -10,6 +10,9 @@
 
 #include "Game/MainGameInstance.h"
 
+#include "Components/CombatComponent.h"
+#include "Components/InventoryComponent.h"
+
 UTDS_EquipmentShopWidget::UTDS_EquipmentShopWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -29,6 +32,30 @@ void UTDS_EquipmentShopWidget::NativeConstruct()
 void UTDS_EquipmentShopWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
+	/*
+	TArray<TSubclassOf<AActor>> OutKeys;
+	TArray<bool> OutValues;
+	PurchasedItems.GetKeys(OutKeys);
+	PurchasedItems.GenerateValueArray(OutValues);
+	*/
+	for (int i = 0; i < PurchasedItems.Num(); i++)
+	{
+
+		if (GetOwningPlayer() && GetOwningPlayer()->GetPawn())
+		{
+			if (PurchasedItems[i].bIsWeapon == true)
+			{
+				if (UCombatComponent* CombatC = GetOwningPlayer()->GetPawn()->GetComponentByClass<UCombatComponent>()) {
+					CombatC->AddWeaponFromClass(PurchasedItems[i].ItemClass);
+				}
+			}
+			else {
+				if (UInventoryComponent* InventoryC = GetOwningPlayer()->GetPawn()->GetComponentByClass<UInventoryComponent>()) {
+					InventoryC->AddItemToInventoryFromClass(PurchasedItems[i].ItemClass);
+				}
+			}
+		}
+	}
 }
 
 void UTDS_EquipmentShopWidget::CreateItemSlots()
@@ -62,6 +89,7 @@ void UTDS_EquipmentShopWidget::OnBuyItem(int Price, TSubclassOf<AActor> ItemClas
 {
 	MainGameInst->DeductCash(Price);
 	AvailableCash -= Price;
+	PurchasedItems.Add({ItemClass, bIsWeapon});
 	GEngine->AddOnScreenDebugMessage(-1, 34.f, FColor::Cyan, FString("BUY ITEM END"));
 }
 

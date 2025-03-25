@@ -25,6 +25,17 @@ void UInventoryComponent::InitInventory()
 	OwnerAsCharacter = Cast<ACharacter>(GetOwner());
 }
 
+bool UInventoryComponent::AddItemToInventoryFromClass(TSubclassOf<AActor> InItemClass)
+{
+	if (InItemClass == nullptr) return false;
+
+	FActorSpawnParameters ActorSpawnParameters;
+	//ActorSpawnParameters.Instigator = OwnerAsShooterCharacter;
+	ActorSpawnParameters.Owner = GetOwner();
+	AInventoryPickup* Item = GetWorld()->SpawnActor<AInventoryPickup>(InItemClass, ActorSpawnParameters);
+	return AddItemToInventory(Item->GetItemData());
+}
+
 bool UInventoryComponent::AddItemToInventory(const FItemData ItemData)
 {
 	int32 Index = HaveEmpltySlot();

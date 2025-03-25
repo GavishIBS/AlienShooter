@@ -16,6 +16,13 @@ class UHorizontalBox;
 class UTDS_EquipmentShop_Slot;
 class UMainGameInstance;
 
+struct FPurchasedItemData
+{
+	FPurchasedItemData(TSubclassOf<AActor> InItemClass, bool bWeapon): ItemClass(InItemClass), bIsWeapon(bWeapon) {}
+	TSubclassOf<AActor> ItemClass = nullptr;
+	bool bIsWeapon = true;
+};
+
 /**
  * 
  */
@@ -69,4 +76,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	FText CurrentItemInfoText = FText();
+
+private:
+	//TMap<TSubclassOf<AActor>, bool> PurchasedItems;   // TMap<ItemClass, bIsWeapon>
+	TArray<FPurchasedItemData> PurchasedItems;
 };
