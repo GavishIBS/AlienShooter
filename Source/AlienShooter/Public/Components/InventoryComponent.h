@@ -37,6 +37,7 @@ public:
 	FOnItemSelected OnItemSelected;
 
 public:
+	bool AddItemToInventoryFromClass(TSubclassOf<AActor> InItemClass);
 	bool AddItemToInventory(const FItemData ItemData);
 	bool RemoveItemFromInventory(const TSubclassOf<AInventoryPickup> ItemClass, bool bShouldDestroy = false);
 	bool RemoveItemFromInventory(const int32 Index, bool bShouldDestroy = false);

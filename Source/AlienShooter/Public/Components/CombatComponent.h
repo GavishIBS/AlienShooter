@@ -32,6 +32,9 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category=Delegates)
 	FOnNewWeaponAdded OnNewWeaponAdded;
 	
+public:
+	bool AddWeaponFromClass(TSubclassOf<AActor> InWeaponClass);
+
 protected:
 	virtual void BeginPlay() override;
 

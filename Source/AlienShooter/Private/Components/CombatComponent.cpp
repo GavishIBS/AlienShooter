@@ -39,6 +39,17 @@ bool UCombatComponent::CanTakeWeapon(const AWeaponBase* InWeapon) const
 	return true;
 }
 
+bool UCombatComponent::AddWeaponFromClass(TSubclassOf<AActor> InWeaponClass)
+{
+	if (InWeaponClass == nullptr) return false;
+
+	FActorSpawnParameters ActorSpawnParameters;
+	ActorSpawnParameters.Instigator = OwnerAsShooterCharacter;
+	ActorSpawnParameters.Owner = OwnerAsShooterCharacter;
+	AWeaponBase* WeaponSelection = GetWorld()->SpawnActor<AWeaponBase>(InWeaponClass, ActorSpawnParameters);
+	return AddWeapon(WeaponSelection);
+}
+
 bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 {
 	if (CanTakeWeapon(InWeapon) == false) return false;

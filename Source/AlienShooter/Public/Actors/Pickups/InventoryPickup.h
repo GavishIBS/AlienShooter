@@ -36,4 +36,8 @@ private:
 
 public:
 	FORCEINLINE FName GetAttachmentSocketName() const { return ItemProperties.AttachmentSocketName; }
+
+
+
+	FORCEINLINE const FItemData GetItemData() const { return ItemData; }
 };

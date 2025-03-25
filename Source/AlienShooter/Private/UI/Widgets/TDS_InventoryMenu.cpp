@@ -15,14 +15,17 @@ UTDS_InventoryMenu::UTDS_InventoryMenu(const FObjectInitializer& ObjectInitializ
 
 void UTDS_InventoryMenu::NativePreConstruct()
 {
+	Super::NativePreConstruct();
 }
 
 void UTDS_InventoryMenu::NativeConstruct()
 {
+	Super::NativeConstruct();
 }
 
 void UTDS_InventoryMenu::NativeDestruct()
 {
+	Super::NativeDestruct();
 }
 
 void UTDS_InventoryMenu::InitComponent()

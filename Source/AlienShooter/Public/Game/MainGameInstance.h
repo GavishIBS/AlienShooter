@@ -18,9 +18,19 @@ class ALIENSHOOTER_API UMainGameInstance : public UGameInstance
 	
 protected:
 	// Data
+	FName PlayerName = "MyName";
 	unsigned int AvailableCashAmount = 0;
 
 public:
 	FORCEINLINE void AddCash(unsigned int InAmount) { AvailableCashAmount += InAmount; }
 	FORCEINLINE void DeductCash(unsigned int InAmount) { AvailableCashAmount -= InAmount; }
+
+
+
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE FName GetPlayerName() const { return PlayerName; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int GetAvailableCash() { return (int)AvailableCashAmount; }
 };
