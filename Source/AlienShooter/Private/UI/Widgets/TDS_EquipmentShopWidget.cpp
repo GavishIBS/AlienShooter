@@ -8,6 +8,8 @@
 #include "Components/HorizontalBox.h"
 #include "UI/Widgets/TDS_EquipmentShop_Slot.h"
 
+#include "Game/MainGameInstance.h"
+
 UTDS_EquipmentShopWidget::UTDS_EquipmentShopWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -39,7 +41,9 @@ void UTDS_EquipmentShopWidget::CreateItemSlots()
 		UTDS_EquipmentShop_Slot* NewSlot = CreateInventoryItemSlot(i);
 		if (!NewSlot) break;
 		InventoryItems_HorizontalBox->AddChild((UUserWidget*)NewSlot);
+		NewSlot->SetMainGameInstanceRef(MainGameInst);
 		NewSlot->OnItemHover.AddDynamic(this, &UTDS_EquipmentShopWidget::SetItemInfo);
+		NewSlot->OnItemPurchased.AddDynamic(this, &UTDS_EquipmentShopWidget::OnBuyItem);
 	}
 
 	Weapons_HorizontalBox->ClearChildren();
@@ -48,8 +52,17 @@ void UTDS_EquipmentShopWidget::CreateItemSlots()
 		UTDS_EquipmentShop_Slot* NewSlot = CreateWeaponSlot(i);
 		if (!NewSlot) break;
 		Weapons_HorizontalBox->AddChild((UUserWidget*)NewSlot);
+		NewSlot->SetMainGameInstanceRef(MainGameInst);
 		NewSlot->OnItemHover.AddDynamic(this, &UTDS_EquipmentShopWidget::SetItemInfo);
+		NewSlot->OnItemPurchased.AddDynamic(this, &UTDS_EquipmentShopWidget::OnBuyItem);
 	}
+}
+
+void UTDS_EquipmentShopWidget::OnBuyItem(int Price, TSubclassOf<AActor> ItemClass, bool bIsWeapon)
+{
+	MainGameInst->DeductCash(Price);
+	AvailableCash -= Price;
+	GEngine->AddOnScreenDebugMessage(-1, 34.f, FColor::Cyan, FString("BUY ITEM END"));
 }
 
 void UTDS_EquipmentShopWidget::SetItemInfo(FText InItemInfoText)

@@ -14,6 +14,7 @@ class UTextBlock;
 class UButton;
 class UHorizontalBox;
 class UTDS_EquipmentShop_Slot;
+class UMainGameInstance;
 
 /**
  * 
@@ -40,6 +41,9 @@ protected:
 	UTDS_EquipmentShop_Slot* CreateWeaponSlot(const int& Index);
 
 	UFUNCTION()
+	void OnBuyItem(int Price, TSubclassOf<AActor> ItemClass, bool bIsWeapon);
+
+	UFUNCTION()
 	void SetItemInfo(FText InItemInfoText);
 
 	// Components
@@ -53,6 +57,9 @@ protected:
 	// Data
 	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
 	FName PlayerName;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
+	UMainGameInstance* MainGameInst;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
 	int AvailableCash = 0;

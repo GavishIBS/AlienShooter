@@ -11,8 +11,10 @@
 class UTextBlock;
 class UButton;
 class UImage;
+class UMainGameInstance;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemHover, FText, ItemInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnItemPurchased, int, Price, TSubclassOf<AActor>, ItemClass, bool, bIsWeapon);
 
 /**
  * 
@@ -29,6 +31,9 @@ public:
 	// Delegates
 	UPROPERTY(BlueprintAssignable, Category = "Delegates")
 	FOnItemHover OnItemHover;
+
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
+	FOnItemPurchased OnItemPurchased;
 
 protected:
 	virtual void NativePreConstruct() override;
@@ -71,4 +76,16 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
 	FText ItemInfoText = FText();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
+	TSubclassOf<AActor> ItemClass;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
+	bool bIsWeapon = true;
+
+private:
+	UMainGameInstance* MainGameInstance;
+
+public:
+	FORCEINLINE void SetMainGameInstanceRef(UMainGameInstance* InGM) { MainGameInstance = InGM; }
 };

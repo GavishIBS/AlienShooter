@@ -8,6 +8,8 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 
+#include "Game/MainGameInstance.h"
+
 UTDS_EquipmentShop_Slot::UTDS_EquipmentShop_Slot(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -51,4 +53,10 @@ void UTDS_EquipmentShop_Slot::HoverCallback()
 
 void UTDS_EquipmentShop_Slot::BuyButtonCallback()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 34.f, FColor::Cyan, FString("TRY BUY ITEM"));
+	if (MainGameInstance->GetAvailableCash() >= Price)
+	{
+		OnItemPurchased.Broadcast(Price, ItemClass, bIsWeapon);
+		GEngine->AddOnScreenDebugMessage(-1, 34.f, FColor::Cyan, FString("BUY ITEM"));
+	}
 }
