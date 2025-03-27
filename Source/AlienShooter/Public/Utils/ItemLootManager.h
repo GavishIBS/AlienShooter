@@ -26,6 +26,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Data")
 	TMap<TSubclassOf<AActor>, FLootData> Items_LootData;
 
-	UPROPERTY(EditAnywhere, Category = "Data")
+	UPROPERTY(EditAnywhere, Category = "Data", meta = (ClampMin = "0", ClampMax = "100"))
 	float LootAddChancePercent = 30.f;
 };

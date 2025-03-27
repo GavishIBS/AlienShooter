@@ -31,6 +31,14 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UBoxComponent> OverlapBox;
 
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0", ClampMax = "10"))
+	float TurnOnDelay = 0.f;
+
+	FTimerHandle TurnOnLightIteratorDelayTimerHandle;
+
+	TArray<AElectronicActor*> LightsToTurnOn;
+	void TurnOnLight();
+
 	UFUNCTION()
 	void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,

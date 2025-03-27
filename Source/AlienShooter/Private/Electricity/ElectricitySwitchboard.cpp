@@ -37,10 +37,28 @@ void AElectricitySwitchboard::OnBoxOverlap(UPrimitiveComponent* OverlappedCompon
 {
 	if (OtherActor->ActorHasTag("Player"))
 	{
-		for (AElectronicActor* Actor : ControlledActors)
-			if (Actor && Actor->HaveElectricity() == false)
-				Actor->SetHaveElectricity(true);
-
+		if (TurnOnDelay == 0)
+		{
+			for (AElectronicActor* Actor : ControlledActors)
+				if (Actor && Actor->HaveElectricity() == false)
+					Actor->SetHaveElectricity(true);
+		}
+		else {
+			LightsToTurnOn = ControlledActors;
+			GetWorldTimerManager().SetTimer(TurnOnLightIteratorDelayTimerHandle, this, &AElectricitySwitchboard::TurnOnLight, TurnOnDelay, true, 0);
+		}
 		OverlapBox->SetGenerateOverlapEvents(false);
+	}
+}
+
+void AElectricitySwitchboard::TurnOnLight()
+{
+	if (LightsToTurnOn.Num() > 0 && LightsToTurnOn[0] != nullptr && LightsToTurnOn[0]->HaveElectricity() == false)
+	{
+		LightsToTurnOn[0]->SetHaveElectricity(true);
+		LightsToTurnOn.RemoveAt(0);
+	}
+	else {
+		GetWorldTimerManager().ClearTimer(TurnOnLightIteratorDelayTimerHandle);
 	}
 }
