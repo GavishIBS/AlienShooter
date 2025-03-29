@@ -64,4 +64,12 @@ private:
 
 	void GenerateRandomCameraLocation();
 	void StopCameraShake();
+
+public:
+
+
+
+
+
+	FORCEINLINE UAttributeComponent* GetAttributeComponent() const { return AttributeComponent; }
 };

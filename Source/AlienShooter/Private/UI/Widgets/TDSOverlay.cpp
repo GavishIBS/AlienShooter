@@ -6,6 +6,12 @@
 #include "UI/Widgets/TDSOverlay.h"
 #include "UI/Widgets/TDSWeaponBoxList.h"
 #include "UI/Widgets/TDSWeaponInHandDataBox.h"
+#include "Components/ProgressBar.h"
+
+
+#include "Characters/ShooterCharacter.h"
+#include "Components/AttributeComponent.h"
+
 
 UTDSOverlay::UTDSOverlay(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -24,6 +30,10 @@ void UTDSOverlay::NativeConstruct()
 {
 	Super::NativeConstruct();
 	InitComponents();
+	if (OwnerAsShooterCharacter) {
+		OwnerAsShooterCharacter->GetAttributeComponent()->OnHealthUpdated.AddDynamic(this, &UTDSOverlay::UpdateHealthBar);
+		OwnerAsShooterCharacter->GetAttributeComponent()->OnMaxHealthUpdated.AddDynamic(this, &UTDSOverlay::UpdateHealthBar);
+	}
 }
 
 void UTDSOverlay::NativeDestruct()
@@ -44,6 +54,18 @@ void UTDSOverlay::InitComponents()
 		WeaponBoxList->SetOwnerCharacter(OwnerAsShooterCharacter);
 		WeaponBoxList->InitComponent();
 	}*/
+	if (HealthBar)
+	{
+		HealthBar->SetPercent(1);
+	}
+}
+
+void UTDSOverlay::UpdateHealthBar(float Health, float MaxHealth)
+{
+	if (MaxHealth == 0) return;
+	if (HealthBar) {
+		HealthBar->SetPercent(Health / MaxHealth);
+	}
 }
 
 void UTDSOverlay::SetEnvironmentDialogue_Subtitles_Text(const FText InText, const float& DialogueAudioDuration)

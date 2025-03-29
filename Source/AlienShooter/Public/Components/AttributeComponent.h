@@ -24,14 +24,22 @@ struct FDeathAssetsData
 	FName DeathParticleSystemSpawnSocketName = FName("DeathEmitterSocket");
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdated, float, NewHealth, float, MaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMaxHealthUpdated, float, Health, float, NewMaxHealth);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API UAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UAttributeComponent();
 
+	// Delegates
+	FOnHealthUpdated OnHealthUpdated;
+	FOnMaxHealthUpdated OnMaxHealthUpdated;
+
+public:	
 	void TakeDamage(const float InDamage);
 
 	void TakeArmor(AArmor* InArmor);
@@ -59,15 +67,17 @@ public:
 	FORCEINLINE float GetMaxHealth() const {return  MaxHealth;}
 	FORCEINLINE float GetHealth() const {return Health;}
 
-	FORCEINLINE void SetMaxHealth(const float Value) {MaxHealth = Value;}
+	FORCEINLINE void SetMaxHealth(const float Value) { MaxHealth = Value; OnMaxHealthUpdated.Broadcast(Health, MaxHealth); }
 	FORCEINLINE void SetHealth(const float Value)
 	{
 		Health = FMath::Clamp(Value, 0.f, MaxHealth);
+		OnHealthUpdated.Broadcast(Health, MaxHealth);
 	}
 
 	FORCEINLINE void AddHealth(const float Value)
 	{
 		Health = FMath::Clamp(Health + Value, 0.f, MaxHealth);
+		OnHealthUpdated.Broadcast(Health, MaxHealth);
 	}
 
 	FORCEINLINE bool CanTakeArmor(const EArmorColorCode ArmorColorCode);

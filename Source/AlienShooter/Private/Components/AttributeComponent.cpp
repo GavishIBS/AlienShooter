@@ -38,6 +38,8 @@ void UAttributeComponent::TakeDamage(const float InDamage)
 	Health = FMath::Clamp(Health - BodyDamage, 0.f, MaxHealth);
 	if (ArmorEquipped)
 		GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Emerald, FString::Printf(TEXT("AmorHealth: %f, BodyHealth: %f"), ArmorEquipped->GetArmorHealth(), Health));
+
+	OnHealthUpdated.Broadcast(Health, MaxHealth);
 }
 
 bool UAttributeComponent::CanTakeArmor(const EArmorColorCode ArmorColorCode)
