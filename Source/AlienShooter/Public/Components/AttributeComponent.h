@@ -11,6 +11,19 @@
 
 class AArmor;
 
+USTRUCT(BlueprintType)
+struct FDeathAssetsData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Data")
+	UAnimMontage* DeathAnimMontage = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Data")
+	UParticleSystem* DeathParticleSystem = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Data")
+	FName DeathParticleSystemSpawnSocketName = FName("DeathEmitterSocket");
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API UAttributeComponent : public UActorComponent
 {
@@ -38,6 +51,10 @@ protected:
 	// Armor
 	AArmor* ArmorEquipped = nullptr;
 
+	// Death
+	UPROPERTY(EditDefaultsOnly, Category = "Death | Data")
+	FDeathAssetsData DeathAssetsData;
+
 public:
 	FORCEINLINE float GetMaxHealth() const {return  MaxHealth;}
 	FORCEINLINE float GetHealth() const {return Health;}
@@ -54,4 +71,9 @@ public:
 	}
 
 	FORCEINLINE bool CanTakeArmor(const EArmorColorCode ArmorColorCode);
+
+	FORCEINLINE UAnimMontage* GetDeathAnimMontage() const { return DeathAssetsData.DeathAnimMontage; }
+	FORCEINLINE FName GetRandomDeathAnimMontageSectionName() const { return FName("Default"); }
+	FORCEINLINE UParticleSystem* GetDeathEmitter() const { return DeathAssetsData.DeathParticleSystem; }
+	FORCEINLINE FName GetDeathEmitterSpawnSocketName() const { return DeathAssetsData.DeathParticleSystemSpawnSocketName; }
 };

@@ -12,6 +12,10 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
+
+
+#include "Components/AttributeComponent.h"
+
 AControllableCharacter::AControllableCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -46,9 +50,15 @@ void AControllableCharacter::BeginPlay()
 void AControllableCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	CheckCursorLocation();
-	UpdateCharacterRotationToCursor();
-	UpdateCameraBoomOffset(DeltaTime);
+	if (AttributeComponent)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("CurrentHealth: %f"), AttributeComponent->GetHealth()));
+	}
+	if (LifeStatus != ELifeStatus::ELS_Dead) {
+		CheckCursorLocation();
+		UpdateCharacterRotationToCursor();
+		UpdateCameraBoomOffset(DeltaTime);
+	}
 }
 
 void AControllableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
