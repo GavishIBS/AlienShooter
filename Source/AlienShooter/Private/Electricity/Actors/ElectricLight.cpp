@@ -6,19 +6,37 @@
 #include "Electricity/Actors/ElectricLight.h"
 #include "Components/LightComponent.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
 AElectricLight::AElectricLight()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AElectricLight::BeginPlay()
 {
 	Super::BeginPlay();
+	MaxIntensity = Light->Intensity;
 	if (Light) Light->SetVisibility(false);
 }
 
 void AElectricLight::OnElectricityTurnedOn()
 {
 	if (Light)
+	{
+		if (bInterpolateIntensity) {
+			Light->SetIntensity(0.f);
+			bInterpingIntensity = true;
+		}
 		Light->SetVisibility(true);
+	}
+}
+
+void AElectricLight::Tick(float DeltaTime)
+{
+	if (bInterpingIntensity)
+	{
+		if (Light->Intensity >= MaxIntensity) bInterpingIntensity = false;
+		Light->SetIntensity(UKismetMathLibrary::FInterpTo(Light->Intensity, MaxIntensity, DeltaTime, IntensityInterpSpeed));
+	}
 }

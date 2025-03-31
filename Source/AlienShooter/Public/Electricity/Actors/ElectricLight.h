@@ -20,6 +20,7 @@ class ALIENSHOOTER_API AElectricLight : public AElectronicActor
 	
 public:
 	AElectricLight();
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -27,4 +28,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<ULightComponent> Light;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	bool bInterpolateIntensity = false;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float IntensityInterpSpeed = 5.f;
+
+	float MaxIntensity;
+	bool bInterpingIntensity = false;
 };

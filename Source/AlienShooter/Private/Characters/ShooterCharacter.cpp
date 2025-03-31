@@ -20,6 +20,11 @@
 #include "Components/RadioPhoneComponent.h"
 #include "UI/Widgets/TDSOverlay.h"
 
+
+
+#include "Kismet/GameplayStatics.h"
+
+
 AShooterCharacter::AShooterCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -118,9 +123,19 @@ void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Dama
 
 void AShooterCharacter::OnDeathCallback(AActor* Killer)
 {
-	if (!PlayerController) return;
-	PlayerController->DisableInput(PlayerController);
+	//if (!PlayerController) return;
+	//PlayerController->DisableInput(PlayerController);
+	DisableInput(PlayerController);
 	LifeStatus = ELifeStatus::ELS_Dead;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("DEADDDDDDDDD"));
+	SetActorTickEnabled(false);   // Disable actor tick
+
+	// Effects
+	AnimationLibrary::PlayAnimationMontage(GetMesh(), { AttributeComponent->GetDeathAnimMontage() }, AttributeComponent->GetRandomDeathAnimMontageSectionName(), true);
+	if (AttributeComponent->GetDeathEmitter()) {
+		UGameplayStatics::SpawnEmitterAtLocation(this, AttributeComponent->GetDeathEmitter(), GetMesh()->GetSocketLocation(AttributeComponent->GetDeathEmitterSpawnSocketName()),
+			GetMesh()->GetComponentRotation(), FVector(1, 1, 1), true);
+	}
 }
 
 void AShooterCharacter::LeftMouseButtonPressed()

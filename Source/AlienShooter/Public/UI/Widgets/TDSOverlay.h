@@ -12,6 +12,7 @@ class UTDSWeaponBoxList;
 class AShooterCharacter;
 class UTDSWeaponInHandDataBox;
 class UCanvasPanel;
+class UProgressBar;
 
 /**
  * 
@@ -41,6 +42,13 @@ protected:
 	//UPROPERTY(meta=(BindWidget))
 	//TObjectPtr<UTDSWeaponBoxList> WeaponBoxList;
 	
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* HealthBar;
+
+protected:
+	UFUNCTION()
+	void UpdateHealthBar(float Health, float MaxHealth);
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float Environment_Subtitles_Text_ClearDelay = 2.f;

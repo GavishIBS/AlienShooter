@@ -12,6 +12,8 @@ class ALight;
 class UBoxComponent;
 class AElectronicActor;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnElectricityStateChanged, bool, bTurnedOn);
+
 UCLASS()
 class ALIENSHOOTER_API AElectricitySwitchboard : public AActor
 {
@@ -19,6 +21,10 @@ class ALIENSHOOTER_API AElectricitySwitchboard : public AActor
 	
 public:	
 	AElectricitySwitchboard();
+
+	// Delegates
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnElectricityStateChanged OnElectricityStateChanged;
 
 protected:
 	virtual void BeginPlay() override;
@@ -30,6 +36,14 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UBoxComponent> OverlapBox;
+
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0", ClampMax = "10"))
+	float TurnOnDelay = 0.f;
+
+	FTimerHandle TurnOnLightIteratorDelayTimerHandle;
+
+	TArray<AElectronicActor*> LightsToTurnOn;
+	void TurnOnLight();
 
 	UFUNCTION()
 	void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

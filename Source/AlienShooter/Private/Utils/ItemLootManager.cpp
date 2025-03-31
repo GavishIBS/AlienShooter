@@ -7,6 +7,8 @@
 #include "Interfaces/LootInterface.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
 AItemLootManager::AItemLootManager()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -22,6 +24,7 @@ void AItemLootManager::AddLoot()
 		UGameplayStatics::GetAllActorsOfClass(this, It.Key(), OutActors);
 		for (auto& Actor : OutActors)
 		{
+			if (UKismetMathLibrary::RandomFloatInRange(0, 100) > LootAddChancePercent) continue;
 			if (ILootInterface* LootInterface = Cast<ILootInterface>(Actor))
 			{
 				LootInterface->SetLootData(It.Value());
