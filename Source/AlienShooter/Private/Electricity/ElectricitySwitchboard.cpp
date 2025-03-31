@@ -37,6 +37,7 @@ void AElectricitySwitchboard::OnBoxOverlap(UPrimitiveComponent* OverlappedCompon
 {
 	if (OtherActor->ActorHasTag("Player"))
 	{
+		OnElectricityStateChanged.Broadcast(true);
 		if (TurnOnDelay == 0)
 		{
 			for (AElectronicActor* Actor : ControlledActors)
