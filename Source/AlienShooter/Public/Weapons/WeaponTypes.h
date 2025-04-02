@@ -20,6 +20,17 @@ enum class EWeaponName : uint8
 };
 
 USTRUCT(BlueprintType)
+struct FBulletHitEffectData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	UParticleSystem* HitParticle;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	USoundBase* HitSound;
+};
+
+USTRUCT(BlueprintType)
 struct FWeaponProperties
 {
 	GENERATED_USTRUCT_BODY()
@@ -195,7 +206,7 @@ struct FTracerWeaponData
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data | FX")
-	TMap<FName, UParticleSystem*> HitParticles;  // TMap<Tag, ParticleSystem>
+	TMap<FName, FBulletHitEffectData> HitEffects;  // TMap<Tag, ParticleSystem>
 };
 
 USTRUCT(BlueprintType)
@@ -265,5 +276,5 @@ struct FProjectileBulletData
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties | FX")
-	TMap<FName, UParticleSystem*> HitParticles;  // TMap<Tag, ParticleSystem>
+	TMap<FName, FBulletHitEffectData> HitEffects;  // TMap<Tag, ParticleSystem>
 };

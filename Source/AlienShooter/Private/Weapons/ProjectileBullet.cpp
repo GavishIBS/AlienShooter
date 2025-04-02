@@ -29,14 +29,16 @@ void AProjectileBullet::OnBulletHit(AActor* HitActor, const FVector& ImpactPoint
 	if (!HitActor) return;
 
 	TArray<FName> ActorTags = HitActor->Tags;
-	for (auto It = ProjectileBulletData.HitParticles.CreateIterator(); It; ++It)
+	for (auto It = ProjectileBulletData.HitEffects.CreateIterator(); It; ++It)
 	{
 		// Check if the tag exists directly in the ActorTags array
 		if (ActorTags.Contains(It.Key()))
 		{
 			// Spawn particle if the value exists
-			if (It.Value())
-				UGameplayStatics::SpawnEmitterAtLocation(this, It.Value(), ImpactPoint);
+			if (It.Value().HitParticle)
+				UGameplayStatics::SpawnEmitterAtLocation(this, It.Value().HitParticle, ImpactPoint);
+			if (It.Value().HitSound)
+				UGameplayStatics::SpawnSoundAtLocation(this, It.Value().HitSound, ImpactPoint, FRotator());
 			return; // Exit the loop
 		}
 	}
