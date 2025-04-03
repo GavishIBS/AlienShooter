@@ -41,7 +41,8 @@ void ACursorWeapon::Fire()
 	{
 		FVector StartD = HitResult.ImpactPoint;
 		FVector EndD = HitResult.ImpactPoint + (HitResult.ImpactNormal * 100);
-		DrawDebugLine(GetWorld(), StartD, EndD, FColor::Red, false, 7.f);
+		// DEBUG
+		//DrawDebugLine(GetWorld(), StartD, EndD, FColor::Red, false, 7.f);
 
 		// Find two orthogonal vectors to define the plane's basis
 		FVector BasisX, BasisY;
@@ -63,7 +64,7 @@ void ACursorWeapon::Fire()
 			BulletHealth -= HitInterface->GetHit(HitResult_M.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter, UDamageType::StaticClass());
 
 			// DEBUG
-			DrawDebugSphere(GetWorld(), HitResult_M.ImpactPoint, 5.f, 24, FColor::Orange, false, 4.f);
+			//DrawDebugSphere(GetWorld(), HitResult_M.ImpactPoint, 5.f, 24, FColor::Orange, false, 4.f);
 		}
 		OnBulletHit(HitResult_M.GetActor(), HitResult_M.ImpactPoint);
 		if (BulletHealth <= 0.f) {}

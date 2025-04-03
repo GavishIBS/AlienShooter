@@ -32,7 +32,8 @@ public:
 		return PoolSize;
 	}
 	void DestroyPool() {
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString("Destroying pool!"));
+		// DEBUG
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString("Destroying pool!"));
 		for (int i = 0; i < Pool.Num(); i++) {
 			if (Pool[i] != nullptr)
 			{

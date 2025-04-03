@@ -27,7 +27,8 @@ void AProjectileWeapon::OnWeaponSelectedCallback()
 {
 	Super::OnWeaponSelectedCallback();
 
-	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Yellow, FString("Pool created!"));
+	// DEBUG
+	//GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Yellow, FString("Pool created!"));
 
 	// TODO: Destory pool if ammo is exhausted but weapon is still in hand
 
@@ -41,7 +42,8 @@ void AProjectileWeapon::OnWeaponSelectedCallback()
 
 	if (bCreateProjectilePoolComponent)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Creating pool of size: %d"), PoolSize));
+		// DEBUG
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Creating pool of size: %d"), PoolSize));
 		ProjectilePool = new UObjectPool<AProjectile>(GetWorld(), ProjectileWeaponData.ProjectileClass, PoolSize);
 		int ProjectilePoolValid = ProjectilePool->CreatePool();
 		if (ProjectilePoolValid <= 0)
@@ -78,7 +80,8 @@ void AProjectileWeapon::Fire()
 			Projectile = ProjectilePool->SpawnObjectFromPool();
 			if (Projectile)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Yellow, FString("Spawned from pool!"));
+				//DEBUG
+				//GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Yellow, FString("Spawned from pool!"));
 				Projectile->SetActorLocation(MuzzleTransform.GetLocation());
 				Projectile->SetActorRotation(MuzzleTransform.GetRotation());
 				Projectile->SetInUse(true);
@@ -86,7 +89,7 @@ void AProjectileWeapon::Fire()
 		}
 		if (Projectile == nullptr) {
 			// Spawn projectile if not available from pool
-			GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Yellow, FString("Spawned directly!"));
+			//GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Yellow, FString("Spawned directly!"));  // DEBUG
 			Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileWeaponData.ProjectileClass, MuzzleTransform, ActorSpawnParameters);
 		}
 		
