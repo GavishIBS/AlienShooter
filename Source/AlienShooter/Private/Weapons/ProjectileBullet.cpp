@@ -14,6 +14,7 @@ AProjectileBullet::AProjectileBullet()
 
 	BulletMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BulletMesh"));
 	BulletMesh->SetupAttachment(static_cast<USceneComponent*>(BoxCollision));
+	BulletMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
 	Tracer_FX = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Tracer"));
 	Tracer_FX->SetupAttachment(BulletMesh);

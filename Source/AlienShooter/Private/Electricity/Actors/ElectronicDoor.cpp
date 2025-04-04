@@ -20,6 +20,9 @@ AElectronicDoor::AElectronicDoor()
 
 	CloseDoorBoxOverlap = CreateDefaultSubobject<UBoxComponent>(TEXT("CloseDoorBoxOverlap"));
 	CloseDoorBoxOverlap->SetupAttachment(DoorMesh);
+	
+	ElectricityIndicatorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ElectricityIndicatorMesh"));
+	ElectricityIndicatorMesh->SetupAttachment(DoorMesh);
 }
 
 void AElectronicDoor::Tick(float DeltaTime)
@@ -58,6 +61,21 @@ void AElectronicDoor::BeginPlay()
 
 void AElectronicDoor::BindCallbacks()
 {
+	// Update electricity indicator material
+	if (ElectricityIndicatorMesh) {
+		UMaterialInstanceDynamic* MI = ElectricityIndicatorMesh->CreateDynamicMaterialInstance(0);
+		if (MI) {
+			if (HaveElectricity()) {
+				MI->SetScalarParameterValue("Red", 0);
+				MI->SetScalarParameterValue("Green", 1);
+			}
+			else {
+				MI->SetScalarParameterValue("Red", 1);
+				MI->SetScalarParameterValue("Green", 0);
+			}
+		}
+	}
+
 	if (OpenDoorBoxOverlap && CloseDoorBoxOverlap)
 	{
 		OpenDoorBoxOverlap->OnComponentBeginOverlap.AddDynamic(this, &AElectronicDoor::OnOpenDoorBoxOverlap);

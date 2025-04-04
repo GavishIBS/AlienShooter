@@ -73,4 +73,8 @@ public:
 	// TEMP - Don't use cascade particle systems
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	UParticleSystem* ExplosionParticleSystem_C = nullptr;
+
+	// TEMP
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	USoundBase* ExplodeSound;
 };

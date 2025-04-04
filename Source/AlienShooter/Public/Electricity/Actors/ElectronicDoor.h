@@ -53,6 +53,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UBoxComponent> CloseDoorBoxOverlap;
 
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	TObjectPtr<UStaticMeshComponent> ElectricityIndicatorMesh;
+
 private:
 	void OpenDoor();
 	void CloseDoor();

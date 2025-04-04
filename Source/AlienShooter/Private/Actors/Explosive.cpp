@@ -17,6 +17,11 @@
 
 #include "Characters/BaseCharacter.h"
 
+
+
+// TEMP
+#include "Kismet/GameplayStatics.h"
+
 AExplosive::AExplosive()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -94,6 +99,10 @@ float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const 
 void AExplosive::Explode(AActor* ThisObject, UParticleSystem* InExplosionParticleSystem, const FDamageProperties& InDamageProperties,
 	const FVector& Loc, const FRotator& Rot, const TArray<AActor*> InActorsToIgnore)
 {
+	// TEMP
+	if (ExplodeSound)
+		UGameplayStatics::PlaySoundAtLocation(this, ExplodeSound, GetActorLocation());
+	
 	IExplodeInterface::Explode(ThisObject, InExplosionParticleSystem, InDamageProperties, Loc, Rot, InActorsToIgnore);
 }
 
