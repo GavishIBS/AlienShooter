@@ -28,6 +28,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DoCameraShake(const FVector IntensityFactor, const float ShakeTime, const bool bShakeInDir, const FVector Direction);
 
+	void Rebirth(const FTransform& RebirthTransform);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual float GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass) override;
