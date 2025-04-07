@@ -56,7 +56,7 @@ void ACursorWeapon::Fire()
 
 		FHitResult HitResult_M;
 		UKismetSystemLibrary::SphereTraceSingle(GetWorld(), RandomPoint, RandomPoint, 7.f, ETraceTypeQuery::TraceTypeQuery1, false,
-			ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult_M, true, FLinearColor::Red, FLinearColor::Green);
+			ActorsToIgnore, EDrawDebugTrace::None, HitResult_M, true, FLinearColor::Red, FLinearColor::Green);
 
 		if (!HitResult_M.bBlockingHit) return;
 		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult_M.GetActor()))
