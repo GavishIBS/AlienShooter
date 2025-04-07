@@ -17,6 +17,11 @@ void UAttributeComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
+void UAttributeComponent::ReInitComponent()
+{
+	SetHealth(MaxHealth);
+}
+
 void UAttributeComponent::TakeDamage(const float InDamage)
 {
 	float BodyDamage = InDamage;

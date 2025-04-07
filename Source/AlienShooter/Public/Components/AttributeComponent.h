@@ -39,6 +39,8 @@ public:
 	FOnHealthUpdated OnHealthUpdated;
 	FOnMaxHealthUpdated OnMaxHealthUpdated;
 
+	void ReInitComponent();
+
 public:	
 	void TakeDamage(const float InDamage);
 

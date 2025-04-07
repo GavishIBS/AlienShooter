@@ -21,10 +21,11 @@ class ALIENSHOOTER_API AGameCharacter : public ACharacter
 public:
 	AGameCharacter();
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnDeath OnDeath;
+
 protected:
 	virtual void BeginPlay() override;
-
-	FOnDeath OnDeath;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	TSoftObjectPtr<UNiagaraSystem> DeathParticleSystem;

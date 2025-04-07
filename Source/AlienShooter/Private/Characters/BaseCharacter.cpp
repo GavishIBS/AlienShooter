@@ -73,6 +73,17 @@ void ABaseCharacter::DoCameraShake(const FVector IntensityFactor, const float Sh
 	GetWorldTimerManager().SetTimer(CameraShakeStopTimerHandle, this, &ABaseCharacter::StopCameraShake, ShakeTime, false, ShakeTime);
 }
 
+void ABaseCharacter::Rebirth(const FTransform& RebirthTransform)
+{
+	SetActorTransform(RebirthTransform);
+	if (AttributeComponent) {
+		AttributeComponent->ReInitComponent();
+	}
+	SetActorTickEnabled(true);
+	EnableInput(Cast<APlayerController>(GetController()));
+	LifeStatus = ELifeStatus::ELS_Alive;
+}
+
 void ABaseCharacter::GenerateRandomCameraLocation()
 {
 	if (!bShakeInDirection) {
