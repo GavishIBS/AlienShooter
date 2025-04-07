@@ -53,4 +53,7 @@ void AMainGameMode::TryRespawnPlayer(AActor* Killer)
 		FTimerHandle TimerHandle;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AMainGameMode::RespawnPlayer, 2.f, false, 2.f);
 	}
+	else {
+		// Game over
+	}
 }
