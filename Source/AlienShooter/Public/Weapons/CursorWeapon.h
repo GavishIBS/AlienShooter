@@ -22,4 +22,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Fire() override;
+
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0"))
+	float DistanceToInBetweenHit = 40.f;
 };
