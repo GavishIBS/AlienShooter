@@ -36,4 +36,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0"))
 	float VelocityAffectingScaling = 12.5f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	bool bCheckObstaclesBetween = true;
 };

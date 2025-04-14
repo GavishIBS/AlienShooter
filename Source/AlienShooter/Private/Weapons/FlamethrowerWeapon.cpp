@@ -22,8 +22,35 @@ void AFlamethrowerWeapon::Fire()
 	const FTransform MuzzleTransform = WeaponProperties.bIsSkeletalMesh ? WeaponSkeletalMesh->GetSocketTransform(WeaponProperties.WeaponMuzzleSocketName) :
 		WeaponStaticMesh->GetSocketTransform(WeaponProperties.WeaponMuzzleSocketName);
 
-	const float TraceRadius = (TraceRange / NumberOfSphereTraceDivisions) + TraceRadiusAdditive;
-	for (int i = 0; i < NumberOfSphereTraceDivisions; i++)
+	float TraceRadius = (TraceRange / NumberOfSphereTraceDivisions) + TraceRadiusAdditive;
+	int32 L_NumberOfSphereTraceDivisions = NumberOfSphereTraceDivisions;
+
+	// Check if obstacle ahead
+	if (bCheckObstaclesBetween)
+	{
+		FHitResult LineHit;
+		FVector Start = WeaponMuzzle_S->K2_GetComponentLocation();
+		FVector End = Start + WeaponMuzzle_S->GetForwardVector() * TraceRange;
+		UKismetSystemLibrary::LineTraceSingle(this, Start, End, ETraceTypeQuery::TraceTypeQuery1, false, { this, GetOwner() }, EDrawDebugTrace::ForDuration, LineHit, true);
+		if (LineHit.bBlockingHit == true && LineHit.GetActor() != nullptr)
+		{
+			if (LineHit.GetActor()->ActorHasTag(FName("Insulator")) == true) // TODO: Use physics materials for this logic
+			{
+				float L_TraceRange = FVector::Dist(WeaponMuzzle_S->GetComponentLocation(), LineHit.ImpactPoint);
+				//L_TraceRange -= TraceRadius;
+				L_NumberOfSphereTraceDivisions = L_TraceRange / TraceRadius;
+				if (L_NumberOfSphereTraceDivisions <= 0)
+				{
+					// Adjust radius and do a single trace if not enough distance
+					TraceRadius = L_TraceRange / 2;
+					L_NumberOfSphereTraceDivisions = 1;
+				}
+				
+			}
+		}
+	}
+
+	for (int i = 0; i < L_NumberOfSphereTraceDivisions; i++)
 	{
 		FHitResult OutHit;
 		FVector TraceLocation = MuzzleTransform.GetLocation() + ((WeaponMuzzle_S->GetForwardVector() * TraceRadius) * (i + 1));
