@@ -4,9 +4,13 @@
 #include "Weapons/FlamethrowerWeapon.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interfaces/HitInterface.h"
+#include "NiagaraComponent.h"
 
 AFlamethrowerWeapon::AFlamethrowerWeapon()
 {
+	FlameFXComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("FlameFXComponent"));
+	FlameFXComponent->SetupAttachment(WeaponStaticMesh);
+	FlameFXComponent->bAutoActivate = false;
 }
 
 void AFlamethrowerWeapon::BeginPlay()
@@ -17,6 +21,12 @@ void AFlamethrowerWeapon::BeginPlay()
 void AFlamethrowerWeapon::Fire()
 {
 	Super::Fire();
+
+	// Clear flame fx timer
+	GetWorldTimerManager().ClearTimer(FlameFXTimer);
+
+	// Activate flame fx
+	EnableFlameFX();
 
 	const FVector OwnerVelocity = GetOwner() ? GetOwner()->GetVelocity() : FVector(0, 0, 0);
 	const FTransform MuzzleTransform = WeaponProperties.bIsSkeletalMesh ? WeaponSkeletalMesh->GetSocketTransform(WeaponProperties.WeaponMuzzleSocketName) :
@@ -69,5 +79,24 @@ void AFlamethrowerWeapon::Fire()
 			OnBulletHit(OutHit.GetActor(), OutHit.ImpactPoint);
 			if (WeaponProperties.BulletHealth <= 0) break;  // break loop if bullet health is or bwlow 0
 		}
+	}
+
+	// Set a timer to turn off flame fx
+	GetWorldTimerManager().SetTimer(FlameFXTimer, this, &AFlamethrowerWeapon::DisableFlameFX, FlameFXDeactivateTime, false, FlameFXDeactivateTime);
+}
+
+void AFlamethrowerWeapon::DisableFlameFX()
+{
+	if (FlameFXComponent)
+	{
+		FlameFXComponent->Deactivate();
+	}
+}
+
+void AFlamethrowerWeapon::EnableFlameFX()
+{
+	if (FlameFXComponent)
+	{
+		FlameFXComponent->Activate();
 	}
 }

@@ -6,6 +6,8 @@
 #include "Weapons/TracerWeapon.h"
 #include "FlamethrowerWeapon.generated.h"
 
+class UNiagaraComponent;
+
 /**
  * 
  */
@@ -20,6 +22,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Fire() override;
+
 
 	// Properties
 	UPROPERTY(EditAnywhere, Category = "Properties")
@@ -39,4 +42,17 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	bool bCheckObstaclesBetween = true;
+
+	// Effects
+	UPROPERTY(EditDefaultsOnly, Category = "Effects / FX")
+	UNiagaraComponent* FlameFXComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects / FX")
+	float FlameFXDeactivateTime = 0.35f;
+
+private:
+	FTimerHandle FlameFXTimer;
+
+	void DisableFlameFX();
+	void EnableFlameFX();
 };
