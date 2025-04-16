@@ -6,7 +6,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "../InventoryTypes.h"
 #include "MainSaveGameObject.generated.h"
+
+class AWeaponBase;
 
 /**
  * 
@@ -21,6 +24,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Data | Player | Details")
 	FString PlayerName = FString("PlayerName");
+
+	UPROPERTY(VisibleAnywhere, Category = "Data | Player | Equipment | Weapons")
+	TMap<TSubclassOf<AWeaponBase>, int> Weapons;
+
+	UPROPERTY(VisibleAnywhere, Category = "Data | Player | Equipment | Inventory")
+	TArray<FSlotData> InventoryContent;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	FString SaveSlotName;

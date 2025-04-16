@@ -94,4 +94,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UTDSUserWidget> InventoryMenu_UW_Class = nullptr;
+
+
+
+
+
+
+public:
+	TArray<FSlotData> GetContent() { return Content; }
+	void SetContent(const TArray<FSlotData>& InContent) { Content = InContent; }
 };
