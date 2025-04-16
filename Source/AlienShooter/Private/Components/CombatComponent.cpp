@@ -104,8 +104,15 @@ bool UCombatComponent::SelectWeapon(const int Index)
 	// Update ammo
 	TArray<int> Values;
 	Weapons.GenerateValueArray(Values);
-	const int Ammo = Values[Index];
-	WeaponSelection->SetTotalAmmoAvailable(Ammo);
+	int Ammo = FMath::Clamp(Values[Index], 0, WeaponSelection->GetWeaponProperties()->MaxAmmoCapacity + WeaponSelection->GetWeaponProperties()->MagazineMaxSize);
+	if (Ammo >= WeaponSelection->GetWeaponProperties()->MagazineMaxSize) {
+		WeaponSelection->SetAmmoInMagazine(WeaponSelection->GetWeaponProperties()->MagazineMaxSize);
+	}
+	else {
+		WeaponSelection->SetAmmoInMagazine(Ammo);
+	}
+	int RemainingAmmo = FMath::Clamp(Ammo - WeaponSelection->GetAmmoInMag(), 0, WeaponSelection->GetWeaponProperties()->MaxAmmoCapacity);
+	WeaponSelection->SetTotalAmmoAvailable(RemainingAmmo);
 	
 	const FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget,
 	EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);

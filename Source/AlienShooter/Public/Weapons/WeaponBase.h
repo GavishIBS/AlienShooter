@@ -141,4 +141,5 @@ public:
 	FTransform GetLeftHandPlacementTransform() const;
 
 	FORCEINLINE void SetTotalAmmoAvailable(const int& Value) {WeaponProperties.SetTotalAmmoAvailable(Value);}
+	FORCEINLINE void SetAmmoInMagazine(const int& Value) { WeaponProperties.SetAmmoInMag(Value); }
 };
