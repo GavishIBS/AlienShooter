@@ -9,6 +9,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "SaveGameObjects/GameDataSaveObject.h"
 
+// TEST // DEBUG
+#include "Kismet/KismetSystemLibrary.h"
+
 UTDS_MainMenu::UTDS_MainMenu(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -74,33 +77,18 @@ void UTDS_MainMenu::OnContinueGameButtonPressed()
 		}
 		UGameplayStatics::OpenLevel(this, LevelName);
 	}
-
-	/*
-	ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(GetPawn());
-	if (!BaseCharacter) return false;
-
-	if (UMainSaveGameObject* LoadedGameInst = Cast<UMainSaveGameObject>(UGameplayStatics::LoadGameFromSlot(FString("MainSaveSlot"), 0)))
-	{
-		BaseCharacter->SetPlayerName(LoadedGameInst->PlayerName);
-		if (UCombatComponent* CombatC = BaseCharacter->GetComponentByClass<UCombatComponent>())
-		{
-			CombatC->Weapons = LoadedGameInst->Weapons;
-		}
-		if (UInventoryComponent* InventoryC = BaseCharacter->GetComponentByClass<UInventoryComponent>())
-		{
-			InventoryC->SetContent(LoadedGameInst->InventoryContent);
-		}
-		return true;
-	}
-
-	return false;
-	*/
 }
 
 void UTDS_MainMenu::OnOptionsButtonPressed()
 {
+	UTDSUserWidget* OptionsMenuUW = (UTDSUserWidget*)CreateOptionsMenuUI();
+	if (OptionsMenuUW) {
+		OptionsMenuUW->AddToViewport();
+		RemoveFromParent();
+	}
 }
 
 void UTDS_MainMenu::OnExitGameButtonPressed()
 {
+	UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(this, 0), EQuitPreference::Quit, false);
 }

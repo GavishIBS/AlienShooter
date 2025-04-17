@@ -9,6 +9,7 @@
 #include "TDS_MainMenu.generated.h"
 
 class UButton;
+class UTDS_OptionsMenu;
 
 /**
  * 
@@ -28,6 +29,9 @@ protected:
 	virtual void NativeDestruct() override;
 
 	virtual void BindCallbacks();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	UTDS_OptionsMenu* CreateOptionsMenuUI();
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* NewGameButton;

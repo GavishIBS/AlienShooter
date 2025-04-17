@@ -1,4 +1,6 @@
-// // Copyright (c) 2024 Gavish Bansal// // All rights reserved.
+// Copyright (c) 2024 Gavish Bansal
+// 
+// All rights reserved.
 
 
 #include "Controllers/ShooterPlayerController.h"
