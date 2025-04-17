@@ -41,7 +41,7 @@ void AFlamethrowerWeapon::Fire()
 		FHitResult LineHit;
 		FVector Start = WeaponMuzzle_S->K2_GetComponentLocation();
 		FVector End = Start + WeaponMuzzle_S->GetForwardVector() * TraceRange;
-		UKismetSystemLibrary::LineTraceSingle(this, Start, End, ETraceTypeQuery::TraceTypeQuery1, false, { this, GetOwner() }, EDrawDebugTrace::ForDuration, LineHit, true);
+		UKismetSystemLibrary::LineTraceSingle(this, Start, End, ETraceTypeQuery::TraceTypeQuery1, false, { this, GetOwner() }, EDrawDebugTrace::None, LineHit, true);
 		if (LineHit.bBlockingHit == true && LineHit.GetActor() != nullptr)
 		{
 			if (LineHit.GetActor()->ActorHasTag(FName("Insulator")) == true) // TODO: Use physics materials for this logic
@@ -69,7 +69,7 @@ void AFlamethrowerWeapon::Fire()
 			TraceLocation += OwnerVelocity.GetSafeNormal() * VelocityAffectingScaling * (i + 1);
 		}
 		UKismetSystemLibrary::SphereTraceSingle(this, TraceLocation, TraceLocation, TraceRadius, ETraceTypeQuery::TraceTypeQuery1, false, {this, GetOwner()},
-			EDrawDebugTrace::ForDuration, OutHit, true);
+			EDrawDebugTrace::None, OutHit, true);
 		if (OutHit.bBlockingHit)
 		{
 			if (IHitInterface* HitInterface = Cast<IHitInterface>(OutHit.GetActor()))
@@ -77,7 +77,7 @@ void AFlamethrowerWeapon::Fire()
 				WeaponProperties.BulletHealth -= HitInterface->GetHit(OutHit.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, GetOwner(), UDamageType::StaticClass());
 			}
 			OnBulletHit(OutHit.GetActor(), OutHit.ImpactPoint);
-			if (WeaponProperties.BulletHealth <= 0) break;  // break loop if bullet health is or bwlow 0
+			if (WeaponProperties.BulletHealth <= 0) break;  // break loop if bullet health is or below 0
 		}
 	}
 

@@ -74,4 +74,12 @@ public:
 
 
 	FORCEINLINE UAttributeComponent* GetAttributeComponent() const { return AttributeComponent; }
+
+
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	FString PlayerName = "TestPlayerName";
+public:
+	FORCEINLINE FString GetPlayerName() const { return PlayerName; }
+	FORCEINLINE void SetPlayerName(const FString& InPlayerName) { PlayerName = InPlayerName; }
 };
