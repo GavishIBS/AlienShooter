@@ -12,7 +12,7 @@
 class AWeaponBase;
 
 /**
- * 
+ * PlayerDataSaveObject - stores all the data which is directly related to player
  */
 UCLASS()
 class ALIENSHOOTER_API UMainSaveGameObject : public USaveGame
