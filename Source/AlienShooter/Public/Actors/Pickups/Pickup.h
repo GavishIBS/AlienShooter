@@ -40,4 +40,13 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float RotationSpeed = 1.f;
+	
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	bool bDespawnAfterDelay = true;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float DespawnDelay = 12.5f;
+
+private:
+	void Despawn();
 };

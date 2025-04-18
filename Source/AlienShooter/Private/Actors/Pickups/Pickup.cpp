@@ -26,6 +26,12 @@ void APickup::BeginPlay()
 	Super::BeginPlay();
 	InitCallbacks();
 	if (!bTick) SetActorTickEnabled(false);
+	
+	// Despawn timer
+	if (bDespawnAfterDelay) {
+		FTimerHandle DespawnTimerHandle;
+		GetWorldTimerManager().SetTimer(DespawnTimerHandle, this, &APickup::Despawn, DespawnDelay, false, DespawnDelay);
+	}
 }
 
 void APickup::Tick(float DeltaTime)
@@ -54,4 +60,9 @@ void APickup::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 bool APickup::PostPickup(AActor* Caller)
 {
 	return true;
+}
+
+void APickup::Despawn()
+{
+	Destroy();
 }
