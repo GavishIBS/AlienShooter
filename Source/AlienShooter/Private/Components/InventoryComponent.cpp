@@ -207,9 +207,9 @@ AUsableActor* UInventoryComponent::UseButtonPressed()
 
 	if (AUsableActor* UsableActor = Cast<AUsableActor>(ItemInHand))
 	{
-		ACharacter* Character = Cast<ACharacter>(GetOwner());
+		//ACharacter* Character = Cast<ACharacter>(GetOwner());
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("Trying to use item now"));
-		if (AUsableActor* Usable = UsableActor->UseItem(Character))
+		if (AUsableActor* Usable = UsableActor->UseItem(OwnerAsCharacter))
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("AUsableActor::UseItem is called with return = true"));
 			RemoveItemFromInventory(SelectedItemIndex);
