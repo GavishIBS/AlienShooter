@@ -68,6 +68,7 @@ void AControllableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AControllableCharacter::Move);
+		EnhancedInputComponent->BindAction(GamepadCursorMoveAction, ETriggerEvent::Triggered, this, &AControllableCharacter::GamepadCursorMove);
 	}
 }
 
@@ -189,4 +190,18 @@ void AControllableCharacter::Move(const FInputActionValue& Value)
 		const FVector RightDir = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(RightDir, InputValue.Y);
 	}
+}
+
+void AControllableCharacter::GamepadCursorMove(const FInputActionValue& Value)
+{
+	if (!PlayerController) return;
+
+	float X, Y;
+	PlayerController->GetMousePosition(X, Y);
+	int32 ViewportX, ViewportY;
+	PlayerController->GetViewportSize(ViewportX, ViewportY);
+	const FVector2d InputValue = Value.Get<FVector2d>();
+	float NewX = FMath::Clamp(X + (InputValue.X * GamepadCursorMoveSpeed), 0.f, (float)ViewportX);
+	float NewY = FMath::Clamp(Y + (InputValue.Y * GamepadCursorMoveSpeed), 0.f, (float)ViewportY);
+	PlayerController->SetMouseLocation(NewX, NewY);
 }

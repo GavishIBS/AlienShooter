@@ -43,6 +43,7 @@ protected:
 protected:
 	/* Input callbacks begin */
 	void Move(const FInputActionValue& Value);
+	void GamepadCursorMove(const FInputActionValue& Value);
 	/* Input callbacks end */
 	
 	/* Input actions begin */
@@ -51,6 +52,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
 	TObjectPtr<UInputAction> MoveAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
+	TObjectPtr<UInputAction> GamepadCursorMoveAction;
 	/* Input end */
 
 	// Properties
@@ -84,6 +88,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Camera Movements")
 	float CameraSpeed = 3.f;
 	/* Camera movements end */
+
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "15"))
+	float GamepadCursorMoveSpeed = 35.f;
 
 public:
 	FORCEINLINE FVector GetCursorTraceHitLocation() const {return CursorTraceHitLocation;}
