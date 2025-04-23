@@ -9,6 +9,7 @@
 #include "AISpawnerBase.generated.h"
 
 class ABaseAICharacter;
+class ATargetPoint;
 
 USTRUCT(BlueprintType)
 struct FAISpawnData
@@ -42,6 +43,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Data");
 	TArray<FAISpawnData> SpawnData;
+
+	UPROPERTY(EditAnywhere, Category=Data)
+	TArray<ATargetPoint*> SpawnPoints;
 
 	int NumSpawned = 0;   // Number of AI characters spawned through this spawner.
 
