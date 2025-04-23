@@ -94,4 +94,24 @@ protected:
 	float DeathDecalLifeSpawn = 5.f;
 
 	FAcquiredSpecialEffectData AcquiredSpecialEffectData;
+
+	// Dumbness logic begin
+	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
+	bool bCanForgetTarget = false;
+
+	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
+	float ForgetTargetRate = 15.f;    // Amount of time after which AI should forget target
+
+	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
+	float TargetForgetMinRange = 1500.f;  // Target should be atlest 'x' units away to forget
+	
+	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
+	float ForgetTargetTime = 8.f;        // Amount of time for which AI forgets target
+
+	FTimerHandle ForgetTargetTimerHandle;
+
+	bool CanForgetTarget();
+	void ForgetTarget();
+	void ReaquireTarget();
+	// Dumbness logic end
 };

@@ -11,6 +11,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
+#include "Navigation/PathFollowingComponent.h"
 
 ABaseAICharacter::ABaseAICharacter()
 {
@@ -25,14 +26,22 @@ ABaseAICharacter::ABaseAICharacter()
 void ABaseAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	// Setup target forget timer
+	if (bCanForgetTarget)
+	{
+		GetWorldTimerManager().SetTimer(ForgetTargetTimerHandle, this, &ABaseAICharacter::ForgetTarget, ForgetTargetRate, true, ForgetTargetRate / 2);
+	}
 }
 
 void ABaseAICharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if (IsInAttackRange())
-		Attack();
-	else ChaseTarget(AIController);
+	if (AIController->TargetCharacter) {
+		if (IsInAttackRange())
+			Attack();
+		else ChaseTarget(AIController);
+	}
 }
 
 void ABaseAICharacter::PossessedBy(AController* NewController)
@@ -113,7 +122,7 @@ void ABaseAICharacter::GetSpecialHit(const FVector& HitLocation, const FSpecialE
 		UKismetMathLibrary::RandomFloatInRange(-RandomizationFactor, RandomizationFactor);
 	const FDamageEvent DamageEvent;
 	TakeDamage(Damage_Calc, DamageEvent, nullptr, InDamageCauser);
-
+	
 	int NumMaterials = GetMesh()->GetNumMaterials();
 	for (int i = 0; i < NumMaterials; i++)
 	{
@@ -263,6 +272,40 @@ void ABaseAICharacter::StopwatchTick()
 	TakeDamage(Damage_Calc, DamageEvent, nullptr, nullptr);
 
 	AcquiredSpecialEffectData.Duration -= 1.f;
+}
+
+bool ABaseAICharacter::CanForgetTarget()
+{
+	if (AIController == nullptr || AIController->TargetCharacter == nullptr) return false;
+
+	if (FVector::Dist(AIController->TargetCharacter->GetActorLocation(), GetActorLocation())
+		> TargetForgetMinRange)
+	{
+		return true;
+	}
+	return false;
+}
+
+void ABaseAICharacter::ForgetTarget()
+{
+	if (CanForgetTarget() == false) return;
+
+	AIController->SetTargetCharacter(nullptr);
+	
+	// Stop AI
+	FAIMoveRequest MoveRequest;
+	MoveRequest.SetGoalActor((AActor*)this);
+	MoveRequest.SetAcceptanceRadius(AIController->GetAIProperties().AcceptanceRadius);
+	AIController->MoveTo(MoveRequest);
+
+	// Setup timer to reaquire target
+	FTimerHandle ReaquireTargetTimerHandle;
+	GetWorldTimerManager().SetTimer(ReaquireTargetTimerHandle, this, &ABaseAICharacter::ReaquireTarget, ForgetTargetTime, false, ForgetTargetTime);
+}
+
+void ABaseAICharacter::ReaquireTarget()
+{
+	if (const bool bUpdated = UpdateChaseTarget(AIController); !bUpdated) Destroy();
 }
 
 void ABaseAICharacter::StartAttackTrace()
