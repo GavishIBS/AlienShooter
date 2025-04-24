@@ -12,6 +12,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "Navigation/PathFollowingComponent.h"
+#include "NavigationSystem.h"
+#include "NavigationPath.h"
 
 ABaseAICharacter::ABaseAICharacter()
 {
@@ -291,12 +293,30 @@ void ABaseAICharacter::ForgetTarget()
 	if (CanForgetTarget() == false) return;
 
 	AIController->SetTargetCharacter(nullptr);
+
+	// No target AI movement
+	if (bStopOnTargetForget) {
+		// Stop AI
+		FAIMoveRequest MoveRequest;
+		MoveRequest.SetGoalActor((AActor*)this);
+		MoveRequest.SetAcceptanceRadius(AIController->GetAIProperties().AcceptanceRadius);
+		AIController->MoveTo(MoveRequest);
+	}
+	else {
+		// Random AI movement
+		GetWorldTimerManager().SetTimer(NoTargetRandomMoveTickTimerHandle, FTimerDelegate::CreateLambda([&]() {
+			FNavLocation ResultLocation;
+			UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
+			if (NavSys && NavSys->GetRandomPointInNavigableRadius(GetActorLocation(), NoTargetMoveRandomPointArea, ResultLocation))
+			{
+				FAIMoveRequest MoveRequest;
+				MoveRequest.SetAcceptanceRadius(AIController->GetAIProperties().AcceptanceRadius);
+				MoveRequest.SetGoalLocation(ResultLocation);
+				AIController->MoveTo(MoveRequest);
+			}
+		}), NoTargetRandomMovementResetRate, true, NoTargetRandomMovementResetRate);
+	}
 	
-	// Stop AI
-	FAIMoveRequest MoveRequest;
-	MoveRequest.SetGoalActor((AActor*)this);
-	MoveRequest.SetAcceptanceRadius(AIController->GetAIProperties().AcceptanceRadius);
-	AIController->MoveTo(MoveRequest);
 
 	// Setup timer to reaquire target
 	FTimerHandle ReaquireTargetTimerHandle;
@@ -305,7 +325,8 @@ void ABaseAICharacter::ForgetTarget()
 
 void ABaseAICharacter::ReaquireTarget()
 {
-	if (const bool bUpdated = UpdateChaseTarget(AIController); !bUpdated) Destroy();
+	GetWorldTimerManager().ClearTimer(NoTargetRandomMoveTickTimerHandle);  // Stop no target random movements
+	if (const bool bUpdated = UpdateChaseTarget(AIController); !bUpdated) Destroy();  // Try get target otherwise destroy
 }
 
 void ABaseAICharacter::StartAttackTrace()

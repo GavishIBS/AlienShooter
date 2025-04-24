@@ -107,8 +107,18 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
 	float ForgetTargetTime = 8.f;        // Amount of time for which AI forgets target
+	
+	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
+	bool bStopOnTargetForget = false;
+
+	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness", meta = (ClampMin="10"))
+	float NoTargetMoveRandomPointArea = 200.f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
+	float NoTargetRandomMovementResetRate = 1.f;
 
 	FTimerHandle ForgetTargetTimerHandle;
+	FTimerHandle NoTargetRandomMoveTickTimerHandle;
 
 	bool CanForgetTarget();
 	void ForgetTarget();
