@@ -85,7 +85,7 @@ protected:
 	TObjectPtr<UCollisionTraceComponent> CollisionTraceComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category="Effects")
-	TObjectPtr<UMaterialInstance> DeathDecalMaterialInstance = nullptr;
+	TArray<TObjectPtr<UMaterialInstance>> DeathDecalMaterialInstances = {};
 
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	FVector DeathDecalSize = FVector(100.f, 100.f, 100.f);

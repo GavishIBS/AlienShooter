@@ -74,7 +74,12 @@ void ABaseAICharacter::Destroyed()
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, GetActorLocation(),
 			GetActorRotation(), GetActorScale3D(), true, true);
 
-	if (DeathDecalMaterialInstance)
+	UMaterialInstance* DeathDecalMI_Selection = 0;
+	if (DeathDecalMaterialInstances.Num() > 0) {
+		int32 DeathDecalIndex = UKismetMathLibrary::RandomIntegerInRange(0, DeathDecalMaterialInstances.Num() - 1);
+		DeathDecalMI_Selection = DeathDecalMaterialInstances[DeathDecalIndex];
+	}
+	if (DeathDecalMI_Selection)
 	{
 		TArray<AActor*> ActorsToIgnore;
 		ActorsToIgnore.Add(this);
@@ -86,7 +91,7 @@ void ABaseAICharacter::Destroyed()
 		if (OutHit.bBlockingHit)
 		{
 			UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(),
-				DeathDecalMaterialInstance, DeathDecalSize, OutHit.ImpactPoint,
+				DeathDecalMI_Selection, DeathDecalSize, OutHit.ImpactPoint,
 				FRotator(-90.f, 0.f, 0.f), DeathDecalLifeSpawn);
 		}
 	}
