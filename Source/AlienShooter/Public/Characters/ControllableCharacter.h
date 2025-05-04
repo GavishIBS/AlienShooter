@@ -11,6 +11,7 @@
 
 class UInputMappingContext;
 class UInputAction;
+class USpotLightComponent;
 
 /**
  * 
@@ -39,11 +40,16 @@ protected:
 	/* Character rotation end */
 
 	void UpdateCameraBoomOffset(float DeltaTime);
-	
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<USpotLightComponent> FlashlightComponent;
+
 protected:
 	/* Input callbacks begin */
 	void Move(const FInputActionValue& Value);
 	void GamepadCursorMove(const FInputActionValue& Value);
+	void ToggleFlashlight();
 	/* Input callbacks end */
 	
 	/* Input actions begin */
@@ -55,6 +61,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
 	TObjectPtr<UInputAction> GamepadCursorMoveAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
+	TObjectPtr<UInputAction> ToggleFlashlightAction;
 	/* Input end */
 
 	// Properties

@@ -11,7 +11,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "Components/SpotLightComponent.h"
 
 
 #include "Components/AttributeComponent.h"
@@ -26,6 +26,9 @@ AControllableCharacter::AControllableCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	CameraBoom->bUsePawnControlRotation = false;
 	ViewCamera->bUsePawnControlRotation = false;
+
+	FlashlightComponent = CreateDefaultSubobject<USpotLightComponent>(TEXT("Flashlight_SpotLightComponent"));
+	FlashlightComponent->SetupAttachment(GetMesh());
 }
 
 void AControllableCharacter::BeginPlay()
@@ -69,6 +72,7 @@ void AControllableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AControllableCharacter::Move);
 		EnhancedInputComponent->BindAction(GamepadCursorMoveAction, ETriggerEvent::Triggered, this, &AControllableCharacter::GamepadCursorMove);
+		EnhancedInputComponent->BindAction(ToggleFlashlightAction, ETriggerEvent::Completed, this, &AControllableCharacter::ToggleFlashlight);
 	}
 }
 
@@ -204,4 +208,9 @@ void AControllableCharacter::GamepadCursorMove(const FInputActionValue& Value)
 	float NewX = FMath::Clamp(X + (InputValue.X * GamepadCursorMoveSpeed), 0.f, (float)ViewportX);
 	float NewY = FMath::Clamp(Y + (InputValue.Y * GamepadCursorMoveSpeed), 0.f, (float)ViewportY);
 	PlayerController->SetMouseLocation(NewX, NewY);
+}
+
+void AControllableCharacter::ToggleFlashlight()
+{
+	if (FlashlightComponent) FlashlightComponent->SetVisibility(!FlashlightComponent->IsVisible());
 }
