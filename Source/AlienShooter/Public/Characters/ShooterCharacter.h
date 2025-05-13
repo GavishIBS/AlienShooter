@@ -76,6 +76,7 @@ protected:
 	void InventorySlotPressed_2();
 	void InventorySlotPressed_3();
 	void InventorySlotPressed_4();
+	void DisplayObjectives();
 	/* Input callbacks end */
 	
 	/* Input begin */
@@ -108,6 +109,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> InventorySlot_4_Action = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> DisplayObjectivesAction = nullptr;
 	/* Input end */
 
 	FShooterProperties ShooterProperties = FShooterProperties();
