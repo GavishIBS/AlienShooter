@@ -15,6 +15,7 @@ struct FDialogueData
 	GENERATED_BODY()
 
 
+	UPROPERTY(EditAnywhere, Category=Data)
 	FString Dialogue = FString();
 	
 	UPROPERTY(EditAnywhere, Category=Data)
