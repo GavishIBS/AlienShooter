@@ -8,6 +8,8 @@
 #include "UI/Widgets/TDSUserWidget.h"
 #include "TDS_DialogueLogSlot_UserWidget.generated.h"
 
+class UTextBlock;
+
 /**
  * 
  */
@@ -28,8 +30,16 @@ protected:
 	virtual void NativeDestruct() override;
 	void BindCallbacks();
 
-	UPROPERTY(BlueprintReadOnly, Category = "Data")
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SpeakerName_TextBlock;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Dialogue_TextBlock;
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
 	FName DialogueSpeakerName = FName("SpeakerName");
-	UPROPERTY(BlueprintReadOnly, Category = "Data")
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Data", meta = (ExposeOnSpawn = "true"))
 	FString DialogueLogText = FString("sample dialogue line");
 };

@@ -9,6 +9,8 @@
 #include "Dialogue_Types.h"
 #include "TDS_DialogueLogsUserWidget.generated.h"
 
+class UTDS_DialogueLogSlot_UserWidget;
+
 /**
  * 
  */
@@ -32,7 +34,13 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void InitComponentWithText();    // DEBUG // TEMP
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void InitComponent();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
+	TSubclassOf<UTDS_DialogueLogSlot_UserWidget> DialogueLogSlot_UW_Class = nullptr;
 	
 public:
-	FORCEINLINE void SetDialogueLogs(const TArray<FDialogueLog>& InDialogueLogs) { DialogueLogs = InDialogueLogs; InitComponentWithText(); }
+	FORCEINLINE void SetDialogueLogs(const TArray<FDialogueLog>& InDialogueLogs) { DialogueLogs = InDialogueLogs; InitComponentWithText(); if (DialogueLogSlot_UW_Class) { InitComponent(); } }
 };
