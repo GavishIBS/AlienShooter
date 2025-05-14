@@ -189,7 +189,8 @@ void UCombatComponent::FireWeapon()
 		return;
 	}
 	if (WeaponInHand->ShouldDoCameraShake()) {
-		OwnerAsShooterCharacter->DoCameraShake(WeaponInHand->GetCameraShakeIntensity(), WeaponInHand->GetCameraShakeTime(), true, OwnerAsShooterCharacter->GetMesh()->GetForwardVector());
+		//OwnerAsShooterCharacter->DoCameraShake(WeaponInHand->GetCameraShakeIntensity(), WeaponInHand->GetCameraShakeTime(), true, OwnerAsShooterCharacter->GetMesh()->GetForwardVector());
+		OwnerAsShooterCharacter->DoCameraShake(WeaponInHand->GetCameraShakeIntensity(), WeaponInHand->GetCameraShakeTime(), false, FVector());
 	}
 	WeaponInHand->OnWeaponFirePressed.Broadcast();
 
