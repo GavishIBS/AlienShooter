@@ -19,8 +19,8 @@
 #include "Actors/UsableActor.h"
 #include "Components/RadioPhoneComponent.h"
 #include "UI/Widgets/TDSOverlay.h"
-
-
+#include "UI/Widgets/TDS_DialogueLogsUserWidget.h"
+#include "Components/ObjectiveComponent.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -92,6 +92,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(InventorySlot_2_Action, ETriggerEvent::Started, this, &AShooterCharacter::InventorySlotPressed_2);
 		EnhancedInputComponent->BindAction(InventorySlot_3_Action, ETriggerEvent::Started, this, &AShooterCharacter::InventorySlotPressed_3);
 		EnhancedInputComponent->BindAction(InventorySlot_4_Action, ETriggerEvent::Started, this, &AShooterCharacter::InventorySlotPressed_4);
+
+		EnhancedInputComponent->BindAction(DisplayObjectivesAction, ETriggerEvent::Started, this, &AShooterCharacter::DisplayObjectives);
 	}
 }
 
@@ -303,6 +305,23 @@ void AShooterCharacter::InventorySlotPressed_3()
 void AShooterCharacter::InventorySlotPressed_4()
 {
 	TryUseInventoryItemAtIndex(3);
+}
+
+void AShooterCharacter::DisplayObjectives()
+{
+	if (ObjectiveComponent == nullptr || PlayerController == nullptr) return;
+
+	if (ObjectiveComponent->DialogueLogsMenu_UW_Ref) {
+		ObjectiveComponent->DialogueLogsMenu_UW_Ref->RemoveFromParent();
+		ObjectiveComponent->DialogueLogsMenu_UW_Ref = nullptr;
+	}
+	else if (ATDSHUD* TDS_HUD = Cast<ATDSHUD>(PlayerController->GetHUD()))
+	{
+		ObjectiveComponent->DialogueLogsMenu_UW_Ref = Cast<UTDS_DialogueLogsUserWidget>(TDS_HUD->MakeWidgetInViewport(ObjectiveComponent->DialogueLogMenu_UWClass));
+		if (ObjectiveComponent->DialogueLogsMenu_UW_Ref) {
+			ObjectiveComponent->DialogueLogsMenu_UW_Ref->SetDialogueLogs(ObjectiveComponent->RadioPhoneDialogueLogs);
+		}
+	}
 }
 
 void AShooterCharacter::EndAttack()

@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/InventoryComponent.h"
 #include "Components/RadioPhoneComponent.h"
+#include "Components/ObjectiveComponent.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -30,6 +31,7 @@ ABaseCharacter::ABaseCharacter()
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 	RadioPhoneComponent = CreateDefaultSubobject<URadioPhoneComponent>(TEXT("RadioPhoneComponent"));
 	RadioPhoneComponent->SetupAttachment(GetMesh());
+	ObjectiveComponent = CreateDefaultSubobject<UObjectiveComponent>(TEXT("ObjectiveComponent"));
 }
 
 void ABaseCharacter::BeginPlay()
