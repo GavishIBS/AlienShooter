@@ -12,7 +12,8 @@ AEventArea::AEventArea()
 	PrimaryActorTick.bCanEverTick = false;
 
 	OverlapArea = CreateDefaultSubobject<UBoxComponent>(TEXT("OverlapArea"));
-	OverlapArea->SetupAttachment(GetRootComponent());
+	//OverlapArea->SetupAttachment(GetRootComponent());
+	SetRootComponent(OverlapArea);
 
 	Billboard = CreateDefaultSubobject<UBillboardComponent>(TEXT("Billboard"));
 	Billboard->SetupAttachment(OverlapArea);
