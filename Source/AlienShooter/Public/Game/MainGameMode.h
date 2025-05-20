@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "AlarmingTypes.h"
 #include "MainGameMode.generated.h"
 
 /**
@@ -32,6 +33,27 @@ protected:
 
 	UFUNCTION()
 	void TryRespawnPlayer(AActor* Killer);
+
+	/** Alarming system begins */
+	UFUNCTION(BlueprintCallable)   // TEST // DEBUG
+	void EnableAlarmingSystem(const EAlarmingModeName& SwitchToModeName = EAlarmingModeName::NORMAL);
+	UFUNCTION(BlueprintCallable)   // TEST // DEBUG
+	void DisableAlarmingSystem();
+
+	//UFUNCTION()
+	virtual void OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, const EAlarmingModeName& LastModeName);
+
+	EAlarmingModeName CurrentAlarmingModeName = EAlarmingModeName::NONE;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data | AlarmingSystem")
+	TArray<FAlarmingModeData> AlarmingModes;          // 4 modes - normal, safe, gray-zone, and danger
+
+	void Setup_AlarmLights();
+	TArray<class AAlarmDirectionalLight_Electric*> Alarm_DirectionalLights;
+
+private:
+	FAlarmingModeData GetAlarmingModeData_ByName(const EAlarmingModeName& ModeName);
+	/** Alarming system ends */
 
 public:
 	//UFUNCTION(BlueprintCallable, Category = "Game | Rebirth")
