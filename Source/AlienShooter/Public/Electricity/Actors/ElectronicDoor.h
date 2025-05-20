@@ -10,11 +10,13 @@
 
 class UBoxComponent;
 
+/*
 UENUM()
 enum class EMovementAxis
 {
 	X, Y, Z
 };
+*/
 
 /**
  * 
@@ -27,7 +29,6 @@ class ALIENSHOOTER_API AElectronicDoor : public AElectronicActor
 public:
 	AElectronicDoor();
 	virtual void Tick(float DeltaTime) override;
-
 protected:
 	virtual void BeginPlay() override;
 	void BindCallbacks();

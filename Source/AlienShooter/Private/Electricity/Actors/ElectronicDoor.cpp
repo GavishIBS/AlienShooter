@@ -27,6 +27,8 @@ AElectronicDoor::AElectronicDoor()
 
 void AElectronicDoor::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
+
 	if (bOpening)
 	{
 		FVector Target = InitialDoorLocation + TargetLocationOffset;
@@ -39,7 +41,7 @@ void AElectronicDoor::Tick(float DeltaTime)
 		}
 		return;
 	}
-	if (bClosing)
+	else if (bClosing)
 	{
 		FVector Target = InitialDoorLocation;
 		FVector Door_NewLocation = FMath::VInterpTo(DoorMesh->GetComponentLocation(),
