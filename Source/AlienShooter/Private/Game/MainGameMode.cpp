@@ -7,6 +7,7 @@
 #include "Characters/BaseCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Electricity/Actors/AlarmDirectionalLight_Electric.h"
+#include "Components/AudioComponent.h"
 
 /*
 void AMainGameMode::OnPostLogin(AController* NewPlayer)
@@ -94,13 +95,26 @@ void AMainGameMode::DisableAlarmingSystem()
 	OnAlarmingModeChanged(CurrentAlarmingModeName, LastModeName);
 }
 
+void AMainGameMode::ChangeAlarmingMode(const EAlarmingModeName& SwitchToModeName)
+{
+	DisableAlarmingSystem();
+	EnableAlarmingSystem(SwitchToModeName);
+}
+
 void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, const EAlarmingModeName& LastModeName)
 {
 	if (NewModeName == EAlarmingModeName::NONE) return;
 
 	//APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	//FVector PlayerLocation;
-	UGameplayStatics::PlaySound2D(this, GetAlarmingModeData_ByName(CurrentAlarmingModeName).SirensSoundEffect);
+	
+	if (CurrentAlarmModeSound_AudioComponent) {
+		CurrentAlarmModeSound_AudioComponent->Stop();
+		CurrentAlarmModeSound_AudioComponent->DestroyComponent();
+	}
+	if (USoundBase* SoundToSpawn = GetAlarmingModeData_ByName(CurrentAlarmingModeName).SirensSoundEffect) {
+		CurrentAlarmModeSound_AudioComponent = UGameplayStatics::SpawnSound2D(this, SoundToSpawn);
+	}
 
 	// disable last alarm light
 	for (AAlarmDirectionalLight_Electric* AlarmLight : Alarm_DirectionalLights) {

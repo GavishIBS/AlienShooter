@@ -39,11 +39,14 @@ protected:
 	void EnableAlarmingSystem(const EAlarmingModeName& SwitchToModeName = EAlarmingModeName::NORMAL);
 	UFUNCTION(BlueprintCallable)   // TEST // DEBUG
 	void DisableAlarmingSystem();
+	UFUNCTION(BlueprintCallable)   // TEST // DEBUG
+	void ChangeAlarmingMode(const EAlarmingModeName& SwitchToModeName = EAlarmingModeName::NORMAL);
 
 	//UFUNCTION()
 	virtual void OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, const EAlarmingModeName& LastModeName);
 
 	EAlarmingModeName CurrentAlarmingModeName = EAlarmingModeName::NONE;
+	class UAudioComponent* CurrentAlarmModeSound_AudioComponent = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data | AlarmingSystem")
 	TArray<FAlarmingModeData> AlarmingModes;          // 4 modes - normal, safe, gray-zone, and danger
