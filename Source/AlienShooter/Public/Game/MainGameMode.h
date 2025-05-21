@@ -42,7 +42,7 @@ protected:
 
 	virtual void OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, const EAlarmingModeName& LastModeName);
 
-	EAlarmingModeName CurrentAlarmingModeName = EAlarmingModeName::NONE;
+	EAlarmingModeName CurrentAlarmingModeName = EAlarmingModeName::NORMAL;
 	class UAudioComponent* CurrentAlarmModeSound_AudioComponent = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data | AlarmingSystem")
