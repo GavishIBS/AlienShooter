@@ -60,10 +60,8 @@ void AMainGameMode::TryRespawnPlayer(AActor* Killer)
 
 void AMainGameMode::EnableAlarmingSystem(const EAlarmingModeName& SwitchToModeName)
 {
-	if (CurrentAlarmingModeName != EAlarmingModeName::NONE) return;
+	//if (CurrentAlarmingModeName != EAlarmingModeName::NONE) return;
 
-	//CurrentAlarmingModeName = SwitchToModeName;
-	//if (CurrentAlarmingModeName == EAlarmingModeName::NONE) CurrentAlarmingModeName = EAlarmingModeName::NORMAL;
 	EAlarmingModeName LastModeName = CurrentAlarmingModeName;
 	CurrentAlarmingModeName = SwitchToModeName == EAlarmingModeName::NONE ? EAlarmingModeName::NORMAL : SwitchToModeName;
 	
@@ -80,6 +78,7 @@ void AMainGameMode::EnableAlarmingSystem(const EAlarmingModeName& SwitchToModeNa
 
 void AMainGameMode::DisableAlarmingSystem()
 {
+	/*
 	if (CurrentAlarmingModeName == EAlarmingModeName::NONE) return;
 
 	for (FAlarmingModeData& ModeData : AlarmingModes)
@@ -93,21 +92,14 @@ void AMainGameMode::DisableAlarmingSystem()
 	EAlarmingModeName LastModeName = CurrentAlarmingModeName;
 	CurrentAlarmingModeName = EAlarmingModeName::NONE;
 	OnAlarmingModeChanged(CurrentAlarmingModeName, LastModeName);
-}
-
-void AMainGameMode::ChangeAlarmingMode(const EAlarmingModeName& SwitchToModeName)
-{
-	DisableAlarmingSystem();
-	EnableAlarmingSystem(SwitchToModeName);
+	*/
+	EnableAlarmingSystem();
 }
 
 void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, const EAlarmingModeName& LastModeName)
 {
 	if (NewModeName == EAlarmingModeName::NONE) return;
 
-	//APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	//FVector PlayerLocation;
-	
 	if (CurrentAlarmModeSound_AudioComponent) {
 		CurrentAlarmModeSound_AudioComponent->Stop();
 		CurrentAlarmModeSound_AudioComponent->DestroyComponent();
@@ -117,16 +109,18 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 	}
 
 	// disable last alarm light
-	for (AAlarmDirectionalLight_Electric* AlarmLight : Alarm_DirectionalLights) {
-		if (LastModeName == AlarmLight->GetLinkedAlarmingModeName()) {
-			AlarmLight->SetLightVisibility(false);
+	for (FAlarmingModeData& ModeData : AlarmingModes)
+	{
+		if (ModeData.AlarmingModeName == LastModeName) {
+			if (ModeData.DirectionalLight) { ModeData.DirectionalLight->SetLightVisibility(false); }
 		}
 	}
 
 	// enable new alarm light
-	for (AAlarmDirectionalLight_Electric* AlarmLight : Alarm_DirectionalLights) {
-		if (NewModeName == AlarmLight->GetLinkedAlarmingModeName()) {
-			AlarmLight->SetLightVisibility(true);
+	for (FAlarmingModeData& ModeData : AlarmingModes)
+	{
+		if (ModeData.AlarmingModeName == NewModeName) {
+			if (ModeData.DirectionalLight) { ModeData.DirectionalLight->SetLightVisibility(true); }
 		}
 	}
 }
@@ -152,8 +146,6 @@ void AMainGameMode::Setup_AlarmLights()
 	{
 		AAlarmDirectionalLight_Electric* AlarmLight = Cast<AAlarmDirectionalLight_Electric>(AlarmLight_AsActor);
 		if (AlarmLight) {
-			Alarm_DirectionalLights.AddUnique(AlarmLight);
-			
 			for (FAlarmingModeData& ModeData : AlarmingModes) {
 				if (ModeData.AlarmingModeName == AlarmLight->GetLinkedAlarmingModeName()) {
 					ModeData.DirectionalLight = AlarmLight;

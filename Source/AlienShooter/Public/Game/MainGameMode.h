@@ -39,10 +39,7 @@ protected:
 	void EnableAlarmingSystem(const EAlarmingModeName& SwitchToModeName = EAlarmingModeName::NORMAL);
 	UFUNCTION(BlueprintCallable)   // TEST // DEBUG
 	void DisableAlarmingSystem();
-	UFUNCTION(BlueprintCallable)   // TEST // DEBUG
-	void ChangeAlarmingMode(const EAlarmingModeName& SwitchToModeName = EAlarmingModeName::NORMAL);
 
-	//UFUNCTION()
 	virtual void OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, const EAlarmingModeName& LastModeName);
 
 	EAlarmingModeName CurrentAlarmingModeName = EAlarmingModeName::NONE;
@@ -52,7 +49,6 @@ protected:
 	TArray<FAlarmingModeData> AlarmingModes;          // 4 modes - normal, safe, gray-zone, and danger
 
 	void Setup_AlarmLights();
-	TArray<class AAlarmDirectionalLight_Electric*> Alarm_DirectionalLights;
 
 private:
 	FAlarmingModeData GetAlarmingModeData_ByName(const EAlarmingModeName& ModeName);

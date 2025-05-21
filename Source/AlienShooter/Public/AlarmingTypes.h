@@ -3,8 +3,6 @@
 #include "CoreMinimal.h"
 #include "AlarmingTypes.generated.h"
 
-class AElectricDirectionalLight;
-
 UENUM(BlueprintType)
 enum class EAlarmingModeName : uint8
 {
@@ -20,7 +18,7 @@ struct FAlarmingModeData   // 4 modes - normal, safe, gray-zone, and danger
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Data)
-	AElectricDirectionalLight* DirectionalLight;      // using ElectricalDirectionalLight class for now - change later if need to
+	class AAlarmDirectionalLight_Electric* DirectionalLight;      // using ElectricalDirectionalLight class for now - change later if need to
 	//ACustomDirectionalLight_DerivedFromElectricDirectionalLight* DirectionalLight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Data)
