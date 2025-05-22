@@ -7,9 +7,10 @@
 #include "CoreMinimal.h"
 #include "UI/Widgets/TDSUserWidget.h"
 #include "Dialogue_Types.h"
+#include "TDS_DialogueLogSlot_UserWidget.h"  // TODO: check why have to add this include line, instead of just a forward declaration
 #include "TDS_DialogueLogsUserWidget.generated.h"
 
-class UTDS_DialogueLogSlot_UserWidget;
+//class UTDS_DialogueLogSlot_UserWidget;
 
 /**
  * 

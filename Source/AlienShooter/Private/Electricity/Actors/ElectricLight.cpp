@@ -22,7 +22,7 @@ void AElectricLight::BeginPlay()
 
 void AElectricLight::OnElectricityTurnedOn()
 {
-	if (Light)
+	if (Light && bTurnOnAuto)
 	{
 		if (bInterpolateIntensity) {
 			Light->SetIntensity(0.f);
@@ -38,5 +38,18 @@ void AElectricLight::Tick(float DeltaTime)
 	{
 		if (Light->Intensity >= MaxIntensity) bInterpingIntensity = false;
 		Light->SetIntensity(UKismetMathLibrary::FInterpTo(Light->Intensity, MaxIntensity, DeltaTime, IntensityInterpSpeed));
+	}
+}
+
+void AElectricLight::TurnOnLight()
+{
+	if (HaveElectricity()) {
+		if (Light) {
+			if (bInterpolateIntensity) {
+				Light->SetIntensity(0.f);
+				bInterpingIntensity = true;
+			}
+			Light->SetVisibility(true);
+		}
 	}
 }

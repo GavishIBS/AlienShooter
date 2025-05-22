@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Electricity/Actors/AlarmDirectionalLight_Electric.h"
 #include "Components/AudioComponent.h"
+#include "Electricity/Actors/Electric_Siren_SpotLight.h"
 
 /*
 void AMainGameMode::OnPostLogin(AController* NewPlayer)
@@ -123,6 +124,16 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 			if (ModeData.DirectionalLight) { ModeData.DirectionalLight->SetLightVisibility(true); }
 		}
 	}
+
+	// update sirens
+	for (AElectric_Siren_SpotLight* Siren : SirensCache)
+	{
+		if (Siren) {
+			Siren->TurnOnLightWithMode(NewModeName);
+		}
+	}
+
+	OnAlarmingModeChangedEvent.Broadcast(NewModeName, LastModeName);
 }
 
 FAlarmingModeData AMainGameMode::GetAlarmingModeData_ByName(const EAlarmingModeName& ModeName)
@@ -139,7 +150,7 @@ FAlarmingModeData AMainGameMode::GetAlarmingModeData_ByName(const EAlarmingModeN
 
 void AMainGameMode::Setup_AlarmLights()
 {
-	TArray<AActor*> AlarmLights_AsActors;
+	TArray<AActor*> AlarmLights_AsActors;  // Directional lights
 	UGameplayStatics::GetAllActorsOfClass(this, AAlarmDirectionalLight_Electric::StaticClass(), AlarmLights_AsActors);
 
 	for (AActor* AlarmLight_AsActor : AlarmLights_AsActors)
@@ -151,6 +162,17 @@ void AMainGameMode::Setup_AlarmLights()
 					ModeData.DirectionalLight = AlarmLight;
 				}
 			}
+		}
+	}
+
+	TArray<AActor*> SirenLights_AsActors;
+	UGameplayStatics::GetAllActorsOfClass(this, AElectric_Siren_SpotLight::StaticClass(), SirenLights_AsActors);
+
+	for (AActor* SirenLight_AsActor : SirenLights_AsActors)
+	{
+		AElectric_Siren_SpotLight* SirenLight = Cast<AElectric_Siren_SpotLight>(SirenLight_AsActor);
+		if (SirenLight) {
+			SirensCache.AddUnique(SirenLight);
 		}
 	}
 }
