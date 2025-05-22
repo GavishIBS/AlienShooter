@@ -6,7 +6,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "AlarmingTypes.h"
 #include "MainGameMode.generated.h"
+
+class AElectric_Siren_SpotLight;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAlarmingModeChanged, EAlarmingModeName, NewModeName, EAlarmingModeName, LastModeName);
 
 /**
  * 
@@ -32,6 +37,33 @@ protected:
 
 	UFUNCTION()
 	void TryRespawnPlayer(AActor* Killer);
+
+	/** Alarming system begins */
+public:
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
+	FOnAlarmingModeChanged OnAlarmingModeChangedEvent;
+
+protected:
+	UFUNCTION(BlueprintCallable)   // TEST // DEBUG
+	void EnableAlarmingSystem(const EAlarmingModeName& SwitchToModeName = EAlarmingModeName::NORMAL);
+	UFUNCTION(BlueprintCallable)   // TEST // DEBUG
+	void DisableAlarmingSystem();
+
+	virtual void OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, const EAlarmingModeName& LastModeName);
+
+	EAlarmingModeName CurrentAlarmingModeName = EAlarmingModeName::NORMAL;
+	class UAudioComponent* CurrentAlarmModeSound_AudioComponent = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data | AlarmingSystem")
+	TArray<FAlarmingModeData> AlarmingModes;          // 4 modes - normal, safe, gray-zone, and danger
+
+	void Setup_AlarmLights();
+
+private:
+	TArray<AElectric_Siren_SpotLight*> SirensCache;
+
+	FAlarmingModeData GetAlarmingModeData_ByName(const EAlarmingModeName& ModeName);
+	/** Alarming system ends */
 
 public:
 	//UFUNCTION(BlueprintCallable, Category = "Game | Rebirth")

@@ -22,12 +22,17 @@ public:
 	AElectricLight();
 	virtual void Tick(float DeltaTime) override;
 
+	void TurnOnLight();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnElectricityTurnedOn() override;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<ULightComponent> Light;
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	bool bTurnOnAuto = true;
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	bool bInterpolateIntensity = false;

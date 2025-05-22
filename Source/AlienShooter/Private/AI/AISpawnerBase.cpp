@@ -15,6 +15,14 @@ AAISpawnerBase::AAISpawnerBase()
 	SpawnPoint->SetupAttachment(GetRootComponent());
 }
 
+void AAISpawnerBase::MultiplySpawnCount(const float Factor)
+{
+	for (FAISpawnData& Data : SpawnData) {
+		const float NewSpawnCount = (float)Data.Count * Factor;
+		Data.Count = (int)NewSpawnCount;
+	}
+}
+
 bool AAISpawnerBase::StartSpawning()
 {
 	if (SpawnPoint)

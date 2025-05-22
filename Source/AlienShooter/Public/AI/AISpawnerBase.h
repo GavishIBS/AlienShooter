@@ -34,6 +34,9 @@ public:
 	friend class ASpawnStarter;
 	AAISpawnerBase();
 
+	UFUNCTION(BlueprintCallable)   // TEST
+	void MultiplySpawnCount(const float Factor);    // TEST
+
 protected:
 	bool StartSpawning();
 	void SpawnTick();
