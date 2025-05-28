@@ -133,6 +133,16 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 		}
 	}
 
+	// update cursor widget
+	for (FAlarmingModeData& ModeData : AlarmingModes)
+	{
+		if (ModeData.AlarmingModeName == NewModeName) {
+			if (ModeData.CursorWidget) {
+				GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld())->SetMouseCursorWidget(EMouseCursor::Default, ModeData.CursorWidget);
+			}
+		}
+	}
+
 	OnAlarmingModeChangedEvent.Broadcast(NewModeName, LastModeName);
 }
 

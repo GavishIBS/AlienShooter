@@ -26,6 +26,9 @@ struct FAlarmingModeData   // 4 modes - normal, safe, gray-zone, and danger
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Data)
 	EAlarmingModeName AlarmingModeName = EAlarmingModeName::NORMAL;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Data)
+	class UUserWidget* CursorWidget;
 
 	UPROPERTY(BlueprintAssignable, Category=Data)
 	FOnAlarmingModeActivated OnAlarmingModeActivated;
