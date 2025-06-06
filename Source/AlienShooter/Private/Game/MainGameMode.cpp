@@ -110,40 +110,42 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 	}
 
 	// disable last alarm light
-	for (FAlarmingModeData& ModeData : AlarmingModes)
+	for (FAlarmingModeData& ModeData_LastLight : AlarmingModes)
 	{
-		if (ModeData.AlarmingModeName == LastModeName) {
-			if (ModeData.DirectionalLight) { ModeData.DirectionalLight->SetLightVisibility(false); }
-		}
-	}
-
-	// enable new alarm light
-	for (FAlarmingModeData& ModeData : AlarmingModes)
-	{
-		if (ModeData.AlarmingModeName == NewModeName) {
-			if (ModeData.DirectionalLight) { ModeData.DirectionalLight->SetLightVisibility(true); }
-		}
-	}
-
-	// update sirens
-	for (AElectric_Siren_SpotLight* Siren : SirensCache)
-	{
-		if (Siren) {
-			Siren->TurnOnLightWithMode(NewModeName);
-		}
-	}
-
-	// update cursor widget
-	for (FAlarmingModeData& ModeData : AlarmingModes)
-	{
-		if (ModeData.AlarmingModeName == NewModeName) {
-			if (ModeData.CursorWidget) {
-				GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld())->SetMouseCursorWidget(EMouseCursor::Default, ModeData.CursorWidget);
+		if (ModeData_LastLight.AlarmingModeName == LastModeName) {
+			if (ModeData_LastLight.DirectionalLight) {
+				ModeData_LastLight.DirectionalLight->SetLightVisibility(false);
 			}
 		}
-	}
 
-	OnAlarmingModeChangedEvent.Broadcast(NewModeName, LastModeName);
+		// enable new alarm light
+		for (FAlarmingModeData& ModeData_NiewLight : AlarmingModes)
+		{
+			if (ModeData_NiewLight.AlarmingModeName == NewModeName) {
+				if (ModeData_NiewLight.DirectionalLight) { ModeData_NiewLight.DirectionalLight->SetLightVisibility(true); }
+			}
+		}
+
+		// update sirens
+		for (AElectric_Siren_SpotLight* Siren : SirensCache)
+		{
+			if (Siren) {
+				Siren->TurnOnLightWithMode(NewModeName);
+			}
+		}
+
+		// update cursor widget
+		for (FAlarmingModeData& ModeData_Cursor : AlarmingModes)
+		{
+			if (ModeData_Cursor.AlarmingModeName == NewModeName) {
+				if (ModeData_Cursor.CursorWidget) {
+					GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld())->SetMouseCursorWidget(EMouseCursor::Default, ModeData_Cursor.CursorWidget);
+				}
+			}
+		}
+
+		OnAlarmingModeChangedEvent.Broadcast(NewModeName, LastModeName);
+	}
 }
 
 FAlarmingModeData AMainGameMode::GetAlarmingModeData_ByName(const EAlarmingModeName& ModeName)
