@@ -7,6 +7,7 @@
 #include "Interfaces/HitInterface.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "SurfaceTypeDefs.h"
 
 AProjectileBullet::AProjectileBullet()
 {
@@ -25,22 +26,23 @@ void AProjectileBullet::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AProjectileBullet::OnBulletHit(AActor* HitActor, const FVector& ImpactPoint)
+void AProjectileBullet::OnBulletHit(AActor* HitActor, const FVector& ImpactPoint, UPhysicalMaterial* PhysMat)
 {
 	if (!HitActor) return;
 
-	TArray<FName> ActorTags = HitActor->Tags;
-	for (auto It = ProjectileBulletData.HitEffects.CreateIterator(); It; ++It)
-	{
-		// Check if the tag exists directly in the ActorTags array
-		if (ActorTags.Contains(It.Key()))
-		{
-			// Spawn particle if the value exists
-			if (It.Value().HitParticle)
-				UGameplayStatics::SpawnEmitterAtLocation(this, It.Value().HitParticle, ImpactPoint);
-			if (It.Value().HitSound)
-				UGameplayStatics::SpawnSoundAtLocation(this, It.Value().HitSound, ImpactPoint, FRotator());
-			return; // Exit the loop
+	if (PhysMat) {
+		GEngine->AddOnScreenDebugMessage(-1, 6.f, FColor::Emerald, FString("Physics material is valid!"));
+
+		EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(PhysMat);
+
+		if (ProjectileBulletData.HitEffects.Contains(SurfaceType)) {
+			const FBulletHitEffectData& EffectData = ProjectileBulletData.HitEffects[SurfaceType];
+
+			if (EffectData.HitParticle)
+				UGameplayStatics::SpawnEmitterAtLocation(this, EffectData.HitParticle, ImpactPoint);
+
+			if (EffectData.HitSound)
+				UGameplayStatics::PlaySoundAtLocation(this, EffectData.HitSound, ImpactPoint);
 		}
 	}
 }
@@ -68,7 +70,7 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 		ProjectileProperties.BulletHealth -= HitInterface->GetHit(Hit.ImpactPoint, ProjectileProperties.Damage,
 			ProjectileProperties.Damage_RandomizationFactor, WeaponOwner, UDamageType::StaticClass());
 	}
-	OnBulletHit(Hit.GetActor(), Hit.ImpactPoint);
+	OnBulletHit(Hit.GetActor(), Hit.ImpactPoint, Hit.PhysMaterial.Get());
 	DestroyWrapper();
 }
 

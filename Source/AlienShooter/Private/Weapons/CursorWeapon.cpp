@@ -98,7 +98,7 @@ void ACursorWeapon::Fire()
 			// DEBUG
 			//DrawDebugSphere(GetWorld(), HitResult_M.ImpactPoint, 5.f, 24, FColor::Orange, false, 4.f);
 		}
-		OnBulletHit(HitResult_M.GetActor(), HitResult_M.ImpactPoint);
+		OnBulletHit(HitResult_M.GetActor(), HitResult_M.ImpactPoint, HitResult_M.PhysMaterial.Get());
 		if (BulletHealth <= 0.f) {}
 	}
 }

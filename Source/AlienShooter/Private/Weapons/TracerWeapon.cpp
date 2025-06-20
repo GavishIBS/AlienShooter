@@ -20,10 +20,25 @@ void ATracerWeapon::Fire()
 	Super::Fire();
 }
 
-void ATracerWeapon::OnBulletHit(AActor* HitActor, const FVector& ImpactPoint)
+void ATracerWeapon::OnBulletHit(AActor* HitActor, const FVector& ImpactPoint, UPhysicalMaterial* PhysMat)
 {
 	if (!HitActor) return;
 
+	if (PhysMat) {
+		EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(PhysMat);
+
+		if (TracerWeaponData.HitEffects.Contains(SurfaceType)) {
+			const FBulletHitEffectData& EffectData = TracerWeaponData.HitEffects[SurfaceType];
+
+			if (EffectData.HitParticle)
+				UGameplayStatics::SpawnEmitterAtLocation(this, EffectData.HitParticle, ImpactPoint);
+
+			if (EffectData.HitSound)
+				UGameplayStatics::PlaySoundAtLocation(this, EffectData.HitSound, ImpactPoint);
+		}
+	}
+
+	/*
 	TArray<FName> ActorTags = HitActor->Tags;
 	for (auto It = TracerWeaponData.HitEffects.CreateIterator(); It; ++It)
 	{
@@ -38,4 +53,5 @@ void ATracerWeapon::OnBulletHit(AActor* HitActor, const FVector& ImpactPoint)
 			return; // Exit the loop
 		}
 	}
+	*/
 }

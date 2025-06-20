@@ -51,7 +51,7 @@ void AHitscanWeapon::Fire()
 				BulletHealth -= HitInterface->GetHit(HitResult.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter, UDamageType::StaticClass());
 			
 			// Hit particles
-			OnBulletHit(HitResult.GetActor(), HitResult.ImpactPoint);
+			OnBulletHit(HitResult.GetActor(), HitResult.ImpactPoint, HitResult.PhysMaterial.Get());
 			if (HitResult.GetActor())
 			{
 				/*

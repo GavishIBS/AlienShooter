@@ -10,7 +10,7 @@ public class AlienShooter : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Chaos", "GeometryCollectionEngine", "ChaosSolverEngine", "FieldSystemEngine", "Niagara", "NavigationSystem" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Chaos", "GeometryCollectionEngine", "ChaosSolverEngine", "FieldSystemEngine", "Niagara", "NavigationSystem", "PhysicsCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
