@@ -206,7 +206,8 @@ struct FTracerWeaponData
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data | FX")
-	TMap<FName, FBulletHitEffectData> HitEffects;  // TMap<Tag, ParticleSystem>
+	TMap<TEnumAsByte<EPhysicalSurface>, FBulletHitEffectData> HitEffects;  // TMap<PhysicsSurface, ParticleSystem>
+	//TMap<FName, FBulletHitEffectData> HitEffects;  // TMap<Tag, ParticleSystem>
 };
 
 USTRUCT(BlueprintType)
@@ -276,5 +277,5 @@ struct FProjectileBulletData
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties | FX")
-	TMap<FName, FBulletHitEffectData> HitEffects;  // TMap<Tag, ParticleSystem>
+	TMap<TEnumAsByte<EPhysicalSurface>, FBulletHitEffectData> HitEffects;  // TMap<PhysicsSurface, ParticleSystem>
 };

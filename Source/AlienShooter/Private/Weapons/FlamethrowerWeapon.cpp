@@ -76,7 +76,7 @@ void AFlamethrowerWeapon::Fire()
 			{
 				WeaponProperties.BulletHealth -= HitInterface->GetHit(OutHit.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, GetOwner(), UDamageType::StaticClass());
 			}
-			OnBulletHit(OutHit.GetActor(), OutHit.ImpactPoint);
+			OnBulletHit(OutHit.GetActor(), OutHit.ImpactPoint, OutHit.PhysMaterial.Get());
 			if (WeaponProperties.BulletHealth <= 0) break;  // break loop if bullet health is or below 0
 		}
 	}

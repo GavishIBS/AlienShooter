@@ -19,7 +19,7 @@ class ALIENSHOOTER_API ATracerWeapon : public AWeaponBase, public IBulletInterfa
 	
 public:
 	ATracerWeapon();
-	virtual void OnBulletHit(AActor* HitActor, const FVector& ImpactPoint) override;
+	virtual void OnBulletHit(AActor* HitActor, const FVector& ImpactPoint, UPhysicalMaterial* PhysMat = nullptr) override;
 
 protected:
 	virtual void BeginPlay() override;

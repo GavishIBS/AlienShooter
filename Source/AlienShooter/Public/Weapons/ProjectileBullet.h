@@ -21,7 +21,7 @@ class ALIENSHOOTER_API AProjectileBullet : public AProjectile, public IBulletInt
 
 public:
 	AProjectileBullet();
-	virtual void OnBulletHit(AActor* HitActor, const FVector& ImpactPoint) override;
+	virtual void OnBulletHit(AActor* HitActor, const FVector& ImpactPoint, UPhysicalMaterial* PhysMat = nullptr) override;
 	//virtual void Init(const float& InBulletHealth, const float& InDamage, const float& InDamage_RandomizationFactor) override;
 
 protected:
