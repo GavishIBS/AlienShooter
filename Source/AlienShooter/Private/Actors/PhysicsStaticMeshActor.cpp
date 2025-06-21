@@ -12,6 +12,7 @@ APhysicsStaticMeshActor::APhysicsStaticMeshActor()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
 	Mesh->SetSimulatePhysics(true);
+	Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 }
 
 UPrimitiveComponent* APhysicsStaticMeshActor::GetPhysicsComponent()
