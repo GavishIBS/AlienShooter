@@ -13,6 +13,7 @@ class AShooterCharacter;
 class UTDSWeaponInHandDataBox;
 class UCanvasPanel;
 class UProgressBar;
+class UBorder;
 
 /**
  * 
@@ -44,6 +45,9 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar* HealthBar;
+	
+	UPROPERTY(meta = (BindWidget))
+	UBorder* EnvText_Border;
 
 protected:
 	UFUNCTION()
@@ -59,7 +63,7 @@ protected:
 
 private:
 	FTimerHandle EnvironmentDialogueText_Subtitles_TimerHandle;
-	void OnEnvironmentDialogueCompleted() { EnvironmentDialogue_Subtitles_Text = FText(); }
+	void OnEnvironmentDialogueCompleted();
 
 	FTimerHandle TypeEnvironmentDialogue_Subtitles_Text_TimerHandle;
 	FText Target_Subtitles_Text = FText();
