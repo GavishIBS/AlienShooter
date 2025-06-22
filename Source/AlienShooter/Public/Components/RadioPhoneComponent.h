@@ -34,6 +34,9 @@ protected:
 	
 	UFUNCTION(BlueprintCallable)
 	bool TriggerAudio_WithParams(const FAudioEvent AudioEvent);
+	
+	UFUNCTION(BlueprintCallable)
+	bool TriggerAudio_WithParams_Response(const FAudioEvent AudioEvent, const FAudioEvent ResponseAudioEvent, float ResponseDelay = 3);
 
 	void EndAudio();
 
