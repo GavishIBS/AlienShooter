@@ -87,7 +87,7 @@ void ABaseAICharacter::Destroyed()
 		const FVector Start = GetActorLocation();
 		const FVector End = GetActorLocation() - FVector(0.f, 0.f, 1000.f);
 		UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1,
-			false, ActorsToIgnore, EDrawDebugTrace::ForDuration, OutHit, true);
+			false, ActorsToIgnore, EDrawDebugTrace::None, OutHit, true);
 		if (OutHit.bBlockingHit)
 		{
 			UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(),
