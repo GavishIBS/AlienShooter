@@ -76,6 +76,9 @@ void UTDSOverlay::SetEnvironmentDialogue_Subtitles_Text(const FText InText, cons
 {
 	//EnvironmentDialogue_Subtitles_Text = InText;
 	
+	// Reset string
+	EnvironmentDialogue_Subtitles_Text = FText::FromString(FString(""));
+
 	Target_Subtitles_Text = InText;
 	float TypingSpeed = UKismetMathLibrary::SafeDivide(DialogueAudioDuration, (double)InText.ToString().Len());
 	//float TypingSpeed = DialogueAudioDuration / InText.ToString().Len();
