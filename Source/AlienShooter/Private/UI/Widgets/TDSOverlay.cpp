@@ -7,11 +7,12 @@
 #include "UI/Widgets/TDSWeaponBoxList.h"
 #include "UI/Widgets/TDSWeaponInHandDataBox.h"
 #include "Components/ProgressBar.h"
-
+#include "Components/Border.h"
 
 #include "Characters/ShooterCharacter.h"
 #include "Components/AttributeComponent.h"
 
+#include "Kismet/KismetMathLibrary.h"
 
 UTDSOverlay::UTDSOverlay(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -24,6 +25,9 @@ void UTDSOverlay::NativePreConstruct()
 	
 	if (WeaponInHandDataBox)
 		WeaponInHandDataBox->SetDesiredSizeInViewport(WeaponInHandDataBox->GetRootSize());
+	if (EnvText_Border) {
+		EnvText_Border->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void UTDSOverlay::NativeConstruct()
@@ -73,12 +77,24 @@ void UTDSOverlay::SetEnvironmentDialogue_Subtitles_Text(const FText InText, cons
 	//EnvironmentDialogue_Subtitles_Text = InText;
 	
 	Target_Subtitles_Text = InText;
-	float TypingSpeed = DialogueAudioDuration / InText.ToString().Len();
+	float TypingSpeed = UKismetMathLibrary::SafeDivide(DialogueAudioDuration, (double)InText.ToString().Len());
+	//float TypingSpeed = DialogueAudioDuration / InText.ToString().Len();
+	if (TypingSpeed > 0 && EnvText_Border) {
+		EnvText_Border->SetVisibility(ESlateVisibility::Visible);
+	}
 	GetWorld()->GetTimerManager().
 		SetTimer(TypeEnvironmentDialogue_Subtitles_Text_TimerHandle, this, &UTDSOverlay::IncrementCharacter_To_Subtitles_Text, TypingSpeed, true, 0.f);
 	
 	GetWorld()->GetTimerManager().SetTimer(EnvironmentDialogueText_Subtitles_TimerHandle, this, &UTDSOverlay::OnEnvironmentDialogueCompleted,
 		DialogueAudioDuration + Environment_Subtitles_Text_ClearDelay, false, DialogueAudioDuration + Environment_Subtitles_Text_ClearDelay);
+}
+
+void UTDSOverlay::OnEnvironmentDialogueCompleted()
+{
+	EnvironmentDialogue_Subtitles_Text = FText();
+	if (EnvText_Border) {
+		EnvText_Border->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void UTDSOverlay::IncrementCharacter_To_Subtitles_Text()
