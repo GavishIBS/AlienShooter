@@ -23,6 +23,11 @@ void AAISpawnerBase::MultiplySpawnCount(const float Factor)
 	}
 }
 
+void AAISpawnerBase::StartSpawningWrapper()
+{
+	StartSpawning();
+}
+
 bool AAISpawnerBase::StartSpawning()
 {
 	if (SpawnPoint)

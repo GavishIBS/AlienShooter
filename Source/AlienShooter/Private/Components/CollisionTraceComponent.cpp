@@ -25,8 +25,12 @@ FHitResult UCollisionTraceComponent::DoTraceSingle(const TArray<AActor*>& Actors
 {
 	FHitResult ReturnValue;
 	if (!OwnerMesh) return ReturnValue;
-	//if (TraceSets.Num() <= Index) return ReturnValue;
 	
+	if (TraceSets.Num() > 0) {
+		int RandomTraceSetSelectionIndex = FMath::RandRange(0, TraceSets.Num() - 1);
+		TraceSet = TraceSets[RandomTraceSetSelectionIndex];
+	}
+
 	if (TraceShape == ETS_Sphere)
 	{
 		TArray<AActor*> ActorToIgnore;
