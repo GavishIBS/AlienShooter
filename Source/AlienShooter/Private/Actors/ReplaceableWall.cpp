@@ -32,4 +32,5 @@ void AReplaceableWall::ReplaceMesh()
 
 void AReplaceableWall::OnMeshChanged()
 {
+	OnMeshReplaced.Broadcast();
 }

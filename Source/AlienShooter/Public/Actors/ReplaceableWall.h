@@ -8,6 +8,8 @@
 #include "GameFramework/Actor.h"
 #include "ReplaceableWall.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMeshReplaced);
+
 UCLASS()
 class ALIENSHOOTER_API AReplaceableWall : public AActor
 {
@@ -20,6 +22,9 @@ public:
 	void ReplaceMesh();
 
 	virtual void OnMeshChanged();
+
+	UPROPERTY(BlueprintAssignable)
+	FOnMeshReplaced OnMeshReplaced;
 
 protected:
 	virtual void BeginPlay() override;
