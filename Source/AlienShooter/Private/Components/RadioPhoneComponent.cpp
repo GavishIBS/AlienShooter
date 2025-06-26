@@ -74,11 +74,12 @@ bool URadioPhoneComponent::TriggerAudio_WithParams_Response(const FAudioEvent Au
 				FTimerHandle ResponseAudioTimerHandle;
 				GetWorld()->GetTimerManager().SetTimer(ResponseAudioTimerHandle, FTimerDelegate::CreateLambda([this]() {
 					bAudioInProgress = false;
+					OnAudioCompleted.Broadcast();
 					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("Response dialogue have been completed"));
 					}), ResponseAudioEvent.AudioAsset->Duration, false, ResponseAudioEvent.AudioAsset->Duration);
 			}
 			else {
-				bAudioInProgress = false;
+				EndAudio();
 			}
 			}),
 		AudioEvent.AudioAsset->Duration, false, AudioEvent.AudioAsset->Duration + ResponseDelay
@@ -90,4 +91,5 @@ bool URadioPhoneComponent::TriggerAudio_WithParams_Response(const FAudioEvent Au
 void URadioPhoneComponent::EndAudio()
 {
 	bAudioInProgress = false;
+	OnAudioCompleted.Broadcast();
 }
