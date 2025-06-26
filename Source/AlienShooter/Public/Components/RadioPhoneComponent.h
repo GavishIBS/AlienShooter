@@ -44,4 +44,8 @@ protected:
 	bool bAudioInProgress = false;
 	
 	FTimerHandle AudioTimerHandle;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE bool HaveRadioPhone() const { return bHavePhone; }
 };
