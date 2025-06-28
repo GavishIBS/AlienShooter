@@ -58,6 +58,11 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	// IK
 	CalculateIK();
+
+	{
+		// Other stuff
+		bRadioPhoneAudioInProgress = ShooterCharacter->IsRadioPhoneAudioInProgress();
+	}
 }
 
 void UShooterAnimInstance::CalculateIK()

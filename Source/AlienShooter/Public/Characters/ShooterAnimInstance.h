@@ -77,4 +77,7 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
 	FRotator RightHandRotation = FRotator();
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
+	bool bRadioPhoneAudioInProgress = false;
 };

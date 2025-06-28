@@ -37,6 +37,9 @@ public:
 	UFUNCTION(BlueprintCallable)   // TEST
 	void MultiplySpawnCount(const float Factor);    // TEST
 
+	UFUNCTION(BlueprintCallable)
+	void StartSpawningWrapper();
+
 protected:
 	bool StartSpawning();
 	void SpawnTick();

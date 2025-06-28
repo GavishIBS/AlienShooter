@@ -46,6 +46,9 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration);
+	
+	UFUNCTION()
+	void OnRadioPhoneAudioCompleted();
 
 	UFUNCTION()
 	void OnTakeAnyDamageCallback(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
@@ -152,6 +155,7 @@ public:
 	FORCEINLINE FShooterProperties* GetShooterProperties() {return &ShooterProperties;}
 	FORCEINLINE int GetNumberOfWeapon() const {return CombatComponent ? CombatComponent->Weapons.Num() : 0;}
 	FORCEINLINE bool IsAiming() const { return CombatComponent ? CombatComponent->bAiming : false; }
+	FORCEINLINE bool IsRadioPhoneAudioInProgress() const;
 
 	FORCEINLINE void DeactivateSpecialAbilityNiagaraEffect();
 	FORCEINLINE void ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSystem);

@@ -21,6 +21,7 @@
 #include "UI/Widgets/TDSOverlay.h"
 #include "UI/Widgets/TDS_DialogueLogsUserWidget.h"
 #include "Components/ObjectiveComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -60,6 +61,7 @@ void AShooterCharacter::InitCallbacks()
 	}
 	if (RadioPhoneComponent) {
 		RadioPhoneComponent->OnAudioTriggered.AddDynamic(this, &AShooterCharacter::OnRadioPhoneAudioTriggered);
+		RadioPhoneComponent->OnAudioCompleted.AddDynamic(this, &AShooterCharacter::OnRadioPhoneAudioCompleted);
 	}
 }
 
@@ -429,6 +431,11 @@ void AShooterCharacter::TryUseInventoryItemAtIndex(const int Index)
 	}
 }
 
+bool AShooterCharacter::IsRadioPhoneAudioInProgress() const
+{
+	return RadioPhoneComponent ? RadioPhoneComponent->IsAudioInProgress() : false;
+}
+
 void AShooterCharacter::DeactivateSpecialAbilityNiagaraEffect()
 {
 	SpecialAbilityNiagaraComponent->Deactivate();
@@ -440,11 +447,46 @@ void AShooterCharacter::ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSy
 }
 
 void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration) {
-	if (AudioType != EAudioType::EAT_Dialogue) return;
-	if (!PlayerController) return;
-
-	if (ATDSHUD* TDS_HUD = Cast<ATDSHUD>(PlayerController->GetHUD()))  // TODO: Save TDS_HUD at BeginPlay
-	{
-		TDS_HUD->GetOverlayWidget()->SetEnvironmentDialogue_Subtitles_Text(FText::FromString(AudioInfo), AudioDuration);
+	if (RadioPhoneComponent == nullptr) return;
+	
+	if (CombatComponent) {
+		CombatComponent->UnselectWeapon();
 	}
+	if (InventoryComponent) {
+		InventoryComponent->UnselectItem();
+	}
+
+	PawnActionState = EPawnActionState::EPAS_Talking;
+
+	GetCharacterMovement()->MaxWalkSpeed = RadioPhoneComponent->GetOnAudioStarted_MaxWalkSpeed();
+	if (PawnActionState != EPawnActionState::EPAS_Talking) {
+		AnimationLibrary::PlayAnimationMontage(GetMesh(), { RadioPhoneComponent->GetOnAudioStarted_ToggleRadioPhone_AnimMontage() });
+	}
+
+	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget, false);
+	RadioPhoneComponent->AttachToComponent(GetMesh(), AttachmentTransformRules, RadioPhoneComponent->GetInHandAttachment_SocketName());
+
+	if (AudioType == EAudioType::EAT_Dialogue) {
+		if (!PlayerController) return;
+
+		if (ATDSHUD* TDS_HUD = Cast<ATDSHUD>(PlayerController->GetHUD()))  // TODO: Save TDS_HUD at BeginPlay
+		{
+			TDS_HUD->GetOverlayWidget()->SetEnvironmentDialogue_Subtitles_Text(FText::FromString(AudioInfo), AudioDuration);
+		}
+	}
+}
+
+void AShooterCharacter::OnRadioPhoneAudioCompleted()
+{
+	if (RadioPhoneComponent == nullptr) return;
+
+	GetCharacterMovement()->MaxWalkSpeed = RadioPhoneComponent->GetOnAudioCompleted_MaxWalkSpeed();
+	AnimationLibrary::PlayAnimationMontage(GetMesh(), {RadioPhoneComponent->GetOnAudioCompleted_ToggleRadioPhone_AnimMontage()});
+	
+	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget, false);
+	RadioPhoneComponent->AttachToComponent(GetMesh(), AttachmentTransformRules, RadioPhoneComponent->GetOutHandAttachment_SocketName());
+
+	PawnActionState = EPawnActionState::EPAS_Idle;
 }
