@@ -19,7 +19,8 @@ class ALIENSHOOTER_API AEventArea : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
+	friend class AEventArea;
 	AEventArea();
 
 	UPROPERTY(BlueprintAssignable, Category = "Delegates")
@@ -46,4 +47,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Properties)
 	FName TagToLook = FName("Player");
+
+	// Event chaining
+	UPROPERTY(EditAnywhere, Category = "Event Chaining")
+	TObjectPtr<AEventArea> ChainedEvent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Chaining")
+	float ChainedEvent_Delay = 1.f;
 };

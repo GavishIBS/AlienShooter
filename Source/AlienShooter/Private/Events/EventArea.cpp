@@ -37,6 +37,14 @@ void AEventArea::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 {
 	if (OtherActor->ActorHasTag(TagToLook)) {
 		OnEnterArea.Broadcast(OtherActor);
+		if (ChainedEvent) {
+			FTimerHandle ChainedEvent_TimerHandle;
+			GetWorldTimerManager().SetTimer(ChainedEvent_TimerHandle,
+				FTimerDelegate::CreateLambda([this, OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult]() {
+					ChainedEvent->OnOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+				}),
+				ChainedEvent_Delay, false, ChainedEvent_Delay);
+		}
 	}
 }
 
@@ -44,5 +52,13 @@ void AEventArea::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 {
 	if (OtherActor->ActorHasTag(TagToLook)) {
 		OnExitArea.Broadcast(OtherActor);
+		if (ChainedEvent) {
+			FTimerHandle ChainedEvent_TimerHandle;
+			GetWorldTimerManager().SetTimer(ChainedEvent_TimerHandle,
+				FTimerDelegate::CreateLambda([this, OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex]() {
+					ChainedEvent->OnEndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
+					}),
+				ChainedEvent_Delay, false, ChainedEvent_Delay);
+		}
 	}
 }
