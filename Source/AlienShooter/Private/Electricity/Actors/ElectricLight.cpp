@@ -30,6 +30,25 @@ void AElectricLight::OnElectricityTurnedOn()
 		}
 		Light->SetVisibility(true);
 	}
+
+	if (Light && Light->IsVisible() && bFlicker) {
+		if (FlickerHoldTime > FlickerRate) {
+			FlickerHoldTime /= 2;
+		}
+		FTimerHandle FlickerTimerHandle;
+		GetWorldTimerManager().SetTimer(FlickerTimerHandle, this, &AElectricLight::FlickerLight, FlickerRate, true, FlickerRate);
+	}
+}
+
+void AElectricLight::FlickerLight()
+{
+	Light->SetVisibility(false);
+	
+	const float L_FlickerHoldTime = FMath::FRandRange(FlickerHoldTime - (FlickerHoldTime / 3), FlickerHoldTime + (FlickerHoldTime / 3));
+	FTimerHandle FlickerHoldTimerHandle;
+	GetWorldTimerManager().SetTimer(FlickerHoldTimerHandle, FTimerDelegate::CreateLambda([&] {
+		Light->SetVisibility(true);
+		}), L_FlickerHoldTime, false, L_FlickerHoldTime);
 }
 
 void AElectricLight::Tick(float DeltaTime)

@@ -28,6 +28,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnElectricityTurnedOn() override;
 
+	void FlickerLight();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<ULightComponent> Light;
 
@@ -42,4 +44,13 @@ protected:
 
 	float MaxIntensity;
 	bool bInterpingIntensity = false;
+	
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	bool bFlicker = false;
+
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0"))
+	float FlickerRate = 0.2f;  // TODO: Add flickering sound
+	
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0"))
+	float FlickerHoldTime = 0.1f;  // TODO: Add flickering sound
 };
