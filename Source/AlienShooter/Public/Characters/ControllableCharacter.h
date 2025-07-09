@@ -39,7 +39,15 @@ protected:
 	void UpdateCharacterRotationToCursor();
 	/* Character rotation end */
 
+	/* Camera boom begin */
 	void UpdateCameraBoomOffset(float DeltaTime);
+	void UpdateCameraBoomLength(float DeltaTime);
+
+	inline static float BaseCameraBoomLength = 1000.f;
+	
+	UPROPERTY(EditAnywhere, Category=Properties)
+	float CameraBoomLengthAdditiveFactor = 75.f;
+	/* Camera boom end */
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")

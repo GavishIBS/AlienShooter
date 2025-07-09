@@ -48,6 +48,9 @@ void AControllableCharacter::BeginPlay()
 		PlayerController->SetInputMode(InputMode);
 		PlayerController->SetShowMouseCursor(true);
 	}
+
+	// Update static variables
+	BaseCameraBoomLength = CameraBoom->TargetArmLength;
 }
 
 void AControllableCharacter::Tick(float DeltaTime)
@@ -57,10 +60,11 @@ void AControllableCharacter::Tick(float DeltaTime)
 	{
 		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("CurrentHealth: %f"), AttributeComponent->GetHealth()));
 	}
-	if (LifeStatus != ELifeStatus::ELS_Dead) {
+	if (LifeStatus != ELifeStatus::ELS_Dead && GetCharacterMovement()) {
 		CheckCursorLocation();
 		UpdateCharacterRotationToCursor();
 		UpdateCameraBoomOffset(DeltaTime);
+		UpdateCameraBoomLength(DeltaTime);
 	}
 }
 
@@ -153,6 +157,14 @@ void AControllableCharacter::UpdateCameraBoomOffset(float DeltaTime)
 
 	CursorPosition_LastFrame = CursorPosition;
 	CameraBoomOffset_LastFrame = CurrentCameraBoomOffset;
+}
+
+void AControllableCharacter::UpdateCameraBoomLength(float DeltaTime)
+{
+	const float SpeedFraction = GetVelocity().Size() / GetCharacterMovement()->MaxWalkSpeed;
+	const float NewTargetArmLength = BaseCameraBoomLength + (SpeedFraction * CameraBoomLengthAdditiveFactor);
+	
+	CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, NewTargetArmLength, DeltaTime, CameraSpeed / 2);
 }
 
 void AControllableCharacter::CheckCursorLocation()
