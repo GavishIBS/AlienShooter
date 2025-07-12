@@ -51,6 +51,7 @@ void AControllableCharacter::BeginPlay()
 
 	// Update static variables
 	BaseCameraBoomLength = CameraBoom->TargetArmLength;
+	BaseCameraBoomRotationYaw = CameraBoom->GetRelativeRotation().Yaw;
 }
 
 void AControllableCharacter::Tick(float DeltaTime)
@@ -65,6 +66,7 @@ void AControllableCharacter::Tick(float DeltaTime)
 		UpdateCharacterRotationToCursor();
 		UpdateCameraBoomOffset(DeltaTime);
 		UpdateCameraBoomLength(DeltaTime);
+		UpdateCameraBoomRotation(DeltaTime);
 	}
 }
 
@@ -165,6 +167,25 @@ void AControllableCharacter::UpdateCameraBoomLength(float DeltaTime)
 	const float NewTargetArmLength = BaseCameraBoomLength + (SpeedFraction * CameraBoomLengthAdditiveFactor);
 	
 	CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, NewTargetArmLength, DeltaTime, CameraSpeed / 2);
+}
+
+void AControllableCharacter::UpdateCameraBoomRotation(float DeltaTime)
+{
+	FHitResult OutHit;
+	UKismetSystemLibrary::LineTraceSingle(this, CameraBoomTopPoint->GetComponentLocation(), CameraBoomTopPoint->GetComponentLocation() +
+		(CameraBoomTopPoint->GetForwardVector() * 2000.f), ETraceTypeQuery::TraceTypeQuery1, false, {}, EDrawDebugTrace::ForDuration,
+		OutHit, false);
+
+	if (OutHit.bBlockingHit && OutHit.GetActor() != this) {
+		FRotator NewCameraBoomRotation = CameraBoom->GetRelativeRotation();
+		NewCameraBoomRotation.Yaw = FMath::FInterpTo(NewCameraBoomRotation.Yaw, NewCameraBoomRotation.Yaw + 1, DeltaTime, CameraSpeed);
+		CameraBoom->SetRelativeRotation(NewCameraBoomRotation);
+	}
+	else {
+		FRotator NewCameraBoomRotation = CameraBoom->GetRelativeRotation();
+		NewCameraBoomRotation.Yaw = FMath::FInterpTo(NewCameraBoomRotation.Yaw, BaseCameraBoomRotationYaw, DeltaTime, CameraSpeed);
+		CameraBoom->SetRelativeRotation(NewCameraBoomRotation);
+	}
 }
 
 void AControllableCharacter::CheckCursorLocation()

@@ -42,8 +42,10 @@ protected:
 	/* Camera boom begin */
 	void UpdateCameraBoomOffset(float DeltaTime);
 	void UpdateCameraBoomLength(float DeltaTime);
+	void UpdateCameraBoomRotation(float DeltaTime);
 
 	inline static float BaseCameraBoomLength = 1000.f;
+	inline static float BaseCameraBoomRotationYaw = -40.f;
 	
 	UPROPERTY(EditAnywhere, Category=Properties)
 	float CameraBoomLengthAdditiveFactor = 75.f;
