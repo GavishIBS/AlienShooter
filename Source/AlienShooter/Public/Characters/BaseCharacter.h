@@ -40,6 +40,9 @@ protected:
 	TObjectPtr<USpringArmComponent> CameraBoom;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	TObjectPtr<USpringArmComponent> CameraBoom_Secondary;	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	TObjectPtr<USceneComponent> CameraBoomTopPoint;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)

@@ -22,9 +22,14 @@ ABaseCharacter::ABaseCharacter()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
 	CameraBoom->TargetArmLength = 1000.f;
+	//CameraBoom->bUsePawnControlRotation
+
+	CameraBoom_Secondary = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom_Secondary"));
+	CameraBoom_Secondary->SetupAttachment(GetRootComponent());
+	CameraBoom_Secondary->TargetArmLength = 1000.f;
 
 	CameraBoomTopPoint = CreateDefaultSubobject<USceneComponent>(TEXT("CameraBoomTopPoint"));
-	CameraBoomTopPoint->SetupAttachment(GetRootComponent());
+	CameraBoomTopPoint->SetupAttachment(CameraBoom_Secondary);
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(CameraBoom);
@@ -40,8 +45,8 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	CameraBoomTopPoint->SetWorldRotation(ViewCamera->GetComponentRotation());
-	CameraBoomTopPoint->SetWorldLocation(ViewCamera->GetComponentLocation());
+	//CameraBoomTopPoint->SetWorldRotation(ViewCamera->GetComponentRotation());
+	//CameraBoomTopPoint->SetWorldLocation(ViewCamera->GetComponentLocation());
 }
 
 void ABaseCharacter::Tick(float DeltaTime)
