@@ -51,6 +51,7 @@ void AControllableCharacter::BeginPlay()
 
 	// Update static variables
 	BaseCameraBoomLength = CameraBoom->TargetArmLength;
+	BaseCameraBoomRotationYaw = CameraBoom->GetRelativeRotation().Yaw;
 }
 
 void AControllableCharacter::Tick(float DeltaTime)
@@ -65,6 +66,7 @@ void AControllableCharacter::Tick(float DeltaTime)
 		UpdateCharacterRotationToCursor();
 		UpdateCameraBoomOffset(DeltaTime);
 		UpdateCameraBoomLength(DeltaTime);
+		UpdateCameraBoomRotation(DeltaTime);
 	}
 }
 
@@ -165,6 +167,74 @@ void AControllableCharacter::UpdateCameraBoomLength(float DeltaTime)
 	const float NewTargetArmLength = BaseCameraBoomLength + (SpeedFraction * CameraBoomLengthAdditiveFactor);
 	
 	CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, NewTargetArmLength, DeltaTime, CameraSpeed / 2);
+}
+
+void AControllableCharacter::UpdateCameraBoomRotation(float DeltaTime)
+{
+	FHitResult OutHit;
+	UKismetSystemLibrary::SphereTraceSingle(this, CameraBoomTopPoint->GetComponentLocation(), CameraBoomTopPoint->GetComponentLocation() +
+		(CameraBoomTopPoint->GetForwardVector() * 2000.f), 5.f/*TraceRadius*/, ETraceTypeQuery::TraceTypeQuery1, false, {}, EDrawDebugTrace::None,
+		OutHit, false);
+
+	if (OutHit.bBlockingHit && OutHit.GetActor() != this) {
+		float RotateDirection = 0.f;
+		{
+			FVector Start = CameraBoomTopPoint->GetComponentLocation();
+			FVector Forward = CameraBoomTopPoint->GetForwardVector();
+			FVector LeftDirection = Forward.RotateAngleAxis(-30.f, FVector::UpVector);
+			FVector RightDirection = Forward.RotateAngleAxis(30.f, FVector::UpVector);
+
+			FHitResult LeftHit, RightHit;
+			TArray<AActor*> ActorsToIgnore = { this };
+
+			// Left trace
+			UKismetSystemLibrary::LineTraceSingle(
+				this,
+				Start,
+				Start + LeftDirection * 2000.f,
+				ETraceTypeQuery::TraceTypeQuery1,
+				false,
+				ActorsToIgnore,
+				EDrawDebugTrace::None,
+				LeftHit,
+				true
+			);
+
+			// Right trace
+			UKismetSystemLibrary::LineTraceSingle(
+				this,
+				Start,
+				Start + RightDirection * 2000.f,
+				ETraceTypeQuery::TraceTypeQuery1,
+				false,
+				ActorsToIgnore,
+				EDrawDebugTrace::None,
+				RightHit,
+				true
+			);
+			float LeftDist = LeftHit.bBlockingHit ? LeftHit.Distance : 2000.f;
+			float RightDist = RightHit.bBlockingHit ? RightHit.Distance : 2000.f;
+
+			if (LeftDist > RightDist + 50.f) // Slight bias
+			{
+				RotateDirection = -1.f; // Rotate left
+			}
+			else if (RightDist > LeftDist + 50.f) {
+				RotateDirection = 1.f; // Rotate right
+			}
+		}
+
+		FRotator NewCameraBoomRotation = CameraBoom->GetRelativeRotation();
+		NewCameraBoomRotation.Yaw = FMath::FInterpTo(NewCameraBoomRotation.Yaw, NewCameraBoomRotation.Yaw - (20 * RotateDirection)/*CameraBoomRotation_Factor*/, DeltaTime, CameraSpeed / 2);
+		CameraBoom->SetRelativeRotation(NewCameraBoomRotation);
+		CameraBoom_Secondary->SetRelativeRotation(NewCameraBoomRotation);
+	}
+	else if (GetVelocity().Size() > 15.f/*CameraBoomBaseRotation_VelocityThreshold*/) {
+		FRotator NewCameraBoomRotation = CameraBoom->GetRelativeRotation();
+		NewCameraBoomRotation.Yaw = FMath::FInterpTo(NewCameraBoomRotation.Yaw, BaseCameraBoomRotationYaw, DeltaTime, CameraSpeed);
+		CameraBoom->SetRelativeRotation(NewCameraBoomRotation);
+		CameraBoom_Secondary->SetRelativeRotation(NewCameraBoomRotation);
+	}
 }
 
 void AControllableCharacter::CheckCursorLocation()
