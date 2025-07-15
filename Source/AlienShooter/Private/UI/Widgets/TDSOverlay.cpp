@@ -23,8 +23,10 @@ void UTDSOverlay::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 	
-	if (WeaponInHandDataBox)
+	if (WeaponInHandDataBox) {
 		WeaponInHandDataBox->SetDesiredSizeInViewport(WeaponInHandDataBox->GetRootSize());
+		WeaponInHandDataBox->SetVisibility(ESlateVisibility::Hidden);
+	}
 	if (EnvText_Border) {
 		EnvText_Border->SetVisibility(ESlateVisibility::Hidden);
 	}

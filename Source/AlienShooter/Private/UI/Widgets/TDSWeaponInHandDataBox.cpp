@@ -59,6 +59,8 @@ void UTDSWeaponInHandDataBox::OnWeaponUpdatedCallback()
 	{
 		if (OwnerAsShooterCharacter->GetWeaponInHand())
 		{
+			SetVisibility(ESlateVisibility::Visible);
+
 			WeaponIcon->SetRenderOpacity(1.f);
 			SizeBox_AmmoBox->SetRenderOpacity(1.f);
 			WeaponIcon->SetBrushFromTexture(OwnerAsShooterCharacter->GetWeaponInHand()->GetWeaponProperties()->WeaponIcon);
@@ -70,6 +72,7 @@ void UTDSWeaponInHandDataBox::OnWeaponUpdatedCallback()
 		{
 			WeaponIcon->SetRenderOpacity(0.f);
 			SizeBox_AmmoBox->SetRenderOpacity(0.f);
+			SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }
