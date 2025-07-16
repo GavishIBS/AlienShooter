@@ -11,9 +11,6 @@
 #include "AnimationLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 
-// TODO:
-#include "DrawDebugHelpers.h"
-
 AWeaponBase::AWeaponBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -199,40 +196,16 @@ FTransform AWeaponBase::GetLeftHandPlacementTransform() const
 void AWeaponBase::UpdateLaser(const FVector& EndLocation, const bool& bHittableAhead)
 {
 	if (!LaserMesh) return;
-	
-	const FVector LaserWorldLocation = LaserMesh->GetComponentLocation();
-	/*
 
-	DrawDebugSphere(GetWorld(), EndLocation, 5.f, 24, FColor::White, false, 1.f);
-	FVector MuzzleFwd = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector();
-	DrawDebugSphere(GetWorld(), MuzzleFwd, 5.f, 24, FColor::Yellow, false, 1.f);
-
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("Angle: %f"),
-		FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(MuzzleFwd, EndLocation) /
-		(MuzzleFwd.GetSafeNormal().Size() * EndLocation.GetSafeNormal().Size())))));
-	
-	if (FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(MuzzleFwd, EndLocation) /
-		(MuzzleFwd.GetSafeNormal().Size() * EndLocation.GetSafeNormal().Size()))) > 5) {
-		// angle bwteen muzzle forward direction point and laser end point is greater than 5 degrees
-		LaserMesh->SetVisibility(false);
-		return;
-	}
-	else {
-		LaserMesh->SetVisibility(true);
-	}
-	*/
-
-
-	/*
 	const FVector LaserWorldLocation = LaserMesh->GetComponentLocation();
 
-	// Visual debug spheres
-	DrawDebugSphere(GetWorld(), EndLocation, 5.f, 24, FColor::White, false, 1.f);
-
-	const FVector MuzzleLocation = GetOwner()->GetActorLocation();
-	const FVector MuzzleForward = GetOwner()->GetActorForwardVector();
-	DrawDebugSphere(GetWorld(), MuzzleLocation + MuzzleForward * 100.f, 5.f, 24, FColor::Yellow, false, 1.f);
-
+	const FVector MuzzleLocation = WeaponProperties.bIsSkeletalMesh ?
+		WeaponSkeletalMesh->GetSocketLocation(WeaponProperties.WeaponMuzzleSocketName) :
+		WeaponStaticMesh->GetSocketLocation(WeaponProperties.WeaponMuzzleSocketName);
+	const FVector MuzzleForward = WeaponProperties.bIsSkeletalMesh
+		? WeaponSkeletalMesh->GetSocketRotation(WeaponProperties.WeaponMuzzleSocketName).Vector()
+		: WeaponStaticMesh->GetSocketRotation(WeaponProperties.WeaponMuzzleSocketName).Vector();
+	
 	// Correct direction vectors
 	const FVector ToEndDirection = (EndLocation - MuzzleLocation).GetSafeNormal();
 	const FVector ForwardDirection = MuzzleForward.GetSafeNormal();
@@ -245,14 +218,13 @@ void AWeaponBase::UpdateLaser(const FVector& EndLocation, const bool& bHittableA
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("Angle: %f"), AngleDegrees));
 
 	// Angle check
-	if (AngleDegrees > 5.f) {
+	if (AngleDegrees > LaserProperties.LaserMaxBendAngle) {
 		LaserMesh->SetVisibility(false);
 		return;
 	}
 	else {
 		LaserMesh->SetVisibility(true);
 	}
-	*/
 
 
 
