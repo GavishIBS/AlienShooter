@@ -93,13 +93,14 @@ void AControllableCharacter::UpdateCharacterRotationToCursor()
 		// Calculate new rotation
 		CursorTraceHitLocation = HitResult.Location;
 		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetMesh()->GetComponentLocation(), CursorTraceHitLocation);
-		FRotator NewRotation = FRotator(GetMesh()->GetComponentRotation().Pitch, LookAtRotation.Yaw - 90.f, GetMesh()->GetComponentRotation().Roll);
+		const FRotator TargetRotation = FRotator(GetMesh()->GetComponentRotation().Pitch, LookAtRotation.Yaw - 90.f, GetMesh()->GetComponentRotation().Roll);
 		// NewRotation.Yaw is LookAtRotation.Yaw - 90.f and not LookAtRotation.Yaw because character mesh component is
 		// rotated by -90.f yaw value relative to the capsule component.
 		
 		// Smooth rotation
 		const FRotator CurrentRotation = GetMesh()->GetComponentRotation();
-		NewRotation = FMath::RInterpTo(CurrentRotation, NewRotation, GetWorld()->GetDeltaSeconds(), 10.f);
+		const FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, GetWorld()->GetDeltaSeconds(), 6.f);  // 6.f // 10.f
+		TurnInPlace_Yaw = TargetRotation.Yaw - NewRotation.Yaw;
 
 		// Update rotation
 		GetMesh()->SetWorldRotation(NewRotation);
