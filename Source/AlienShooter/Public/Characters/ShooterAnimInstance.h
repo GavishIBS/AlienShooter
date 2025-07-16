@@ -26,7 +26,7 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 protected:
-	void CalculateIK();
+	void CalculateIK(float DeltaSeconds);
 	
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Ownership")
@@ -54,6 +54,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Locomotion)
 	float YawOffsetFromVelocity = 0.f;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Locomotion)
+	float TurnInPlace_Yaw = 0.f;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Combat)
 	bool bEquipped = false;
 
@@ -77,6 +80,10 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
 	FRotator RightHandRotation = FRotator();
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
+	FRotator RightHandRotation_LastFrame = FRotator();
+
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=IK)
 	bool bRadioPhoneAudioInProgress = false;

@@ -26,6 +26,9 @@ struct FLaserProperties    // for all weapons   TODO: move struct from this head
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects | Laser | Properties | Limits")
 	bool Limit_GlowOnHittableActorsOnly = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects | Laser | Properties | Limits")
+    float LaserMaxBendAngle = 12.5f;
 };
 
 UENUM(BlueprintType)

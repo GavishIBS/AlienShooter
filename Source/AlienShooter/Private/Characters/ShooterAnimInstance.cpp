@@ -46,6 +46,8 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			DeltaRotation = FMath::RInterpTo(DeltaRotation, DeltaRot, DeltaSeconds, 10.f);
 			YawOffsetFromVelocity = DeltaRotation.Yaw;
 		} else YawOffsetFromVelocity = 0.f;
+
+		TurnInPlace_Yaw = ShooterCharacter->GetTurnInPlace_Yaw();
 	}
 
 	{
@@ -57,7 +59,7 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 
 	// IK
-	CalculateIK();
+	CalculateIK(DeltaSeconds);
 
 	{
 		// Other stuff
@@ -65,7 +67,7 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 }
 
-void UShooterAnimInstance::CalculateIK()
+void UShooterAnimInstance::CalculateIK(float DeltaSeconds)
 {
 	if (!ShooterCharacter->GetWeaponInHand())
 	{
@@ -84,7 +86,10 @@ void UShooterAnimInstance::CalculateIK()
 
 			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(RightHandLocation,
 				RightHandLocation + (RightHandLocation - ShooterCharacter->GetCursorTraceHitLocation()));
-			RightHandRotation.Yaw = LookAtRotation.Yaw;
+			//RightHandRotation.Yaw = LookAtRotation.Yaw;
+			RightHandRotation = FMath::RInterpTo(RightHandRotation_LastFrame, LookAtRotation, DeltaSeconds, 6.f);
+			
+			RightHandRotation_LastFrame = RightHandRotation;
 		}
 	}
 

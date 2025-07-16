@@ -80,6 +80,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float RestrictedRadius = 100.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float TurnInPlace_Yaw = 0.f;
 
 	FVector CursorTraceHitLocation = FVector();
 	bool CursorOverlappingHittable = false;
@@ -115,4 +117,6 @@ public:
 	FORCEINLINE FVector GetCursorTraceHitLocation() const {return CursorTraceHitLocation;}
 	FORCEINLINE bool IsCursorOverlappingHittable() const { return CursorOverlappingHittable; }
 	FORCEINLINE APlayerController* GetPlayerController() const { return PlayerController; }
+
+	FORCEINLINE float GetTurnInPlace_Yaw() const { return TurnInPlace_Yaw; }
 };

@@ -196,8 +196,38 @@ FTransform AWeaponBase::GetLeftHandPlacementTransform() const
 void AWeaponBase::UpdateLaser(const FVector& EndLocation, const bool& bHittableAhead)
 {
 	if (!LaserMesh) return;
-	
+
 	const FVector LaserWorldLocation = LaserMesh->GetComponentLocation();
+
+	const FVector MuzzleLocation = WeaponProperties.bIsSkeletalMesh ?
+		WeaponSkeletalMesh->GetSocketLocation(WeaponProperties.WeaponMuzzleSocketName) :
+		WeaponStaticMesh->GetSocketLocation(WeaponProperties.WeaponMuzzleSocketName);
+	const FVector MuzzleForward = WeaponProperties.bIsSkeletalMesh
+		? WeaponSkeletalMesh->GetSocketRotation(WeaponProperties.WeaponMuzzleSocketName).Vector()
+		: WeaponStaticMesh->GetSocketRotation(WeaponProperties.WeaponMuzzleSocketName).Vector();
+	
+	// Correct direction vectors
+	const FVector ToEndDirection = (EndLocation - MuzzleLocation).GetSafeNormal();
+	const FVector ForwardDirection = MuzzleForward.GetSafeNormal();
+
+	// Calculate angle
+	const float DotProduct = FVector::DotProduct(ForwardDirection, ToEndDirection);
+	const float AngleDegrees = FMath::RadiansToDegrees(FMath::Acos(DotProduct));
+
+	// Debug print
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("Angle: %f"), AngleDegrees));
+
+	// Angle check
+	if (AngleDegrees > LaserProperties.LaserMaxBendAngle) {
+		LaserMesh->SetVisibility(false);
+		return;
+	}
+	else {
+		LaserMesh->SetVisibility(true);
+	}
+
+
+
 
 	// Scale correction
 	const float Distance = FVector::Distance(LaserWorldLocation, EndLocation);
