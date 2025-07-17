@@ -13,6 +13,9 @@ AElectronicActor::AElectronicActor()
 void AElectronicActor::BeginPlay()
 {
 	Super::BeginPlay();
+	if (HaveElectricity()) {
+		OnElectricityTurnedOn();
+	}
 }
 
 void AElectronicActor::OnElectricityTurnedOn()
