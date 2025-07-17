@@ -157,6 +157,6 @@ public:
 	FORCEINLINE bool IsAiming() const { return CombatComponent ? CombatComponent->bAiming : false; }
 	FORCEINLINE bool IsRadioPhoneAudioInProgress() const;
 
-	FORCEINLINE void DeactivateSpecialAbilityNiagaraEffect();
-	FORCEINLINE void ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSystem);
+	void DeactivateSpecialAbilityNiagaraEffect();
+	void ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSystem);
 };

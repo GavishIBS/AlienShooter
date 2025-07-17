@@ -82,7 +82,7 @@ public:
 		OnHealthUpdated.Broadcast(Health, MaxHealth);
 	}
 
-	FORCEINLINE bool CanTakeArmor(const EArmorColorCode ArmorColorCode);
+	bool CanTakeArmor(const EArmorColorCode ArmorColorCode);
 
 	FORCEINLINE UAnimMontage* GetDeathAnimMontage() const { return DeathAssetsData.DeathAnimMontage; }
 	FORCEINLINE FName GetRandomDeathAnimMontageSectionName() const { return FName("Default"); }

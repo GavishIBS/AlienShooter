@@ -35,5 +35,5 @@ protected:
 	TObjectPtr<UTDSUserWidget> OverlayWidget;
 
 public:
-	FORCEINLINE TObjectPtr<UTDSOverlay> GetOverlayWidget() const;
+	TObjectPtr<UTDSOverlay> GetOverlayWidget() const;
 };

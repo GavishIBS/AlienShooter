@@ -88,7 +88,7 @@ protected:
 protected:
 	// Inventory UI
 	UTDS_InventoryMenu* InventoryMenu_UW = nullptr;
-	FORCEINLINE void SetInventory_UW(UTDS_InventoryMenu* UW);
+	void SetInventory_UW(UTDS_InventoryMenu* UW);
 
 	void CloseInventory_UI();
 

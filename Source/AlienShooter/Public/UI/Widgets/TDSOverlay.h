@@ -70,5 +70,5 @@ private:
 	void IncrementCharacter_To_Subtitles_Text();
 
 public:
-	FORCEINLINE void SetEnvironmentDialogue_Subtitles_Text(const FText InText, const float& DialogueAudioDuration);
+	void SetEnvironmentDialogue_Subtitles_Text(const FText InText, const float& DialogueAudioDuration);
 };
