@@ -216,9 +216,6 @@ void AWeaponBase::UpdateLaser(const FVector& EndLocation, const bool& bHittableA
 	const float DotProduct = FVector::DotProduct(ForwardDirection, ToEndDirection);
 	const float AngleDegrees = FMath::RadiansToDegrees(FMath::Acos(DotProduct));
 
-	// Debug print
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("Angle: %f"), AngleDegrees));
-
 	// Angle check
 	if (AngleDegrees > LaserProperties.LaserMaxBendAngle) {
 		LaserMesh->SetVisibility(false);

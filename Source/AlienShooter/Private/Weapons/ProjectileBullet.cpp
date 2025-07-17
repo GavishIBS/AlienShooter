@@ -31,8 +31,6 @@ void AProjectileBullet::OnBulletHit(AActor* HitActor, const FVector& ImpactPoint
 	if (!HitActor) return;
 
 	if (PhysMat) {
-		GEngine->AddOnScreenDebugMessage(-1, 6.f, FColor::Emerald, FString("Physics material is valid!"));
-
 		EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(PhysMat);
 
 		if (ProjectileBulletData.HitEffects.Contains(SurfaceType)) {

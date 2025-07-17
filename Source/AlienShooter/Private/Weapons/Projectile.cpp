@@ -61,7 +61,6 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 void AProjectile::DestroyWrapper()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Red, FString("Destroy wrapper called!"));
 	if (WasSpawnedByPool())
 		SetInUse(false);
 	else {
