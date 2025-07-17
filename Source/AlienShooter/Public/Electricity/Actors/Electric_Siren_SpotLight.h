@@ -29,6 +29,9 @@ public:
 	void SetLightProperties(const EAlarmingModeName& ModeName);
 
 protected:
+	UFUNCTION(BlueprintCallable)
+	void TurnOnLightWrapper(const EAlarmingModeName& ModeName);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> SirenMesh;
 

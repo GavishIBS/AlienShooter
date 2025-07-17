@@ -30,3 +30,8 @@ void AElectric_Siren_SpotLight::TurnOnLightWithMode(const EAlarmingModeName& Mod
 	SetLightProperties(ModeName);
 	TurnOnLight();
 }
+
+void AElectric_Siren_SpotLight::TurnOnLightWrapper(const EAlarmingModeName& ModeName)
+{
+	TurnOnLightWithMode(ModeName);
+}
