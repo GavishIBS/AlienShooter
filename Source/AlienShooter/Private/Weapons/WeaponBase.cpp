@@ -177,11 +177,13 @@ void AWeaponBase::UpdateMagazine()
 
 FTransform AWeaponBase::GetWeaponMuzzleTransform() const
 {
-	if (WeaponProperties.bIsSkeletalMesh && WeaponSkeletalMesh)
+	if (WeaponProperties.bIsSkeletalMesh && WeaponSkeletalMesh) {
 		return WeaponSkeletalMesh->GetSocketTransform(WeaponProperties.WeaponMuzzleSocketName, RTS_World);
+	}
 
-	if (WeaponStaticMesh)
+	if (WeaponStaticMesh) {
 		return WeaponMuzzle_S->GetComponentTransform();
+	}
 
 	return FTransform();
 }
