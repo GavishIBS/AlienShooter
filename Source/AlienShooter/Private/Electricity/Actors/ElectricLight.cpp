@@ -13,6 +13,14 @@ AElectricLight::AElectricLight()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void AElectricLight::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	GetWorldTimerManager().ClearTimer(FlickerTimerHandle);
+	GetWorldTimerManager().ClearTimer(FlickerHoldTimerHandle);
+
+	Super::EndPlay(EndPlayReason);
+}
+
 void AElectricLight::BeginPlay()
 {
 	Super::BeginPlay();
@@ -35,7 +43,6 @@ void AElectricLight::OnElectricityTurnedOn()
 		if (FlickerHoldTime > FlickerRate) {
 			FlickerHoldTime /= 2;
 		}
-		FTimerHandle FlickerTimerHandle;
 		GetWorldTimerManager().SetTimer(FlickerTimerHandle, this, &AElectricLight::FlickerLight, FlickerRate, true, FlickerRate);
 	}
 }
@@ -45,7 +52,6 @@ void AElectricLight::FlickerLight()
 	Light->SetVisibility(false);
 	
 	const float L_FlickerHoldTime = FMath::FRandRange(FlickerHoldTime - (FlickerHoldTime / 3), FlickerHoldTime + (FlickerHoldTime / 3));
-	FTimerHandle FlickerHoldTimerHandle;
 	GetWorldTimerManager().SetTimer(FlickerHoldTimerHandle, FTimerDelegate::CreateLambda([&] {
 		Light->SetVisibility(true);
 		}), L_FlickerHoldTime, false, L_FlickerHoldTime);

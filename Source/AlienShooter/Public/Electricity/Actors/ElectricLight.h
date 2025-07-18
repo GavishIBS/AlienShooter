@@ -20,6 +20,7 @@ class ALIENSHOOTER_API AElectricLight : public AElectronicActor
 	
 public:
 	AElectricLight();
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
 
 	void TurnOnLight();
@@ -53,4 +54,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0"))
 	float FlickerHoldTime = 0.1f;  // TODO: Add flickering sound
+
+private:
+	FTimerHandle FlickerTimerHandle;
+	FTimerHandle FlickerHoldTimerHandle;
 };
