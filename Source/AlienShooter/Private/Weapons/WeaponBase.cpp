@@ -11,6 +11,8 @@
 #include "AnimationLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 
+#include "Kismet/GameplayStatics.h"
+
 AWeaponBase::AWeaponBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -117,6 +119,9 @@ void AWeaponBase::OnWeaponFirePressedCallback()
 	if (CanFire())
 	{
 		Fire();
+		if (WeaponSoundData.FireSound) {
+			UGameplayStatics::PlaySoundAtLocation(this, WeaponSoundData.FireSound, GetActorLocation());
+		}
 	} else WeaponFiredFailed();
 }
 

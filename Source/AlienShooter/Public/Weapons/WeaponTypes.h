@@ -279,3 +279,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties | FX")
 	TMap<TEnumAsByte<EPhysicalSurface>, FBulletHitEffectData> HitEffects;  // TMap<PhysicsSurface, ParticleSystem>
 };
+
+USTRUCT(BlueprintType)
+struct FWeaponSoundData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	class USoundBase* FireSound;
+};
