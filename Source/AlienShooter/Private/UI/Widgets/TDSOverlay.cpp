@@ -9,6 +9,8 @@
 #include "Components/ProgressBar.h"
 #include "Components/Border.h"
 
+#include "UI/Widgets/TDS_KeySmashUserWidget.h"
+
 #include "Characters/ShooterCharacter.h"
 #include "Components/AttributeComponent.h"
 
@@ -29,6 +31,9 @@ void UTDSOverlay::NativePreConstruct()
 	}
 	if (EnvText_Border) {
 		EnvText_Border->SetVisibility(ESlateVisibility::Hidden);
+	}
+	if (KeySmashUI) {
+		KeySmashUI->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
@@ -92,6 +97,18 @@ void UTDSOverlay::SetEnvironmentDialogue_Subtitles_Text(const FText InText, cons
 	
 	GetWorld()->GetTimerManager().SetTimer(EnvironmentDialogueText_Subtitles_TimerHandle, this, &UTDSOverlay::OnEnvironmentDialogueCompleted,
 		DialogueAudioDuration + Environment_Subtitles_Text_ClearDelay, false, DialogueAudioDuration + Environment_Subtitles_Text_ClearDelay);
+}
+
+void UTDSOverlay::SetKeySmashUIProperties(const FKeySmashProperties& KeySmashProperties, bool bShow, float ShowTime)
+{
+	KeySmashUI->SetKeySmashProperties(KeySmashProperties);
+	if (bShow) {
+		KeySmashUI->SetVisibility(ESlateVisibility::Visible);
+		FTimerHandle KeySmashUIVisibilityTimerHandle;
+		GetOwningPlayer()->GetWorldTimerManager().SetTimer(KeySmashUIVisibilityTimerHandle, FTimerDelegate::CreateLambda([this]() {
+			KeySmashUI->SetVisibility(ESlateVisibility::Hidden);
+		}), ShowTime, false);
+	}
 }
 
 void UTDSOverlay::OnEnvironmentDialogueCompleted()

@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/Widgets/TDSUserWidget.h"
+#include "UI_Types.h"
 #include "TDSOverlay.generated.h"
 
 class UTDSWeaponBoxList;
@@ -14,6 +15,7 @@ class UTDSWeaponInHandDataBox;
 class UCanvasPanel;
 class UProgressBar;
 class UBorder;
+class UTDS_KeySmashUserWidget;
 
 /**
  * 
@@ -49,6 +51,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UBorder* EnvText_Border;
 
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UTDS_KeySmashUserWidget> KeySmashUI;
+
 protected:
 	UFUNCTION()
 	void UpdateHealthBar(float Health, float MaxHealth);
@@ -71,4 +76,7 @@ private:
 
 public:
 	void SetEnvironmentDialogue_Subtitles_Text(const FText InText, const float& DialogueAudioDuration);
+
+	UFUNCTION(BlueprintCallable)   // TEMPORARY UFUNCTION macro
+	void SetKeySmashUIProperties(const FKeySmashProperties& KeySmashProperties, bool bShow = true, float ShowTime = 4.f);
 };

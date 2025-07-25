@@ -42,3 +42,8 @@ TObjectPtr<UTDSOverlay> ATDSHUD::GetOverlayWidget() const
 {
 	return Cast<UTDSOverlay>(OverlayWidget);
 }
+
+UTDSOverlay* ATDSHUD::GetOverlayWidget_Wrapper() const
+{
+	return Cast<UTDSOverlay>(OverlayWidget);
+}

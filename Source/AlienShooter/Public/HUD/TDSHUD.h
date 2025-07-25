@@ -36,4 +36,7 @@ protected:
 
 public:
 	TObjectPtr<UTDSOverlay> GetOverlayWidget() const;
+	
+	UFUNCTION(BlueprintCallable)  // TEMPORARY FUNCTION
+	UTDSOverlay* GetOverlayWidget_Wrapper() const;
 };
