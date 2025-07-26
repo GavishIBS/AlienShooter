@@ -11,12 +11,13 @@ class AWeaponBase;
 class AProjectile;
 class ABulletShell;
 
-UENUM()
+UENUM(BlueprintTYpe)
 enum class EWeaponName : uint8
 {
 	EWN_None = 0 UMETA(DisplayName="None"),
 	EWN_Glock67 = 1 UMETA(DisplayName="Glock 67"),
-	EWN_AK47 = 2 UMETA(DisplayName="AK 47")
+	EWN_LaserPistol = 2 UMETA(DisplayName="Laser Pistol"),
+	EWN_AK47 = 3 UMETA(DisplayName="AK 47")
 };
 
 USTRUCT(BlueprintType)
@@ -107,9 +108,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	FVector2D HitLocation_RandomizationAdditiveRange = FVector2D(8.f, 8.f);
 
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
+	bool bShouldEnableFabrik = true;
 private:
 	bool bShouldEnableRightHandIK = true;
-	bool bShouldEnableFabrik = true;
 
 private:
 	bool bIsEmpty = AmmoInMagazine <= 0;
