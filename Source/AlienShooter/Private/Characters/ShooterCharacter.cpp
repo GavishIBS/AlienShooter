@@ -360,7 +360,7 @@ void AShooterCharacter::OnWeaponFired()
 {
 	if (CombatComponent == nullptr || CombatComponent->WeaponInHand == nullptr) return;
 
-	if (AnimationLibrary::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData_Pawn()->FireAnimationMontages_Pawn))
+	if (AnimationLibrary::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData_Pawn().FireAnimationMontages_Pawn))
 		PawnActionState = EPawnActionState::EPAS_Attacking;
 }
 
@@ -368,7 +368,7 @@ void AShooterCharacter::OnWeaponReload()
 {
 	if (CombatComponent == nullptr || CombatComponent->WeaponInHand == nullptr) return;
 
-	if (AnimationLibrary::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData_Pawn()->ReloadAnimationMontages_Pawn))
+	if (AnimationLibrary::PlayAnimationMontage(GetMesh(), CombatComponent->WeaponInHand->GetWeaponAnimationData_Pawn().ReloadAnimationMontages_Pawn))
 		PawnActionState = EPawnActionState::EPAS_Reloading;
 }
 

@@ -122,7 +122,7 @@ public:
 	FORCEINLINE UStaticMeshComponent* GetWeaponMeshAsStaticMesh() const { return WeaponStaticMesh; }
 	FORCEINLINE const FWeaponProperties* GetWeaponProperties() const { return &WeaponProperties; }
 	FORCEINLINE const FWeaponAnimationData* GetWeaponAnimationData() const { return &WeaponAnimationData; }
-	FORCEINLINE const FWeaponAnimationData_Pawn* GetWeaponAnimationData_Pawn() const { return &WeaponAnimationData_Pawn; }
+	FORCEINLINE const FWeaponAnimationData_Pawn& GetWeaponAnimationData_Pawn() const { return WeaponAnimationData_Pawn; }
 	FORCEINLINE TSubclassOf<AWeaponBase> GetWeaponClass() const { return WeaponData.WeaponClass; }
 	FORCEINLINE bool CanAim() const { return WeaponProperties.bCanAim; }
 	FORCEINLINE bool ShouldForceAutomaticAim() const { return WeaponProperties.bForceAim; }
