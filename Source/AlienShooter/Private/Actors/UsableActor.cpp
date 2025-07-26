@@ -9,7 +9,7 @@
 
 AUsableActor::AUsableActor()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AUsableActor::BeginPlay()
