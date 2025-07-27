@@ -14,6 +14,7 @@ class UAnimMontage;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAudioTriggered, const EAudioType, AudioType, const FString, AudioInfo, const float, AudioDuration);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAudioCompleted);
 // FOnAudioCompleted - triggered after the whole audio is ended that is including response audio
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBlinkToggle, bool, bBlink);
 
 USTRUCT(BlueprintType)
 struct FOnAudioTriggerData {
@@ -41,6 +42,8 @@ public:
 	FOnAudioTriggered OnAudioTriggered;
 	UPROPERTY(BlueprintAssignable)
 	FOnAudioCompleted OnAudioCompleted;
+	UPROPERTY(BlueprintAssignable)
+	FOnBlinkToggle OnBlinkToggle;
 
 protected:
 	virtual void BeginPlay() override;
@@ -56,13 +59,31 @@ protected:
 	
 	UFUNCTION(BlueprintCallable)
 	bool TriggerAudio_WithParams_Response(const FAudioEvent AudioEvent, const FAudioEvent ResponseAudioEvent, float ResponseDelay = 3);
+	
+	UFUNCTION(BlueprintCallable)
+	bool AddIncomingMessage(const FAudioEvent AudioEvent);
+	
+	UFUNCTION(BlueprintCallable)
+	bool TriggerIncomingMessage();
 
 	void EndAudio();
 
+	void StartBlinkTimer();
+	void EndBlinkTimer();
+
 	bool bHavePhone = false;
 	bool bAudioInProgress = false;
+
+	bool bIncomingMessage = false;
+	FAudioEvent IncomingMessage;
+	//TArray<const FAudioEvent> IncomingMessages; // TODO
 	
+	bool bBlink_ThisFrame = false;
+	UPROPERTY(EditAnywhere, Category=Properties)
+	float BlinkRate = 0.1f;
+
 	FTimerHandle AudioTimerHandle;
+	FTimerHandle BlinkTimer;
 
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
 	FOnAudioTriggerData OnAudioStartedData;

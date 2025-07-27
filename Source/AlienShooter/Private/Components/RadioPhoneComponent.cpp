@@ -5,6 +5,7 @@
 
 #include "Components/RadioPhoneComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Electricity/Actors/ElectricPointLight.h"
 
 URadioPhoneComponent::URadioPhoneComponent()
 {
@@ -88,8 +89,45 @@ bool URadioPhoneComponent::TriggerAudio_WithParams_Response(const FAudioEvent Au
 	return true;
 }
 
+bool URadioPhoneComponent::AddIncomingMessage(const FAudioEvent AudioEvent)
+{
+	if (bIncomingMessage) return false;  // there is already an incoming message
+
+	bIncomingMessage = true;
+	IncomingMessage = AudioEvent;
+
+	StartBlinkTimer();
+
+	return true;
+}
+
+bool URadioPhoneComponent::TriggerIncomingMessage()
+{
+	if (bIncomingMessage == false || IncomingMessage.AudioAsset == nullptr) return false;
+	
+	bool bReturnValue = TriggerAudio_WithParams(IncomingMessage);
+	IncomingMessage = FAudioEvent();
+
+	EndBlinkTimer();
+
+	return bReturnValue;
+}
+
 void URadioPhoneComponent::EndAudio()
 {
 	bAudioInProgress = false;
 	OnAudioCompleted.Broadcast();
+}
+
+void URadioPhoneComponent::StartBlinkTimer()
+{
+	GetOwner()->GetWorldTimerManager().SetTimer(BlinkTimer, FTimerDelegate::CreateLambda([this]() {
+		bBlink_ThisFrame = !bBlink_ThisFrame;
+		OnBlinkToggle.Broadcast(bBlink_ThisFrame);
+	}), BlinkRate, true, 0.f);
+}
+
+void URadioPhoneComponent::EndBlinkTimer()
+{
+	GetOwner()->GetWorldTimerManager().ClearTimer(BlinkTimer);
 }

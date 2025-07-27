@@ -28,4 +28,11 @@ struct FAudioEvent
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	FString AudioInfo = FString();
+
+	FAudioEvent& operator=(const FAudioEvent& rhs) {
+		AudioAsset = rhs.AudioAsset;
+		AudioType = rhs.AudioType;
+		AudioInfo = rhs.AudioInfo;
+		return *this;
+	}
 };
