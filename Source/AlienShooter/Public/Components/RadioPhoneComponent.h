@@ -14,6 +14,7 @@ class UAnimMontage;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAudioTriggered, const EAudioType, AudioType, const FString, AudioInfo, const float, AudioDuration);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAudioCompleted);
 // FOnAudioCompleted - triggered after the whole audio is ended that is including response audio
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnIncomingMessage, bool, bRead);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBlinkToggle, bool, bBlink);
 
 USTRUCT(BlueprintType)
@@ -40,8 +41,13 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAudioTriggered OnAudioTriggered;
+	
 	UPROPERTY(BlueprintAssignable)
 	FOnAudioCompleted OnAudioCompleted;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnIncomingMessage OnIncomingMessage;
+	
 	UPROPERTY(BlueprintAssignable)
 	FOnBlinkToggle OnBlinkToggle;
 

@@ -48,7 +48,7 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UVerticalBox> VerticalBox_List;
 
-	TArray<UTDSWeaponBox> WeaponBoxes;
+	TArray<TObjectPtr<UTDSWeaponBox>> WeaponBoxes;
 
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
 	TSubclassOf<UTDSWeaponBox> WeaponBoxClass;

@@ -96,6 +96,8 @@ bool URadioPhoneComponent::AddIncomingMessage(const FAudioEvent AudioEvent)
 	bIncomingMessage = true;
 	IncomingMessage = AudioEvent;
 
+	OnIncomingMessage.Broadcast(false);
+
 	StartBlinkTimer();
 
 	return true;
@@ -107,6 +109,9 @@ bool URadioPhoneComponent::TriggerIncomingMessage()
 	
 	bool bReturnValue = TriggerAudio_WithParams(IncomingMessage);
 	IncomingMessage = FAudioEvent();
+
+
+	OnIncomingMessage.Broadcast(true);
 
 	EndBlinkTimer();
 
