@@ -28,11 +28,15 @@ struct FAudioEvent
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	FString AudioInfo = FString();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	FName Instigator = FName();
 
 	FAudioEvent& operator=(const FAudioEvent& rhs) {
 		AudioAsset = rhs.AudioAsset;
 		AudioType = rhs.AudioType;
 		AudioInfo = rhs.AudioInfo;
+		Instigator = rhs.Instigator;
 		return *this;
 	}
 };

@@ -14,7 +14,6 @@ struct FDialogueData
 {
 	GENERATED_BODY()
 
-
 	UPROPERTY(EditAnywhere, Category=Data)
 	FString Dialogue = FString();
 	
@@ -29,6 +28,9 @@ USTRUCT(BlueprintType)
 struct FDialogueLog
 {
 	GENERATED_BODY()
+
+	FDialogueLog() = default;
+	FDialogueLog(FName Speaker, FString Text) : SpeakerName(Speaker), DialogueText(Text) {}
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	//FName OtherNPC_Name = FName("Injured Guard");

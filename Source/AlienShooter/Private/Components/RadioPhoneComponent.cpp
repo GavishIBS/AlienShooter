@@ -6,6 +6,7 @@
 #include "Components/RadioPhoneComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Electricity/Actors/ElectricPointLight.h"
+#include "Components/ObjectiveComponent.h"
 
 URadioPhoneComponent::URadioPhoneComponent()
 {
@@ -17,6 +18,20 @@ URadioPhoneComponent::URadioPhoneComponent()
 void URadioPhoneComponent::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void URadioPhoneComponent::SetObjectiveComponent(TObjectPtr<UObjectiveComponent> Component)
+{
+	ObjectiveComponent = Component.Get();
+	OnAudioTriggered.AddDynamic(this, &URadioPhoneComponent::AddDialogueLog);
+}
+
+void URadioPhoneComponent::AddDialogueLog(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration, const FName Instigator)
+{
+	if (ObjectiveComponent != nullptr) {
+		FDialogueLog DialogueLog{ Instigator, AudioInfo };
+		ObjectiveComponent->AddRadioPhoneDialogueLog(std::move(DialogueLog));
+	}
 }
 
 void URadioPhoneComponent::OnPhonePicked()
@@ -33,7 +48,7 @@ bool URadioPhoneComponent::TriggerAudio(USoundBase* InAudio, const EAudioType Au
 
 	UGameplayStatics::PlaySoundAtLocation(this, InAudio, GetComponentLocation());
 	bAudioInProgress = true;
-	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, "Hello this is a sample text", InAudio->Duration);
+	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, "Hello this is a sample text", InAudio->Duration, FName());
 
 	GetOwner()->GetWorldTimerManager().SetTimer(AudioTimerHandle, this, &URadioPhoneComponent::EndAudio, InAudio->Duration, false, InAudio->Duration);
 
@@ -44,11 +59,12 @@ bool URadioPhoneComponent::TriggerAudio_WithParams(const FAudioEvent AudioEvent)
 {
 	if (bAudioInProgress) return false;
 	if (AudioEvent.AudioAsset == nullptr) return false;
+
 	if (bHavePhone == false) return false;
 
 	UGameplayStatics::PlaySoundAtLocation(this, AudioEvent.AudioAsset, GetComponentLocation());
 	bAudioInProgress = true;
-	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, AudioEvent.AudioInfo, AudioEvent.AudioAsset->Duration);
+	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, AudioEvent.AudioInfo, AudioEvent.AudioAsset->Duration, AudioEvent.Instigator);
 
 	GetOwner()->GetWorldTimerManager().SetTimer(AudioTimerHandle, this, &URadioPhoneComponent::EndAudio, AudioEvent.AudioAsset->Duration, false, AudioEvent.AudioAsset->Duration);
 
@@ -63,7 +79,7 @@ bool URadioPhoneComponent::TriggerAudio_WithParams_Response(const FAudioEvent Au
 
 	UGameplayStatics::PlaySoundAtLocation(this, AudioEvent.AudioAsset, GetComponentLocation());
 	bAudioInProgress = true;
-	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, AudioEvent.AudioInfo, AudioEvent.AudioAsset->Duration);
+	OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, AudioEvent.AudioInfo, AudioEvent.AudioAsset->Duration, AudioEvent.Instigator);
 
 	//GetOwner()->GetWorldTimerManager().SetTimer(AudioTimerHandle, this, &URadioPhoneComponent::EndAudio, AudioEvent.AudioAsset->Duration, false, AudioEvent.AudioAsset->Duration);
 	GetWorld()->GetTimerManager().SetTimer(
@@ -71,7 +87,7 @@ bool URadioPhoneComponent::TriggerAudio_WithParams_Response(const FAudioEvent Au
 		FTimerDelegate::CreateLambda([this, ResponseAudioEvent]() {
 			if (ResponseAudioEvent.AudioAsset) {
 				UGameplayStatics::PlaySoundAtLocation(this, ResponseAudioEvent.AudioAsset, GetComponentLocation());
-				OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, ResponseAudioEvent.AudioInfo, ResponseAudioEvent.AudioAsset->Duration);
+				OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, ResponseAudioEvent.AudioInfo, ResponseAudioEvent.AudioAsset->Duration, ResponseAudioEvent.Instigator);
 				FTimerHandle ResponseAudioTimerHandle;
 				GetWorld()->GetTimerManager().SetTimer(ResponseAudioTimerHandle, FTimerDelegate::CreateLambda([this]() {
 					bAudioInProgress = false;

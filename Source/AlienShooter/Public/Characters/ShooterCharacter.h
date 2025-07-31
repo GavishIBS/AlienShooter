@@ -45,7 +45,7 @@ protected:
 	void InitCallbacks();
 
 	UFUNCTION()
-	virtual void OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration);
+	virtual void OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration, FName AudioInstigator);
 	
 	UFUNCTION()
 	void OnRadioPhoneAudioCompleted();

@@ -19,11 +19,12 @@
 #include "Actors/UsableActor.h"
 #include "Components/RadioPhoneComponent.h"
 #include "UI/Widgets/TDSOverlay.h"
-#include "UI/Widgets/TDS_DialogueLogsUserWidget.h"
 #include "Components/ObjectiveComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Kismet/GameplayStatics.h"
+
+#include "UI/Widgets/TDS_DialogueLogsUserWidget.h"
 
 
 AShooterCharacter::AShooterCharacter()
@@ -311,18 +312,15 @@ void AShooterCharacter::InventorySlotPressed_4()
 
 void AShooterCharacter::DisplayObjectives()
 {
-	if (ObjectiveComponent == nullptr || PlayerController == nullptr) return;
+	if (RadioPhoneComponent == nullptr || RadioPhoneComponent->GetObjectiveComponent() == nullptr || PlayerController == nullptr) return;
 
-	if (ObjectiveComponent->DialogueLogsMenu_UW_Ref) {
-		ObjectiveComponent->DialogueLogsMenu_UW_Ref->RemoveFromParent();
-		ObjectiveComponent->DialogueLogsMenu_UW_Ref = nullptr;
+	if (RadioPhoneComponent->GetObjectiveComponent()->Is_DialogueLogs_UW_Valid()) {
+		RadioPhoneComponent->GetObjectiveComponent()->RemoveDialogueLogsMenu_UW();
 	}
 	else if (ATDSHUD* TDS_HUD = Cast<ATDSHUD>(PlayerController->GetHUD()))
 	{
-		ObjectiveComponent->DialogueLogsMenu_UW_Ref = Cast<UTDS_DialogueLogsUserWidget>(TDS_HUD->MakeWidgetInViewport(ObjectiveComponent->DialogueLogMenu_UWClass));
-		if (ObjectiveComponent->DialogueLogsMenu_UW_Ref) {
-			ObjectiveComponent->DialogueLogsMenu_UW_Ref->SetDialogueLogs(ObjectiveComponent->RadioPhoneDialogueLogs);
-		}
+		RadioPhoneComponent->GetObjectiveComponent()->SetDialogueLogsMenu_UW_Ref(Cast<UTDS_DialogueLogsUserWidget>(TDS_HUD->MakeWidgetInViewport(RadioPhoneComponent->GetObjectiveComponent()->GetDialogueLogMenu_UWClass())));
+		RadioPhoneComponent->GetObjectiveComponent()->SetDialogueLogs_Wrapper();
 	}
 }
 
@@ -446,7 +444,7 @@ void AShooterCharacter::ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSy
 	SpecialAbilityNiagaraComponent->SetAsset(InSystem);
 }
 
-void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration) {
+void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration, FName AudioInstigator) {
 	if (RadioPhoneComponent == nullptr) return;
 	
 	if (CombatComponent) {

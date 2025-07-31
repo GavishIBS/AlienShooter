@@ -58,9 +58,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<URadioPhoneComponent> RadioPhoneComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	TObjectPtr<UObjectiveComponent> ObjectiveComponent;
-
 	// Properites
 	EPawnActionState PawnActionState = EPawnActionState::EPAS_Idle;
 

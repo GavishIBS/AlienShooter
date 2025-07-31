@@ -10,8 +10,9 @@
 
 class USoundBase;
 class UAnimMontage;
+class UObjectiveComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAudioTriggered, const EAudioType, AudioType, const FString, AudioInfo, const float, AudioDuration);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAudioTriggered, const EAudioType, AudioType, const FString, AudioInfo, const float, AudioDuration, const FName, Instigator);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAudioCompleted);
 // FOnAudioCompleted - triggered after the whole audio is ended that is including response audio
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnIncomingMessage, bool, bRead);
@@ -36,7 +37,8 @@ class ALIENSHOOTER_API URadioPhoneComponent : public USkeletalMeshComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
+	friend class ABaseCharacter;
 	URadioPhoneComponent();
 
 	UPROPERTY(BlueprintAssignable)
@@ -53,6 +55,17 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	// Objectives begin
+	TWeakObjectPtr<UObjectiveComponent> ObjectiveComponent;
+
+	void SetObjectiveComponent(TObjectPtr<UObjectiveComponent> Component);
+
+	UFUNCTION()
+	void AddDialogueLog(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration, const FName Instigator);
+public:
+	UObjectiveComponent* GetObjectiveComponent() const { return ObjectiveComponent.Get(); }
+	// Objectives end
 
 	UFUNCTION(BlueprintCallable)
 	void OnPhonePicked();
