@@ -34,6 +34,23 @@ void URadioPhoneComponent::AddDialogueLog(const EAudioType AudioType, const FStr
 	}
 }
 
+bool URadioPhoneComponent::RemindObjective(const int32 Key)
+{
+	if (ObjectiveComponent == nullptr) return false;
+	
+	std::tuple<bool, FReminderInfo> ReminderData = ObjectiveComponent->TriggerReminder();
+	if (std::get<0>(ReminderData)) {
+		const FReminderInfo ReminderInfo = std::get<1>(ReminderData);
+		FAudioEvent AudioEvent = FAudioEvent(ReminderInfo.RemindingAudio, EAudioType::EAT_Dialogue, ReminderInfo.RemindingText,
+			FName("Radio room operator"));
+		TriggerAudio_WithParams(AudioEvent);
+
+		return true;
+	}
+	
+	return false;
+}
+
 void URadioPhoneComponent::OnPhonePicked()
 {
 	SetVisibility(true);

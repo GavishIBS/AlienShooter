@@ -20,6 +20,10 @@ struct FAudioEvent
 {
 	GENERATED_BODY()
 
+	FAudioEvent() = default;
+	FAudioEvent(USoundBase* InAudio, EAudioType Type, FString Info, FName InInstigator) :
+		AudioAsset(InAudio), AudioType(Type), AudioInfo(Info), Instigator(InInstigator) {}
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	USoundBase* AudioAsset = nullptr;
 

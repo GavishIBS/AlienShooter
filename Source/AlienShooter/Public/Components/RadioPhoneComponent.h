@@ -57,6 +57,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Objectives begin
+	UPROPERTY(BlueprintReadOnly, Category = "Components")
 	TWeakObjectPtr<UObjectiveComponent> ObjectiveComponent;
 
 	void SetObjectiveComponent(TObjectPtr<UObjectiveComponent> Component);
@@ -64,7 +65,11 @@ protected:
 	UFUNCTION()
 	void AddDialogueLog(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration, const FName Instigator);
 public:
+	UFUNCTION(BlueprintCallable)  // TODO: TEMP
 	UObjectiveComponent* GetObjectiveComponent() const { return ObjectiveComponent.Get(); }
+
+	UFUNCTION(BlueprintCallable)  // TODO: TEMP
+	bool RemindObjective(const int32 Key);
 	// Objectives end
 
 	UFUNCTION(BlueprintCallable)

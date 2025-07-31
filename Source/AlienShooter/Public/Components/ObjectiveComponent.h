@@ -21,17 +21,27 @@ public:
 	//friend class AShooterCharacter;
 	UObjectiveComponent();
 	
+	// Radio Phone Dialogue Logs BEGIN
 	void RemoveDialogueLogsMenu_UW();
-
 	void SetDialogueLogs_Wrapper();
-
 	void AddRadioPhoneDialogueLog(const FDialogueLog&& NewLog);
+	// Radio Phone Dialogue Logs END
+	
+	// Objectives BEGIN
+	UFUNCTION(BlueprintCallable)  // TODO: TEMP
+	bool AddObjective(const FRemindableObjective& Objective);
+	bool CompleteObjective(const FObjective& Objective);
+	std::tuple<bool, FReminderInfo> TriggerReminder();
+	// Objectives END
 
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Data")
 	TArray<FObjective> DisplayObjectives;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Data")
+	TArray<FReminderInfo> RemindObjectives;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Data")
 	TArray<FDialogueLog> RadioPhoneDialogueLogs;
