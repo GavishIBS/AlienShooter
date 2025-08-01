@@ -26,6 +26,29 @@ void AMainGameMode::OnPostLogin(AController* NewPlayer)
 }
 */
 
+void AMainGameMode::OnSequencePlayed(float Duration)
+{
+	DisableControl();
+	FTimerHandle ControlEnableTimerHandle;
+	GetWorldTimerManager().SetTimer(ControlEnableTimerHandle, FTimerDelegate::CreateLambda([&] {
+		EnableControl();
+	}), Duration + ControlToggleOnSequence_Delay, false, Duration + ControlToggleOnSequence_Delay);
+}
+
+void AMainGameMode::DisableControl()
+{
+	if (BChar) {
+		BChar->DisableInput(Cast<APlayerController>(BChar->GetController()));
+	} else {/* TODO: disable through controller directly */}
+}
+
+void AMainGameMode::EnableControl()
+{
+	if (BChar) {
+		BChar->EnableInput(Cast<APlayerController>(BChar->GetController()));
+	} else {/* TODO: enable through controller directly */ }
+}
+
 void AMainGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -37,6 +60,8 @@ void AMainGameMode::BeginPlay()
 			BChar->OnDeath.AddDynamic(this, &AMainGameMode::TryRespawnPlayer);
 		}
 	}
+
+	OnPlaySequence.AddDynamic(this, &AMainGameMode::OnSequencePlayed);
 
 	Setup_AlarmLights();
 }

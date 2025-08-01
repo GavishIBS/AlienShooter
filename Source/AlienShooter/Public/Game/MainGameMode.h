@@ -12,6 +12,7 @@
 class AElectric_Siren_SpotLight;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAlarmingModeChanged, EAlarmingModeName, NewModeName, EAlarmingModeName, LastModeName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlaySequence, float, Duration);
 
 /**
  * 
@@ -20,13 +21,26 @@ UCLASS()
 class ALIENSHOOTER_API AMainGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(BlueprintCallable, BlueprintAssignable)
+	FOnPlaySequence OnPlaySequence;
+
 public:
 	UPROPERTY(BlueprintReadWrite, Category="Game | Rebirth")
 	FTransform LastCheckpointTransform;
 
 protected:
 	ABaseCharacter* BChar;
+
+	UFUNCTION()
+	void OnSequencePlayed(float Duration);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Game | Data", meta = (ClampMin = "0", ClampMax = "9"))
+	float ControlToggleOnSequence_Delay = 1.f;
+
+	void DisableControl();
+	void EnableControl();
 
 protected:
 	//virtual void OnPostLogin(AController* NewPlayer) override;
