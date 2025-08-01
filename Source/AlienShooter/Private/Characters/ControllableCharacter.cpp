@@ -57,10 +57,12 @@ void AControllableCharacter::BeginPlay()
 void AControllableCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 	if (AttributeComponent)
 	{
 		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("CurrentHealth: %f"), AttributeComponent->GetHealth()));
 	}
+
 	if (LifeStatus != ELifeStatus::ELS_Dead && GetCharacterMovement()) {
 		CheckCursorLocation();
 		UpdateCharacterRotationToCursor();

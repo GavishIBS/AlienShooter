@@ -38,6 +38,7 @@ void AMainGameMode::OnSequencePlayed(float Duration)
 void AMainGameMode::DisableControl()
 {
 	if (BChar) {
+		BChar->SetActorTickEnabled(false);
 		BChar->DisableInput(Cast<APlayerController>(BChar->GetController()));
 	} else {/* TODO: disable through controller directly */}
 }
@@ -45,6 +46,7 @@ void AMainGameMode::DisableControl()
 void AMainGameMode::EnableControl()
 {
 	if (BChar) {
+		BChar->SetActorTickEnabled(true);
 		BChar->EnableInput(Cast<APlayerController>(BChar->GetController()));
 	} else {/* TODO: enable through controller directly */ }
 }
