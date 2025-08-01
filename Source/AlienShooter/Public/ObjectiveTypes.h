@@ -22,8 +22,6 @@ struct FObjective
 	FObjective(int32 InKey, FString Desc, bool bOpt, EObjectiveType Type, bool bRem) :
 		Key(InKey), ObjectiveDesc(Desc), bOptional(bOpt), ObjectiveType(Type) {}
 
-	/* TODO: Add a unique key to check objective/reminding priority - before adding objective to list check if a objective/reminder with same key exists
-	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	int32 Key = -1;
 
@@ -35,6 +33,9 @@ struct FObjective
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Data)
 	EObjectiveType ObjectiveType = EObjectiveType::NONE;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Data)
+	int32 Priority = 0;
 };
 
 USTRUCT(BlueprintType)
@@ -47,8 +48,6 @@ struct FReminderInfo
 		Key(InKey), RemindingText(RemingText), RemindingAudio(RemindAudio) {
 	}
 
-	/* TODO: Add a unique key to check objective/reminding priority - before adding objective to list check if a objective/reminder with same key exists
-	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	int32 Key = -1;
 

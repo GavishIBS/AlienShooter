@@ -90,5 +90,13 @@ std::tuple<bool, FReminderInfo> UObjectiveComponent::TriggerReminder(int32 Key)
 	}
 
 	return std::make_tuple(false, FReminderInfo{});
-	// TODO: Implementation - need a ref to radio phone component to trigger audio, but accessing it here will create a circular dependency
+}
+
+int32 UObjectiveComponent::GetHighestPriorityKey() const
+{
+	int32 Priority = -1;
+	for (auto& Obj : DisplayObjectives) {
+		Priority = Obj.Key > Priority ? Obj.Key : Priority;
+	}
+	return Priority;
 }

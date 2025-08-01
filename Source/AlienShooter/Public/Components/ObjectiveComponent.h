@@ -32,6 +32,7 @@ public:
 	bool AddObjective(const FRemindableObjective& Objective);
 	bool CompleteObjective(const FObjective& Objective);
 	std::tuple<bool, FReminderInfo> TriggerReminder(int32 Key);
+	int32 GetHighestPriorityKey() const;
 	// Objectives END
 
 protected:

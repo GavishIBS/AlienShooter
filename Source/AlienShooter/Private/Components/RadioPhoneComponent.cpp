@@ -61,6 +61,18 @@ bool URadioPhoneComponent::RemindObjective_WithKey(const int32 Key)
 	return false;
 }
 
+bool URadioPhoneComponent::RemindObjective_Priority()
+{
+	if (ObjectiveComponent == nullptr) return false;
+
+	int32 PriorityObjKey = ObjectiveComponent->GetHighestPriorityKey();
+	if (PriorityObjKey <= -1) return false;
+
+	RemindObjective_WithKey(PriorityObjKey);
+
+	return false;
+}
+
 void URadioPhoneComponent::OnPhonePicked()
 {
 	SetVisibility(true);

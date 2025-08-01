@@ -72,6 +72,8 @@ public:
 	bool RemindObjective(FDataTableRowHandle ObjectiveID);
 	UFUNCTION(BlueprintCallable)  // TODO: TEMP
 	bool RemindObjective_WithKey(const int32 Key);
+	UFUNCTION(BlueprintCallable)  // TODO: TEMP
+	bool RemindObjective_Priority(); // trigger reminder for objective with highest priority
 	// Objectives end
 
 	UFUNCTION(BlueprintCallable)
