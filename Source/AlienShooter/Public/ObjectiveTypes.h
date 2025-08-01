@@ -8,7 +8,7 @@
 #include "ObjectiveTypes.generated.h"
 
 UENUM(BlueprintType)
-enum class EObjecttiveType : uint8
+enum class EObjectiveType : uint8
 {
 	NONE = 0, GOTO_POINT = 1, EVENT = 2
 };
@@ -18,10 +18,69 @@ struct FObjective
 {
 	GENERATED_BODY()
 
+	FObjective() = default;
+	FObjective(int32 InKey, FString Desc, bool bOpt, EObjectiveType Type, bool bRem) :
+		Key(InKey), ObjectiveDesc(Desc), bOptional(bOpt), ObjectiveType(Type) {}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	int32 Key = -1;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Data)
 	FString ObjectiveDesc = FString("Objective text");
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Data)
 	bool bOptional = false;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Data)
-	EObjecttiveType ObjectiveType = EObjecttiveType::NONE;
+	EObjectiveType ObjectiveType = EObjectiveType::NONE;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Data)
+	int32 Priority = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FReminderInfo
+{
+	GENERATED_BODY()
+
+	FReminderInfo() = default;
+	FReminderInfo(int32 InKey, FString RemingText, class USoundBase* RemindAudio) :
+		Key(InKey), RemindingText(RemingText), RemindingAudio(RemindAudio) {
+	}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	int32 Key = -1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	FString RemindingText = FString("Reminding Objective");
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	TObjectPtr<class USoundBase> RemindingAudio = nullptr;
+};
+
+USTRUCT(BlueprintType)
+struct FRemindableObjective : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	FRemindableObjective() = default;
+	FRemindableObjective(FObjective InObjectiveData, FString RemingText, class USoundBase* RemindAudio) :
+		ObjectiveData(InObjectiveData), RemindingText(RemingText), RemindingAudio(RemindAudio) {}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	FObjective ObjectiveData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	FString RemindingText = FString("Reminding Objective");
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	TObjectPtr<class USoundBase> RemindingAudio = nullptr;
+
+	explicit operator FObjective() const {
+		return ObjectiveData;
+	}
+
+	explicit operator FReminderInfo() const {
+		return { ObjectiveData.Key, RemindingText, RemindingAudio };
+	}
 };

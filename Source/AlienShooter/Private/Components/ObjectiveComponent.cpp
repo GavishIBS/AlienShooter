@@ -4,6 +4,7 @@
 
 
 #include "Components/ObjectiveComponent.h"
+#include "UI/Widgets/TDS_DialogueLogsUserWidget.h"
 
 UObjectiveComponent::UObjectiveComponent()
 {
@@ -13,4 +14,89 @@ UObjectiveComponent::UObjectiveComponent()
 void UObjectiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void UObjectiveComponent::RemoveDialogueLogsMenu_UW()
+{
+	DialogueLogsMenu_UW_Ref->RemoveFromParent();
+	DialogueLogsMenu_UW_Ref = nullptr;
+}
+
+void UObjectiveComponent::SetDialogueLogs_Wrapper()
+{
+	if (DialogueLogsMenu_UW_Ref) {
+		DialogueLogsMenu_UW_Ref->SetDialogueLogs(RadioPhoneDialogueLogs);
+	}
+}
+
+void UObjectiveComponent::AddRadioPhoneDialogueLog(const FDialogueLog&& NewLog)
+{
+	RadioPhoneDialogueLogs.Add(NewLog);
+}
+
+bool UObjectiveComponent::AddObjective(const FRemindableObjective& Objective)
+{
+	if (Objective.ObjectiveData.Key == -1) return false;  // "Key" default value is -1, this statement makes sure that "Key" value was set
+
+	for (auto& Obj : DisplayObjectives) {
+		if (Objective.ObjectiveData.Key == Obj.Key) return false;  // Objective already exists // TODO: Make completed objectives cache to check if a objective have been completed already (or not if we want to reuse objectives in different levels)
+	}
+
+	DisplayObjectives.Add((FObjective)Objective);
+	if (Objective.RemindingAudio != nullptr) {
+		RemindObjectives.Add((FReminderInfo)Objective);
+	}
+
+	return true;
+}
+
+bool UObjectiveComponent::CompleteObjective(const FObjective& Objective)
+{
+	bool ReturnValue = false;
+	int Index = 0;
+	for (auto& Obj : DisplayObjectives)
+	{
+		if (Objective.Key == Obj.Key) {
+			DisplayObjectives.RemoveAt(Index);
+			ReturnValue = true;
+			break;
+		}
+		Index++;
+	}
+
+	Index = 0;
+	for (auto& Obj : RemindObjectives)
+	{
+		if (Objective.Key == Obj.Key) {
+			RemindObjectives.RemoveAt(Index);
+			break;
+		}
+		Index++;
+	}
+
+	return ReturnValue;
+}
+
+std::tuple<bool, FReminderInfo> UObjectiveComponent::TriggerReminder(int32 Key)
+{
+	if (RemindObjectives.Num() <= 0) return std::make_tuple(false, FReminderInfo());
+	
+	int Index = 0;
+	for (auto& R_Obj : RemindObjectives) {
+		if (R_Obj.Key == Key) {
+			return std::make_tuple(true, RemindObjectives[Index]);
+		}
+		Index++;
+	}
+
+	return std::make_tuple(false, FReminderInfo{});
+}
+
+int32 UObjectiveComponent::GetHighestPriorityKey() const
+{
+	int32 Priority = -1;
+	for (auto& Obj : DisplayObjectives) {
+		Priority = Obj.Key > Priority ? Obj.Key : Priority;
+	}
+	return Priority;
 }
