@@ -38,6 +38,10 @@ bool UObjectiveComponent::AddObjective(const FRemindableObjective& Objective)
 {
 	if (Objective.ObjectiveData.Key == -1) return false;  // "Key" default value is -1, this statement makes sure that "Key" value was set
 
+	for (auto& Obj : DisplayObjectives) {
+		if (Objective.ObjectiveData.Key == Obj.Key) return false;  // Objective already exists // TODO: Make completed objectives cache to check if a objective have been completed already (or not if we want to reuse objectives in different levels)
+	}
+
 	DisplayObjectives.Add((FObjective)Objective);
 	if (Objective.RemindingAudio != nullptr) {
 		RemindObjectives.Add((FReminderInfo)Objective);
@@ -73,10 +77,18 @@ bool UObjectiveComponent::CompleteObjective(const FObjective& Objective)
 	return ReturnValue;
 }
 
-std::tuple<bool, FReminderInfo> UObjectiveComponent::TriggerReminder()
+std::tuple<bool, FReminderInfo> UObjectiveComponent::TriggerReminder(int32 Key)
 {
 	if (RemindObjectives.Num() <= 0) return std::make_tuple(false, FReminderInfo());
 	
-	return std::make_tuple(true, RemindObjectives[0]);
+	int Index = 0;
+	for (auto& R_Obj : RemindObjectives) {
+		if (R_Obj.Key == Key) {
+			return std::make_tuple(true, RemindObjectives[Index]);
+		}
+		Index++;
+	}
+
+	return std::make_tuple(false, FReminderInfo{});
 	// TODO: Implementation - need a ref to radio phone component to trigger audio, but accessing it here will create a circular dependency
 }

@@ -34,11 +34,21 @@ void URadioPhoneComponent::AddDialogueLog(const EAudioType AudioType, const FStr
 	}
 }
 
-bool URadioPhoneComponent::RemindObjective(const int32 Key)
+bool URadioPhoneComponent::RemindObjective(FDataTableRowHandle ObjectiveID)
 {
 	if (ObjectiveComponent == nullptr) return false;
 	
-	std::tuple<bool, FReminderInfo> ReminderData = ObjectiveComponent->TriggerReminder();
+	FRemindableObjective* RemindableObj = ObjectiveID.GetRow<FRemindableObjective>(TEXT(""));
+	if (RemindableObj == nullptr) return false;
+	
+	return RemindObjective_WithKey(RemindableObj->ObjectiveData.Key);
+}
+
+bool URadioPhoneComponent::RemindObjective_WithKey(const int32 Key)
+{
+	if (ObjectiveComponent == nullptr) return false;
+	
+	std::tuple<bool, FReminderInfo> ReminderData = ObjectiveComponent->TriggerReminder(Key);
 	if (std::get<0>(ReminderData)) {
 		const FReminderInfo ReminderInfo = std::get<1>(ReminderData);
 		FAudioEvent AudioEvent = FAudioEvent(ReminderInfo.RemindingAudio, EAudioType::EAT_Dialogue, ReminderInfo.RemindingText,

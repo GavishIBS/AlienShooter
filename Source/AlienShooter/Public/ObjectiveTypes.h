@@ -43,7 +43,7 @@ struct FReminderInfo
 	GENERATED_BODY()
 
 	FReminderInfo() = default;
-	FReminderInfo(int32 InKey, FString RemingText, class USoundWave* RemindAudio) :
+	FReminderInfo(int32 InKey, FString RemingText, class USoundBase* RemindAudio) :
 		Key(InKey), RemindingText(RemingText), RemindingAudio(RemindAudio) {
 	}
 
@@ -56,16 +56,16 @@ struct FReminderInfo
 	FString RemindingText = FString("Reminding Objective");
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
-	TObjectPtr<class USoundWave> RemindingAudio = nullptr;
+	TObjectPtr<class USoundBase> RemindingAudio = nullptr;
 };
 
 USTRUCT(BlueprintType)
-struct FRemindableObjective
+struct FRemindableObjective : public FTableRowBase
 {
 	GENERATED_BODY()
 
 	FRemindableObjective() = default;
-	FRemindableObjective(FObjective InObjectiveData, FString RemingText, class USoundWave* RemindAudio) :
+	FRemindableObjective(FObjective InObjectiveData, FString RemingText, class USoundBase* RemindAudio) :
 		ObjectiveData(InObjectiveData), RemindingText(RemingText), RemindingAudio(RemindAudio) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
@@ -75,7 +75,7 @@ struct FRemindableObjective
 	FString RemindingText = FString("Reminding Objective");
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
-	TObjectPtr<class USoundWave> RemindingAudio = nullptr;
+	TObjectPtr<class USoundBase> RemindingAudio = nullptr;
 
 	explicit operator FObjective() const {
 		return ObjectiveData;

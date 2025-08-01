@@ -69,7 +69,9 @@ public:
 	UObjectiveComponent* GetObjectiveComponent() const { return ObjectiveComponent.Get(); }
 
 	UFUNCTION(BlueprintCallable)  // TODO: TEMP
-	bool RemindObjective(const int32 Key);
+	bool RemindObjective(FDataTableRowHandle ObjectiveID);
+	UFUNCTION(BlueprintCallable)  // TODO: TEMP
+	bool RemindObjective_WithKey(const int32 Key);
 	// Objectives end
 
 	UFUNCTION(BlueprintCallable)

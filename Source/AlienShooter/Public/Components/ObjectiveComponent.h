@@ -31,7 +31,7 @@ public:
 	UFUNCTION(BlueprintCallable)  // TODO: TEMP
 	bool AddObjective(const FRemindableObjective& Objective);
 	bool CompleteObjective(const FObjective& Objective);
-	std::tuple<bool, FReminderInfo> TriggerReminder();
+	std::tuple<bool, FReminderInfo> TriggerReminder(int32 Key);
 	// Objectives END
 
 protected:
