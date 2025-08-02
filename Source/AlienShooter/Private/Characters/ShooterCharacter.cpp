@@ -487,4 +487,8 @@ void AShooterCharacter::OnRadioPhoneAudioCompleted()
 	RadioPhoneComponent->AttachToComponent(GetMesh(), AttachmentTransformRules, RadioPhoneComponent->GetOutHandAttachment_SocketName());
 
 	PawnActionState = EPawnActionState::EPAS_Idle;
+
+	if (CombatComponent) {
+		CombatComponent->SelectWeapon(CombatComponent->WeaponIndex);
+	}
 }
