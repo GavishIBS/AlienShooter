@@ -29,7 +29,6 @@ void AProjectileBullet::BeginPlay()
 void AProjectileBullet::OnBulletHit(AActor* HitActor, const FVector& ImpactPoint, UPhysicalMaterial* PhysMat)
 {
 	if (!HitActor) return;
-
 	if (PhysMat) {
 		EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(PhysMat);
 
@@ -59,16 +58,17 @@ void AProjectileBullet::Init(const float& InBulletHealth, const float& InDamage,
 void AProjectileBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	// DEBUG
-	//DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10.f, 24, FColor::Cyan, false, 10.f);
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Name: %s"), *OtherActor->GetName()));
+	Super::OnHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
+
+	if (OtherActor == this) return;
+	if (OtherActor->GetClass() == this->GetClass()) return;
 	
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor))
 	{
 		ProjectileProperties.BulletHealth -= HitInterface->GetHit(Hit.ImpactPoint, ProjectileProperties.Damage,
 			ProjectileProperties.Damage_RandomizationFactor, WeaponOwner, UDamageType::StaticClass());
 	}
-	OnBulletHit(Hit.GetActor(), Hit.ImpactPoint, Hit.PhysMaterial.Get());
+	OnBulletHit(OtherActor, Hit.ImpactPoint, Hit.PhysMaterial.Get());
 	DestroyWrapper();
 }
 
