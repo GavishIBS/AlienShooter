@@ -60,8 +60,10 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 {
 	Super::OnHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
 
-	if (OtherActor == this) return;
-	if (OtherActor->GetClass() == this->GetClass()) return;
+	if (OtherActor == this || OtherActor->GetClass() == this->GetClass()) {
+		DestroyWrapper();
+		return;
+	}
 	
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor))
 	{
