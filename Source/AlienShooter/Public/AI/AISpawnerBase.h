@@ -41,8 +41,15 @@ public:
 	void StartSpawningWrapper();
 
 protected:
+	virtual void BeginPlay() override;
 	bool StartSpawning();
 	void SpawnTick();
+
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	bool bSpawnOnBeginPlay = false;
+	
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	float SpawnDelay = 0.f;
 
 	UPROPERTY(VisibleAnywhere, Category = "Properties")
 	TObjectPtr<USceneComponent> SpawnPoint = nullptr;
