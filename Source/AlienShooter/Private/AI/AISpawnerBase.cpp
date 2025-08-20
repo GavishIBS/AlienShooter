@@ -32,15 +32,21 @@ bool AAISpawnerBase::StartSpawning()
 {
 	bool ReturnValue = false;
 
-	FTimerHandle SpawnDelayTimerHandle;
-	GetWorldTimerManager().SetTimer(SpawnDelayTimerHandle, FTimerDelegate::CreateLambda([&] {
-		if (SpawnPoint)
-		{
-			GetWorldTimerManager().SetTimer(SpawnerTickTimerHandle, this, &AAISpawnerBase::SpawnTick, SpawnTimerTickRate, true, SpawnTimerTickRate);
-			ReturnValue = true;
-		}
-	}), SpawnDelay, false, SpawnDelay);
-	
+	if (SpawnDelay > 0.f) {
+		FTimerHandle SpawnDelayTimerHandle;
+		GetWorldTimerManager().SetTimer(SpawnDelayTimerHandle, FTimerDelegate::CreateLambda([&] {
+			if (SpawnPoint)
+			{
+				GetWorldTimerManager().SetTimer(SpawnerTickTimerHandle, this, &AAISpawnerBase::SpawnTick, SpawnTimerTickRate, true, SpawnTimerTickRate);
+				ReturnValue = true;
+			}
+			}), SpawnDelay, false, SpawnDelay);
+	}
+	else {
+		GetWorldTimerManager().SetTimer(SpawnerTickTimerHandle, this, &AAISpawnerBase::SpawnTick, SpawnTimerTickRate, true, SpawnTimerTickRate);
+		ReturnValue = true;
+	}
+
 	return ReturnValue;
 }
 
