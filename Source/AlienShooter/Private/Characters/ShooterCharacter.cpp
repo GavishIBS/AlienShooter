@@ -124,6 +124,9 @@ void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Dama
 		// Death
 		OnDeath.Broadcast(DamageCauser);
 	}
+	else {
+		TriggerSelfDialogue(EReactionType::Hurt);
+	}
 }
 
 void AShooterCharacter::OnDeathCallback(AActor* Killer)
