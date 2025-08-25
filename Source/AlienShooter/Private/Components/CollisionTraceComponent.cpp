@@ -38,7 +38,7 @@ FHitResult UCollisionTraceComponent::DoTraceSingle(const TArray<AActor*>& Actors
 		const FVector Start = OwnerMesh->GetSocketLocation(TraceSet.TraceStartSocketName);
 		const FVector End = OwnerMesh->GetSocketLocation(TraceSet.TraceEndSocketName);
 		UKismetSystemLibrary::SphereTraceSingle(OwnerMesh, Start, End, TraceRadius, TraceTypeQuery1, false,
-			ActorToIgnore, EDrawDebugTrace::ForDuration, ReturnValue, true);
+			ActorToIgnore, EDrawDebugTrace::None, ReturnValue, true);
 	}
 	
 	return ReturnValue;

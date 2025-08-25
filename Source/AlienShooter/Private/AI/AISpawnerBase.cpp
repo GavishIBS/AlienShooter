@@ -70,7 +70,7 @@ void AAISpawnerBase::SpawnTick()
 	{
 		FTransform SpawnTransform = UKismetMathLibrary::MakeTransform(SpawnPoint->GetComponentLocation(), SpawnPoint->GetComponentRotation());
 		if (SpawnPoints.Num() > 0) {
-			int32 RandomSpawnPointIndex = FMath::FRandRange(0.f, SpawnPoints.Num());
+			int32 RandomSpawnPointIndex = FMath::FRandRange(0.f, SpawnPoints.Num() - 1);
 			AActor* Point = (AActor*)SpawnPoints[RandomSpawnPointIndex];
 			if (Point) {
 				SpawnTransform = UKismetMathLibrary::MakeTransform(Point->GetActorLocation(), Point->GetActorRotation());
