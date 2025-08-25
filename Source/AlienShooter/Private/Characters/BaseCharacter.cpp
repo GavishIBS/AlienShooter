@@ -11,6 +11,9 @@
 #include "Components/RadioPhoneComponent.h"
 //#include "Components/ObjectiveComponent.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+
 ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -94,6 +97,19 @@ void ABaseCharacter::Rebirth(const FTransform& RebirthTransform)
 	SetActorTickEnabled(true);
 	EnableInput(Cast<APlayerController>(GetController()));
 	LifeStatus = ELifeStatus::ELS_Alive;
+}
+
+void ABaseCharacter::TriggerSelfDialogue(const EReactionType InReactionType)
+{
+	for (auto& RD : ReactionDialoguesData)
+	{
+		if (RD.TriggerChancePercent < UKismetMathLibrary::RandomIntegerInRange(0, 100)) return;
+		if (RD.Reaction == InReactionType && RD.DialogueAudios.Num() > 0)
+		{
+			TObjectPtr<USoundBase> SelectedAudio = RD.DialogueAudios[UKismetMathLibrary::RandomFloatInRange(0, RD.DialogueAudios.Num() - 1)];
+			UGameplayStatics::PlaySound2D(this, SelectedAudio);
+		}
+	}  
 }
 
 void ABaseCharacter::GenerateRandomCameraLocation()

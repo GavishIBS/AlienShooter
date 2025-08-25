@@ -16,6 +16,28 @@ class UInventoryComponent;
 class URadioPhoneComponent;
 class UObjectiveComponent;
 
+UENUM(BlueprintType)
+enum class EReactionType : uint8
+{
+	None, Combat, Hurt, Combat_Sarcasm
+};
+
+USTRUCT()
+struct FReactionDialogues
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, Category = "Data")
+	EReactionType Reaction = EReactionType::None;
+	
+	UPROPERTY(EditAnywhere, Category = "Data")
+	TArray<TObjectPtr<USoundBase>> DialogueAudios;
+	
+	UPROPERTY(EditAnywhere, Category = "Data", meta=(Min="0", Max="100"))
+	int32 TriggerChancePercent = 20;
+};
+
 UCLASS()
 class ALIENSHOOTER_API ABaseCharacter : public AGameCharacter, public IHitInterface
 {
@@ -60,6 +82,11 @@ protected:
 
 	// Properites
 	EPawnActionState PawnActionState = EPawnActionState::EPAS_Idle;
+
+protected:
+	void TriggerSelfDialogue(const EReactionType InReactionType);
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
+	TArray<FReactionDialogues> ReactionDialoguesData;
 
 private:
 	FVector CameraOriginalLocation_Rel;
