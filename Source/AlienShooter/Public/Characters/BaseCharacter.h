@@ -19,7 +19,7 @@ class UObjectiveComponent;
 UENUM(BlueprintType)
 enum class EReactionType : uint8
 {
-	None, Combat, Hurt, Combat_Sarcasm
+	None, Combat, Hurt, Combat_Sarcasm, Idle_Tense, Idle_Sarcastic
 };
 
 USTRUCT()
@@ -84,6 +84,7 @@ protected:
 	EPawnActionState PawnActionState = EPawnActionState::EPAS_Idle;
 
 protected:
+	UFUNCTION(BlueprintCallable)
 	void TriggerSelfDialogue(const EReactionType InReactionType);
 	UPROPERTY(EditAnywhere, Category = "Data")
 	TArray<FReactionDialogues> ReactionDialoguesData;
