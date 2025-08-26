@@ -65,7 +65,7 @@ void ABaseCharacter::PostInitializeComponents()
 		InventoryComponent->InitInventory();
 }
 
-float ABaseCharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
+float ABaseCharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass, EGetHitReturnType* OutGetHitReturnType)
 {
 	return IHitInterface::GetHit(HitLocation, Damage, RandomizationFactor, InDamageCauser, DamageTypeClass);
 }
@@ -101,15 +101,16 @@ void ABaseCharacter::Rebirth(const FTransform& RebirthTransform)
 
 void ABaseCharacter::TriggerSelfDialogue(const EReactionType InReactionType)
 {
-	for (auto& RD : ReactionDialoguesData)
+	for (FReactionDialogues& RD : ReactionDialoguesData)
 	{
-		if (RD.TriggerChancePercent < UKismetMathLibrary::RandomIntegerInRange(0, 100)) return;
+		if (RD.TriggerChancePercent < UKismetMathLibrary::RandomIntegerInRange(1, 100)) continue;
 		if (RD.Reaction == InReactionType && RD.DialogueAudios.Num() > 0)
 		{
 			TObjectPtr<USoundBase> SelectedAudio = RD.DialogueAudios[UKismetMathLibrary::RandomFloatInRange(0, RD.DialogueAudios.Num() - 1)];
 			UGameplayStatics::PlaySound2D(this, SelectedAudio);
+			break;
 		}
-	}  
+	}
 }
 
 void ABaseCharacter::GenerateRandomCameraLocation()

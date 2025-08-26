@@ -31,6 +31,9 @@ protected:
 
 	virtual void Fire() override;
 
+	UFUNCTION()
+	void OnMonsterKillBroadcastWrapper();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Projectile | Properties")
 	FProjectileWeaponProperties ProjectileWeaponProperties = FProjectileWeaponProperties();
 

@@ -93,7 +93,12 @@ void ACursorWeapon::Fire()
 		if (!HitResult_M.bBlockingHit) return;
 		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult_M.GetActor()))
 		{
-			BulletHealth -= HitInterface->GetHit(HitResult_M.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter, UDamageType::StaticClass());
+			EGetHitReturnType OutGetHitReturn;
+			BulletHealth -= HitInterface->GetHit(HitResult_M.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter, UDamageType::StaticClass(), &OutGetHitReturn);
+			if (OutGetHitReturn == EGetHitReturnType::MonsterKill)
+			{
+				OnMonsterKill.Broadcast();
+			}
 
 			// DEBUG
 			//DrawDebugSphere(GetWorld(), HitResult_M.ImpactPoint, 5.f, 24, FColor::Orange, false, 4.f);

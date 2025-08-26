@@ -98,4 +98,8 @@ protected:
 	// Properties
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat Properties")
 	float EndAimDelay = 2.75f;
+
+protected:
+	UFUNCTION()
+	void OnMonsterKilled();
 };

@@ -95,6 +95,8 @@ void AProjectileWeapon::Fire()
 		
 		if (Projectile)
 		{
+			Projectile->OnMonsterKill_Projectile.AddDynamic(this, &AProjectileWeapon::OnMonsterKillBroadcastWrapper);
+
 			//Projectile->Init(WeaponProperties.BulletHealth, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor);
 			Projectile->WeaponOwner = (AActor*)(OwnerAsShooterCharacter);  // TODO: Check if Projectile is valid
 
@@ -112,4 +114,9 @@ void AProjectileWeapon::Fire()
 			}
 		}
 	}
+}
+
+void AProjectileWeapon::OnMonsterKillBroadcastWrapper()
+{
+	OnMonsterKill.Broadcast();
 }

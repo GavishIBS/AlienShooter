@@ -52,7 +52,7 @@ void AExplosive::OnTakeDamageCallback(AActor* DamagedActor, float Damage, const 
 }
 */
 
-float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
+float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass, EGetHitReturnType* OutGetHitReturnType)
 {
 	/*
 	// Spawn effects
@@ -82,6 +82,10 @@ float AExplosive::GetHit(const FVector& HitLocation, const float& Damage, const 
 	// Destroy
 	Destroy();
 	*/
+
+	if (OutGetHitReturnType) {
+		*OutGetHitReturnType = EGetHitReturnType::Explosion;
+	}
 
 	// Camera shake // TEMPORARY -> Use a better approach to trigger camera shake, don't access character class directly here
 	if (InDamageCauser) {

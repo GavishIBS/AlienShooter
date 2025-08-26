@@ -67,8 +67,13 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 	
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor))
 	{
+		EGetHitReturnType OutGetHitReturn;
 		ProjectileProperties.BulletHealth -= HitInterface->GetHit(Hit.ImpactPoint, ProjectileProperties.Damage,
-			ProjectileProperties.Damage_RandomizationFactor, WeaponOwner, UDamageType::StaticClass());
+			ProjectileProperties.Damage_RandomizationFactor, WeaponOwner, UDamageType::StaticClass(), &OutGetHitReturn);
+		if (OutGetHitReturn == EGetHitReturnType::MonsterKill)
+		{
+			OnMonsterKill_Projectile.Broadcast();
+		}
 	}
 	OnBulletHit(OtherActor, Hit.ImpactPoint, Hit.PhysMaterial.Get());
 	DestroyWrapper();
@@ -78,6 +83,11 @@ void AProjectileBullet::SetInUse(const bool InValue)
 {
 	Super::SetInUse(InValue);
 	if (InValue)
+	{
 		Tracer_FX->Activate();
-	else Tracer_FX->Deactivate();
+	}
+	else {
+		Tracer_FX->Deactivate();
+		OnMonsterKill_Projectile.Clear();
+	}
 }

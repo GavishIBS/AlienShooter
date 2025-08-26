@@ -19,6 +19,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponSelected);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFirePressed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFired);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReload);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMonsterKill);
 
 UCLASS()
 class ALIENSHOOTER_API AWeaponBase : public AActor
@@ -45,6 +46,9 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category = Delegates)
 	FOnWeaponReload OnWeaponReload;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category = Delegates)
+	FOnMonsterKill OnMonsterKill;
 
 	//bool TakeWeapon(const ACharacter* InstigatorCharacter);
 	bool TryReload();

@@ -69,6 +69,8 @@ bool UCombatComponent::AddWeapon(AWeaponBase* InWeapon)
 	InWeapon->AttachToComponent(OwnerAsShooterCharacter->GetMesh(),
 		AttachmentTransformRules, InWeapon->GetWeaponProperties()->InHandAttachmentSocketName);
 	
+	InWeapon->OnMonsterKill.AddDynamic(this, &UCombatComponent::OnMonsterKilled);
+
 	InWeapon->OnWeaponPicked.Broadcast();
 	InWeapon->OnWeaponSelected.Broadcast();
 	
@@ -314,9 +316,18 @@ void UCombatComponent::DestroyCurrentWeapon()
 {
 	if (WeaponInHand)
 	{
+		WeaponInHand->OnMonsterKill.Clear();
 		StopAutomaticFire();
 		OnWeaponDestroyBegin(WeaponInHand);
 		WeaponInHand->Destroy();
 		WeaponInHand = nullptr;
+	}
+}
+
+void UCombatComponent::OnMonsterKilled()
+{
+	if (OwnerAsShooterCharacter)
+	{
+		OwnerAsShooterCharacter->TriggerCombatSelfDialogueWrapper();
 	}
 }

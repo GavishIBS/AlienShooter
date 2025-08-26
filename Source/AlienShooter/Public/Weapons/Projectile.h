@@ -13,6 +13,8 @@ class AProjectileWeapon;
 class UBoxComponent;
 class UProjectileMovementComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMonsterKill_Projectile);
+
 UCLASS()
 class ALIENSHOOTER_API AProjectile : public APooledActor
 {
@@ -25,6 +27,8 @@ public:
 
 	//virtual void Init(const float& InBulletHealth, const float& InDamage, const float& InDamage_RandomizationFactor);
 	
+	FOnMonsterKill_Projectile OnMonsterKill_Projectile;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;

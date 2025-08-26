@@ -103,9 +103,16 @@ void ABaseAICharacter::InitCallbacks()
 	OnDeath.AddDynamic(this, &ABaseAICharacter::OnDeathCallback);
 }
 
-float ABaseAICharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
+float ABaseAICharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor,
+	AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass, EGetHitReturnType* OutGetHitReturnType)
 {
-	if (LifeStatus != ELifeStatus::ELS_Alive) return 0.f;
+	if (LifeStatus != ELifeStatus::ELS_Alive) {
+		return 0.f;
+	}
+
+	if (OutGetHitReturnType && AIController->GetAIProperties().Health <= Damage) {
+		*OutGetHitReturnType = EGetHitReturnType::MonsterKill;
+	}
 
 	const float Damage_Calc = Damage +
 		UKismetMathLibrary::RandomFloatInRange(-RandomizationFactor, RandomizationFactor);

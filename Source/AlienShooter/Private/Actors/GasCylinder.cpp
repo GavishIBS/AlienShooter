@@ -22,8 +22,12 @@ void AGasCylinder::BeginPlay()
 	Super::BeginPlay();
 }
 
-float AGasCylinder::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
+float AGasCylinder::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass, EGetHitReturnType* OutGetHitReturnType)
 {
+	if (OutGetHitReturnType)
+	{
+		*OutGetHitReturnType = EGetHitReturnType::Explosion;
+	}
 	SpawnEffects();
 	ApplyDamage();
 	Destroy();

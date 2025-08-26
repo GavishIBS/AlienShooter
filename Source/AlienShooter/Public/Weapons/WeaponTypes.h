@@ -291,3 +291,12 @@ struct FWeaponSoundData
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	class USoundBase* FireSound;
 };
+
+UENUM()
+enum class EGetHitReturnType
+{
+	NONE,
+	MonsterKill,
+	Explosion,
+	Max
+};

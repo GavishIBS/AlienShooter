@@ -6,7 +6,7 @@
 #include "Interfaces/HitInterface.h"
 
 float IHitInterface::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor,
-	AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
+	AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass, EGetHitReturnType* OutGetHitReturnType)
 {
 	return 0.f;
 }

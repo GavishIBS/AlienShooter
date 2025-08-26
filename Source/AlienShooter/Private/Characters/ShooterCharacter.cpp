@@ -100,7 +100,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	}
 }
 
-float AShooterCharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
+float AShooterCharacter::GetHit(const FVector& HitLocation, const float& Damage, const float& RandomizationFactor, AActor* InDamageCauser, TSubclassOf<UDamageType> DamageTypeClass, EGetHitReturnType* OutGetHitReturnType)
 {
 	if (LifeStatus != ELifeStatus::ELS_Alive) return 0.f;
 
@@ -446,6 +446,11 @@ void AShooterCharacter::DeactivateSpecialAbilityNiagaraEffect()
 void AShooterCharacter::ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSystem) {
 	SpecialAbilityNiagaraComponent->Activate();
 	SpecialAbilityNiagaraComponent->SetAsset(InSystem);
+}
+
+void AShooterCharacter::TriggerCombatSelfDialogueWrapper()
+{
+	TriggerSelfDialogue(EReactionType::Combat);
 }
 
 void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration, FName AudioInstigator) {
