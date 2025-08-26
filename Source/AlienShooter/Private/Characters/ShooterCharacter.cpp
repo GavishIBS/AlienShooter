@@ -448,9 +448,14 @@ void AShooterCharacter::ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSy
 	SpecialAbilityNiagaraComponent->SetAsset(InSystem);
 }
 
-void AShooterCharacter::TriggerCombatSelfDialogueWrapper()
+void AShooterCharacter::TriggerCombatSelfDialogueWrapper(bool Sarcastic)
 {
-	TriggerSelfDialogue(EReactionType::Combat);
+	if (Sarcastic) {
+		TriggerSelfDialogue(EReactionType::Combat_Sarcasm);
+	}
+	else {
+		TriggerSelfDialogue(EReactionType::Combat);
+	}
 }
 
 void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration, FName AudioInstigator) {

@@ -326,8 +326,14 @@ void UCombatComponent::DestroyCurrentWeapon()
 
 void UCombatComponent::OnMonsterKilled()
 {
+	static int KillCounter = 0;
+	KillCounter++;
 	if (OwnerAsShooterCharacter)
 	{
-		OwnerAsShooterCharacter->TriggerCombatSelfDialogueWrapper();
+		bool Killed_A_Bunch = KillCounter > 20;
+		OwnerAsShooterCharacter->TriggerCombatSelfDialogueWrapper(Killed_A_Bunch);
+		if (Killed_A_Bunch) {
+			KillCounter = 0;
+		}
 	}
 }

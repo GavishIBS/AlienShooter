@@ -160,5 +160,5 @@ public:
 	void DeactivateSpecialAbilityNiagaraEffect();
 	void ActivateSpecialAbilityNiagaraEffect(UNiagaraSystem* InSystem);
 
-	void TriggerCombatSelfDialogueWrapper();
+	void TriggerCombatSelfDialogueWrapper(bool Sarcastic = false);
 };
