@@ -122,6 +122,7 @@ void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Dama
 	if (AttributeComponent->GetHealth() <= 0.f)
 	{
 		// Death
+		CombatComponent->StopAutomaticFire();
 		OnDeath.Broadcast(DamageCauser);
 	}
 	else {
