@@ -101,6 +101,10 @@ void ABaseCharacter::Rebirth(const FTransform& RebirthTransform)
 
 void ABaseCharacter::TriggerSelfDialogue(const EReactionType InReactionType)
 {
+	static bool bPlaying = false;   // TEST // TEMPORARY // DEBUG
+
+	if (bPlaying) return;  // TEMPORARY
+
 	for (FReactionDialogues& RD : ReactionDialoguesData)
 	{
 		if (RD.TriggerChancePercent < UKismetMathLibrary::RandomIntegerInRange(1, 100)) continue;
@@ -108,6 +112,13 @@ void ABaseCharacter::TriggerSelfDialogue(const EReactionType InReactionType)
 		{
 			TObjectPtr<USoundBase> SelectedAudio = RD.DialogueAudios[UKismetMathLibrary::RandomFloatInRange(0, RD.DialogueAudios.Num() - 1)];
 			UGameplayStatics::PlaySound2D(this, SelectedAudio);
+			// TEMPORARY begin
+			bPlaying = true;
+			FTimerHandle CanPlayAnotherDialogueTimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(CanPlayAnotherDialogueTimerHandle, FTimerDelegate::CreateLambda([this] {
+				bPlaying = false;
+			}), 5.f, false, 5.f);
+			// TEMPORARY end
 			break;
 		}
 	}
