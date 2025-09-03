@@ -8,6 +8,7 @@
 #include "UI/Widgets/TDSWeaponInHandDataBox.h"
 #include "Components/ProgressBar.h"
 #include "Components/Border.h"
+#include "Components/Image.h"
 
 #include "UI/Widgets/TDS_KeySmashUserWidget.h"
 
@@ -34,6 +35,9 @@ void UTDSOverlay::NativePreConstruct()
 	}
 	if (KeySmashUI) {
 		KeySmashUI->SetVisibility(ESlateVisibility::Hidden);
+	}
+	if (HealthIndicator_Image) {
+		HealthIndicator_Image->SetOpacity(0.f);
 	}
 }
 
@@ -76,6 +80,9 @@ void UTDSOverlay::UpdateHealthBar(float Health, float MaxHealth)
 	if (MaxHealth == 0) return;
 	if (HealthBar) {
 		HealthBar->SetPercent(Health / MaxHealth);
+	}
+	if (HealthIndicator_Image) {
+		HealthIndicator_Image->SetOpacity(1 - UKismetMathLibrary::SafeDivide(Health, MaxHealth));
 	}
 }
 

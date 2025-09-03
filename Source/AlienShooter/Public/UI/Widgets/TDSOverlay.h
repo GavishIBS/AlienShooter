@@ -16,6 +16,7 @@ class UCanvasPanel;
 class UProgressBar;
 class UBorder;
 class UTDS_KeySmashUserWidget;
+class UImage;
 
 /**
  * 
@@ -48,6 +49,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar* HealthBar;
 	
+	UPROPERTY(meta = (BindWidget))
+	UImage* HealthIndicator_Image;
+
 	UPROPERTY(meta = (BindWidget))
 	UBorder* EnvText_Border;
 
