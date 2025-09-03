@@ -14,6 +14,7 @@
 #include "Navigation/PathFollowingComponent.h"
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ABaseAICharacter::ABaseAICharacter()
 {
@@ -28,7 +29,11 @@ ABaseAICharacter::ABaseAICharacter()
 void ABaseAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (GetCharacterMovement() != nullptr) {
+		GetCharacterMovement()->MaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed + FMath::FRandRange(-SpeedRandomizationRange, SpeedRandomizationRange);
+	}
+
 	// Setup target forget timer
 	if (bCanForgetTarget)
 	{

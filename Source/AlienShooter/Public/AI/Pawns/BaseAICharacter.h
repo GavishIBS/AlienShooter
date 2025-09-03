@@ -96,6 +96,9 @@ protected:
 
 	FAcquiredSpecialEffectData AcquiredSpecialEffectData;
 
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0", ClampMax = "1000"))
+	float SpeedRandomizationRange = 50.f;
+
 	// Dumbness logic begin
 	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
 	bool bCanForgetTarget = false;
