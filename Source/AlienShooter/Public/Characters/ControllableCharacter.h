@@ -104,7 +104,7 @@ protected:
 	int CameraResponse_InnerRadius = 420;   // Radius in which camera doesn't respond to cursor position, unless it have a offset in opposite direction
 	
 	UPROPERTY(EditAnywhere, Category = "Camera Movements")
-	float CameraResponse_RadiusLease = 4.f;
+	float CameraResponse_RadiusLease = 20.f;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Movements")
 	float CameraSpeed = 3.f;

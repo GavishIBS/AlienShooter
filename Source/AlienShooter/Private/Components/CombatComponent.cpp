@@ -178,7 +178,7 @@ void UCombatComponent::FireWeapon()
 
 	if (WeaponInHand->CanAim() && WeaponInHand->ShouldForceAutomaticAim() && bAiming == false) {
 		StartAiming();
-		return;
+		//return;
 	}
 
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString::Printf(TEXT("AmmoInMagazine: %d\nMagazineMaxCapacity: %d\nTotalAmmoAvailable: %d\nAmmoInBag: %d"), 0.f, 0.f, WeaponInHand->GetTotalAmmoAvailable(), WeaponInHand->GetAmmoInBag()));
