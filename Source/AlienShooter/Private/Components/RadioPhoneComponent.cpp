@@ -18,6 +18,7 @@ URadioPhoneComponent::URadioPhoneComponent()
 void URadioPhoneComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	OnAudioCompleted.AddDynamic(this, &URadioPhoneComponent::TriggerNextAudioSet);
 }
 
 void URadioPhoneComponent::SetObjectiveComponent(TObjectPtr<UObjectiveComponent> Component)
@@ -25,6 +26,19 @@ void URadioPhoneComponent::SetObjectiveComponent(TObjectPtr<UObjectiveComponent>
 	ObjectiveComponent = Component.Get();
 	OnAudioTriggered.AddDynamic(this, &URadioPhoneComponent::AddDialogueLog);
 }
+
+void URadioPhoneComponent::TriggerNextAudioSet()
+{
+	if (AudioQueue.Num() > 0) {
+		if (AudioQueue[0].SecondAudioEvent.AudioAsset != nullptr) {
+			TriggerAudio_WithParams_Response(AudioQueue[0].FirstAudioEvent, AudioQueue[0].SecondAudioEvent, AudioQueue[0].SecondTriggerDelay);
+		}
+		else {
+			TriggerAudio_WithParams(AudioQueue[0].FirstAudioEvent);
+		}
+	}
+}
+
 
 void URadioPhoneComponent::AddDialogueLog(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration, const FName Instigator)
 {
@@ -94,7 +108,21 @@ bool URadioPhoneComponent::TriggerAudio(USoundBase* InAudio, const EAudioType Au
 	return true;
 }
 
-bool URadioPhoneComponent::TriggerAudio_WithParams(const FAudioEvent AudioEvent)
+bool URadioPhoneComponent::AddAudioToQueue_WithParams(const FAudioEvent AudioEvent)
+{
+
+	if (AudioEvent.AudioAsset != nullptr)
+	{
+		AudioQueue.Add(FDoubleAudioEvent{ AudioEvent, FAudioEvent{} });
+		if (AudioQueue.Num() == 1) {
+			TriggerNextAudioSet();
+		}
+		return true;
+	}
+	else return false;
+}
+
+bool URadioPhoneComponent::TriggerAudio_WithParams(const FAudioEvent& AudioEvent)
 {
 	if (bAudioInProgress) return false;
 	if (AudioEvent.AudioAsset == nullptr) return false;
@@ -107,10 +135,25 @@ bool URadioPhoneComponent::TriggerAudio_WithParams(const FAudioEvent AudioEvent)
 
 	GetOwner()->GetWorldTimerManager().SetTimer(AudioTimerHandle, this, &URadioPhoneComponent::EndAudio, AudioEvent.AudioAsset->Duration, false, AudioEvent.AudioAsset->Duration);
 
+	AudioQueue.RemoveAt(0);
+
 	return true;
 }
 
-bool URadioPhoneComponent::TriggerAudio_WithParams_Response(const FAudioEvent AudioEvent, const FAudioEvent ResponseAudioEvent, float ResponseDelay)
+bool URadioPhoneComponent::AddAudioToQueue_WithParams_Response(const FAudioEvent AudioEvent, const FAudioEvent ResponseAudioEvent, float ResponseDelay)
+{
+	if (AudioEvent.AudioAsset != nullptr)
+	{
+		AudioQueue.Add(FDoubleAudioEvent{ AudioEvent, ResponseAudioEvent, ResponseDelay });
+		if (AudioQueue.Num() == 1) {
+			TriggerNextAudioSet();
+		}
+		return true;
+	}
+	else return false;
+}
+
+bool URadioPhoneComponent::TriggerAudio_WithParams_Response(const FAudioEvent& AudioEvent, const FAudioEvent& ResponseAudioEvent, const float& ResponseDelay)
 {
 	if (bAudioInProgress) return false;
 	if (AudioEvent.AudioAsset == nullptr) return false;
@@ -140,6 +183,8 @@ bool URadioPhoneComponent::TriggerAudio_WithParams_Response(const FAudioEvent Au
 			}),
 		AudioEvent.AudioAsset->Duration, false, AudioEvent.AudioAsset->Duration + ResponseDelay
 	);
+
+	AudioQueue.RemoveAt(0);
 
 	return true;
 }

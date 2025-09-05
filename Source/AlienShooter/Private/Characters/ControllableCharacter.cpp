@@ -262,7 +262,7 @@ void AControllableCharacter::CheckCursorLocation()
 
 void AControllableCharacter::Move(const FInputActionValue& Value)
 {
-	if (PawnActionState >= EPawnActionState::EPAS_Attacking_Melee) return;
+	if (PawnActionState >= EPawnActionState::EPAS_SelectingItem) return;
 	if (!GetController()) return;
 
 	const FVector2d InputValue = Value.Get<FVector2d>();

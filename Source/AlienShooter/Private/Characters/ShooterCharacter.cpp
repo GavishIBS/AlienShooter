@@ -468,10 +468,10 @@ void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, c
 		InventoryComponent->UnselectItem();
 	}
 
-	PawnActionState = EPawnActionState::EPAS_Talking;
+	PawnActionState = EPawnActionState::EPAS_AloneTalking;
 
 	GetCharacterMovement()->MaxWalkSpeed = RadioPhoneComponent->GetOnAudioStarted_MaxWalkSpeed();
-	if (PawnActionState != EPawnActionState::EPAS_Talking) {
+	if (PawnActionState != EPawnActionState::EPAS_AloneTalking) {
 		AnimationLibrary::PlayAnimationMontage(GetMesh(), { RadioPhoneComponent->GetOnAudioStarted_ToggleRadioPhone_AnimMontage() });
 	}
 

@@ -32,6 +32,25 @@ struct FOnAudioTriggerData {
 	FName AttachmentSocketName = FName();
 };
 
+USTRUCT()
+struct FDoubleAudioEvent
+{
+	GENERATED_BODY()
+
+public:
+	FDoubleAudioEvent() = default;
+	explicit FDoubleAudioEvent(const FAudioEvent InFirstAudioEvent, const FAudioEvent InSecondAudioEvent)
+		: FirstAudioEvent(InFirstAudioEvent), SecondAudioEvent(InSecondAudioEvent) {}
+	explicit FDoubleAudioEvent(const FAudioEvent InFirstAudioEvent, const FAudioEvent InSecondAudioEvent,
+		const float InSecondTriggerDelay)
+		: FirstAudioEvent(InFirstAudioEvent), SecondAudioEvent(InSecondAudioEvent), SecondTriggerDelay(InSecondTriggerDelay) {
+	}
+
+	FAudioEvent FirstAudioEvent;  // Starter
+	FAudioEvent SecondAudioEvent;  // Response
+	float SecondTriggerDelay = 1.f;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API URadioPhoneComponent : public USkeletalMeshComponent
 {
@@ -79,14 +98,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnPhonePicked();
 
-	UFUNCTION(BlueprintCallable)
+	//UFUNCTION(BlueprintCallable)
 	bool TriggerAudio(USoundBase* InAudio, const EAudioType AudioType);
 	
 	UFUNCTION(BlueprintCallable)
-	bool TriggerAudio_WithParams(const FAudioEvent AudioEvent);
+	bool AddAudioToQueue_WithParams(const FAudioEvent AudioEvent);
+	bool TriggerAudio_WithParams(const FAudioEvent& AudioEvent);
 	
 	UFUNCTION(BlueprintCallable)
-	bool TriggerAudio_WithParams_Response(const FAudioEvent AudioEvent, const FAudioEvent ResponseAudioEvent, float ResponseDelay = 3);
+	bool AddAudioToQueue_WithParams_Response(const FAudioEvent AudioEvent, const FAudioEvent ResponseAudioEvent, float ResponseDelay = 3);
+	bool TriggerAudio_WithParams_Response(const FAudioEvent& AudioEvent, const FAudioEvent& ResponseAudioEvent, const float& ResponseDelay = 3);
 	
 	UFUNCTION(BlueprintCallable)
 	bool AddIncomingMessage(const FAudioEvent AudioEvent);
@@ -118,6 +139,18 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category=Properties)
 	FOnAudioTriggerData OnAudioCompletedData;
+
+	// Audio Queue begin
+private:
+	TArray<FDoubleAudioEvent> AudioQueue;
+
+	UFUNCTION()
+	void TriggerNextAudioSet();
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio Queue | Properties")
+	float AudioTriggerDelay = 0.5f;
+	// Audio Queue end
 
 public:
 	UFUNCTION(BlueprintCallable)

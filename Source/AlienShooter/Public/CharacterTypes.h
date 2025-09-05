@@ -20,8 +20,9 @@ enum class EPawnActionState : uint8
 	EPAS_Attacking = 2 UMETA(DisplayName = "Attacking"),
 	EPAS_Attacking_Melee = 3 UMETA(DisplayName = "Attacking_Melee"),
 	EPAS_Reloading = 4 UMETA(DisplayName = "Reloading"),
-	EPAS_SelectingItem = 5 UMETA(DisplayName = "SelectingItem"),
-	EPAS_UsingItem = 6 UMETA(DisplayName = "UsingItem"),
-	EPAS_Talking = 7 UMETA(DisplayName = "Talking"),  // either in conversation or using radio phone
+	EPAS_AloneTalking = 5 UMETA(DisplayName = "AloneTalking"), // using radio phone or self dialogue
+	EPAS_SelectingItem = 6 UMETA(DisplayName = "SelectingItem"),
+	EPAS_UsingItem = 7 UMETA(DisplayName = "UsingItem"),
+	EPAS_InPersonTalking = 8 UMETA(DisplayName = "InPersonTalking"),  // either in conversation
 	EPAS_Max = 99
 };
