@@ -159,7 +159,6 @@ public:
 	FORCEINLINE bool IsAudioInProgress() const { return bAudioInProgress; }
 
 	FORCEINLINE float GetOnAudioStarted_MaxWalkSpeed() const { return OnAudioStartedData.MaxWalkSpeed; }
-	FORCEINLINE float GetOnAudioCompleted_MaxWalkSpeed() const { return OnAudioCompletedData.MaxWalkSpeed; }
 
 	FORCEINLINE TObjectPtr<UAnimMontage> GetOnAudioStarted_ToggleRadioPhone_AnimMontage() const { return OnAudioStartedData.ToggleRadioPhone_AnimMontage; }
 	FORCEINLINE TObjectPtr<UAnimMontage> GetOnAudioCompleted_ToggleRadioPhone_AnimMontage() const { return OnAudioCompletedData.ToggleRadioPhone_AnimMontage; }

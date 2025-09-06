@@ -81,6 +81,7 @@ void AControllableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AControllableCharacter::Move);
 		EnhancedInputComponent->BindAction(GamepadCursorMoveAction, ETriggerEvent::Triggered, this, &AControllableCharacter::GamepadCursorMove);
 		EnhancedInputComponent->BindAction(ToggleFlashlightAction, ETriggerEvent::Completed, this, &AControllableCharacter::ToggleFlashlight);
+		EnhancedInputComponent->BindAction(ToggleMovementTypeAction, ETriggerEvent::Completed, this, &AControllableCharacter::ToggleMovementType);
 	}
 }
 
@@ -298,4 +299,30 @@ void AControllableCharacter::GamepadCursorMove(const FInputActionValue& Value)
 void AControllableCharacter::ToggleFlashlight()
 {
 	if (FlashlightComponent) FlashlightComponent->SetVisibility(!FlashlightComponent->IsVisible());
+}
+
+void AControllableCharacter::ToggleMovementType()
+{
+	switch (MovementType)
+	{
+	case EMovementType::EMT_NONE:
+		break;
+	case EMovementType::EMT_WALK:
+		MovementType = EMovementType::EMT_JOG;
+		break;
+	case EMovementType::EMT_JOG:
+		MovementType = EMovementType::EMT_WALK;
+		break;
+	default:
+		break;
+	}
+
+	GetCharacterMovement()->MaxWalkSpeed = MovementType == EMovementType::EMT_WALK ?
+		GetCharacterMovement()->MaxWalkSpeedCrouched : GetCharacterMovement()->MaxCustomMovementSpeed;
+}
+
+void AControllableCharacter::ResetMovementSpeed()
+{
+	GetCharacterMovement()->MaxWalkSpeed = MovementType == EMovementType::EMT_WALK ?
+		GetCharacterMovement()->MaxWalkSpeedCrouched : GetCharacterMovement()->MaxCustomMovementSpeed;
 }

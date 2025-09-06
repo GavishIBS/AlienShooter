@@ -60,7 +60,10 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void GamepadCursorMove(const FInputActionValue& Value);
 	void ToggleFlashlight();
+	void ToggleMovementType();
 	/* Input callbacks end */
+
+	void ResetMovementSpeed();
 	
 	/* Input actions begin */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
@@ -74,6 +77,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
 	TObjectPtr<UInputAction> ToggleFlashlightAction;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Input)
+	TObjectPtr<UInputAction> ToggleMovementTypeAction;
 	/* Input end */
 
 	// Properties

@@ -82,6 +82,7 @@ protected:
 
 	// Properites
 	EPawnActionState PawnActionState = EPawnActionState::EPAS_Idle;
+	EMovementType MovementType = EMovementType::EMT_WALK;
 
 protected:
 	UFUNCTION(BlueprintCallable)

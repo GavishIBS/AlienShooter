@@ -10,6 +10,7 @@
 #include "Components/InventoryComponent.h"
 #include "Components/RadioPhoneComponent.h"
 //#include "Components/ObjectiveComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -48,6 +49,10 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetCharacterMovement()->MaxWalkSpeed = MovementType == EMovementType::EMT_WALK ?
+		GetCharacterMovement()->MaxWalkSpeedCrouched : GetCharacterMovement()->MaxCustomMovementSpeed;
+
 	//CameraBoomTopPoint->SetWorldRotation(ViewCamera->GetComponentRotation());
 	//CameraBoomTopPoint->SetWorldLocation(ViewCamera->GetComponentLocation());
 }

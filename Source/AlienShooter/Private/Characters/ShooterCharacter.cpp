@@ -499,7 +499,7 @@ void AShooterCharacter::OnRadioPhoneAudioCompleted()
 	// DEBUG
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString("RADIOPHONECOMPLETED"));
 
-	GetCharacterMovement()->MaxWalkSpeed = RadioPhoneComponent->GetOnAudioCompleted_MaxWalkSpeed();
+	ResetMovementSpeed();
 	AnimationLibrary::PlayAnimationMontage(GetMesh(), {RadioPhoneComponent->GetOnAudioCompleted_ToggleRadioPhone_AnimMontage()});
 	
 	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget,
