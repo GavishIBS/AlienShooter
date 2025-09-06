@@ -13,6 +13,12 @@ enum class ELifeStatus : uint8
 };
 
 UENUM(BlueprintType)
+enum class EMovementType : uint8
+{
+	EMT_NONE = 0, EMT_WALK = 1, EMT_JOG = 2
+};
+
+UENUM(BlueprintType)
 enum class EPawnActionState : uint8
 {
 	EPAS_None = 0 UMETA(DisplayName="None"),

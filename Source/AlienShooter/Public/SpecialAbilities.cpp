@@ -6,9 +6,11 @@
 #include "GameFramework/Character.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
-FTimerHandle Abilities::DashExecutionEndTimerHandle;
+FTimerHandle Abilities::AbilityExecutionEndTimerHandle;
 ACharacter* Abilities::Char = nullptr;
+float Abilities::CacheFloat = 0.f;
 
 Abilities::Abilities()
 {
@@ -16,6 +18,16 @@ Abilities::Abilities()
 
 Abilities::~Abilities()
 {
+}
+
+void Abilities::EndAllAbilities()
+{
+	if (Char) {
+		Char->GetWorld()->GetTimerManager().ClearTimer(AbilityExecutionEndTimerHandle);
+	}
+
+	OnDashExecutionEnd();
+	OnSpeedBoostExecutionEnd();
 }
 
 bool Abilities::Dash(ACharacter* InCharacter, float ExecutionDuration) {
@@ -36,7 +48,7 @@ bool Abilities::Dash(ACharacter* InCharacter, float ExecutionDuration) {
 
 
 	InCharacter->GetWorld()->GetTimerManager().SetTimer(
-		DashExecutionEndTimerHandle,
+		AbilityExecutionEndTimerHandle,
 		[]() { Abilities::OnDashExecutionEnd(); },
 		ExecutionDuration,
 		false
@@ -50,4 +62,33 @@ void Abilities::OnDashExecutionEnd()
 	if (Abilities::Char)
 		Abilities::Char->GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 	Abilities::Char = nullptr;
+}
+
+bool Abilities::SpeedBoost(ACharacter* InCharacter, float ExecutionDuration)
+{
+	Abilities::Char = InCharacter;
+
+	if (InCharacter->GetCharacterMovement())
+	{
+		Abilities::CacheFloat = InCharacter->GetCharacterMovement()->MaxWalkSpeed;
+		InCharacter->GetCharacterMovement()->MaxWalkSpeed = 1200.f;
+	}
+
+	InCharacter->GetWorld()->GetTimerManager().SetTimer(
+		AbilityExecutionEndTimerHandle,
+		[]() { Abilities::OnSpeedBoostExecutionEnd(); },
+		ExecutionDuration,
+		false
+	);
+
+	return true;
+}
+
+void Abilities::OnSpeedBoostExecutionEnd()
+{
+	if (Abilities::Char) {
+		Char->GetCharacterMovement()->MaxWalkSpeed = Abilities::CacheFloat;
+	}
+	Abilities::Char = nullptr;
+
 }

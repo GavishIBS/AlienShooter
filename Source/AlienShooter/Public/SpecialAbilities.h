@@ -42,9 +42,16 @@ public:
 
 	static bool Dash(class ACharacter* InCharacter, float ExecutionDuration = 1.25f);
 	static void OnDashExecutionEnd();
-	static FTimerHandle DashExecutionEndTimerHandle;
 	static class ACharacter* Char;
+	
+	static bool SpeedBoost(class ACharacter* InCharacter, float ExecutionDuration = 1.25f);
+	static void OnSpeedBoostExecutionEnd();
+	
+	static FTimerHandle AbilityExecutionEndTimerHandle;
+
+	void EndAllAbilities();
+	// Cache data
+	static float CacheFloat;
 
 private:
-
 };
