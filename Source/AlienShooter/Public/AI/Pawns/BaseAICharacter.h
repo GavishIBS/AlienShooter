@@ -102,6 +102,12 @@ protected:
 	// Dumbness logic begin
 	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
 	bool bCanForgetTarget = false;
+	
+	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
+	bool bOnlyForgetWhenNoPathFound = false;
+	
+	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
+	float PathCheckRate = 1.f;
 
 	UPROPERTY(EditAnywhere, Category = "Properties | Dumbness")
 	float ForgetTargetRate = 15.f;    // Amount of time after which AI should forget target

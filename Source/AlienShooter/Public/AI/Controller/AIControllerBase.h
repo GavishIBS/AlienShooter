@@ -25,6 +25,8 @@ public:
 	friend ABaseAICharacter;
 	AAIControllerBase();
 
+	bool CanReachActor(AActor* TargetActor);
+
 protected:
 	virtual void BeginPlay() override;
 

@@ -35,9 +35,23 @@ void ABaseAICharacter::BeginPlay()
 	}
 
 	// Setup target forget timer
-	if (bCanForgetTarget)
+	if (bCanForgetTarget == true && bOnlyForgetWhenNoPathFound == false)
 	{
 		GetWorldTimerManager().SetTimer(ForgetTargetTimerHandle, this, &ABaseAICharacter::ForgetTarget, ForgetTargetRate, true, ForgetTargetRate / 2);
+	}
+	if (bCanForgetTarget == true)
+	{
+		GetWorldTimerManager().SetTimer(ForgetTargetTimerHandle, FTimerDelegate::CreateLambda([this] {
+			if (AIController) {
+				bool CanReach = AIController->CanReachActor(AIController->TargetCharacter);
+				if (!CanReach) {
+					ForgetTarget();
+				}
+				else if (AIController->TargetCharacter == nullptr && bOnlyForgetWhenNoPathFound == true) {
+					ReaquireTarget();
+				}
+			}
+		}), PathCheckRate, true, PathCheckRate);
 	}
 }
 
@@ -47,7 +61,10 @@ void ABaseAICharacter::Tick(float DeltaSeconds)
 	if (AIController->TargetCharacter) {
 		if (IsInAttackRange())
 			Attack();
-		else ChaseTarget(AIController);
+		else {
+			
+			ChaseTarget(AIController);
+		}
 	}
 }
 
@@ -335,9 +352,11 @@ void ABaseAICharacter::ForgetTarget()
 	}
 	
 
-	// Setup timer to reaquire target
-	FTimerHandle ReaquireTargetTimerHandle;
-	GetWorldTimerManager().SetTimer(ReaquireTargetTimerHandle, this, &ABaseAICharacter::ReaquireTarget, ForgetTargetTime, false, ForgetTargetTime);
+	if (bOnlyForgetWhenNoPathFound == false) {
+		// Setup timer to reaquire target
+		FTimerHandle ReaquireTargetTimerHandle;
+		GetWorldTimerManager().SetTimer(ReaquireTargetTimerHandle, this, &ABaseAICharacter::ReaquireTarget, ForgetTargetTime, false, ForgetTargetTime);
+	}
 }
 
 void ABaseAICharacter::ReaquireTarget()
