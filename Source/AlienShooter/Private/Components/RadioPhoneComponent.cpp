@@ -29,14 +29,17 @@ void URadioPhoneComponent::SetObjectiveComponent(TObjectPtr<UObjectiveComponent>
 
 void URadioPhoneComponent::TriggerNextAudioSet()
 {
-	if (AudioQueue.Num() > 0) {
-		if (AudioQueue[0].SecondAudioEvent.AudioAsset != nullptr) {
-			TriggerAudio_WithParams_Response(AudioQueue[0].FirstAudioEvent, AudioQueue[0].SecondAudioEvent, AudioQueue[0].SecondTriggerDelay);
+	FTimerHandle AudioQueueTimerHandle;
+	GetOwner()->GetWorldTimerManager().SetTimer(AudioQueueTimerHandle, FTimerDelegate::CreateLambda([this] {
+		if (AudioQueue.Num() > 0) {
+			if (AudioQueue[0].SecondAudioEvent.AudioAsset != nullptr) {
+				TriggerAudio_WithParams_Response(AudioQueue[0].FirstAudioEvent, AudioQueue[0].SecondAudioEvent, AudioQueue[0].SecondTriggerDelay);
+			}
+			else {
+				TriggerAudio_WithParams(AudioQueue[0].FirstAudioEvent);
+			}
 		}
-		else {
-			TriggerAudio_WithParams(AudioQueue[0].FirstAudioEvent);
-		}
-	}
+	}), /*Delay to avoid trigger and completion overlap in a single frame*/0.1f, false, 0.1f);
 }
 
 
@@ -110,12 +113,14 @@ bool URadioPhoneComponent::TriggerAudio(USoundBase* InAudio, const EAudioType Au
 
 bool URadioPhoneComponent::AddAudioToQueue_WithParams(const FAudioEvent AudioEvent)
 {
-
 	if (AudioEvent.AudioAsset != nullptr)
 	{
 		AudioQueue.Add(FDoubleAudioEvent{ AudioEvent, FAudioEvent{} });
-		if (AudioQueue.Num() == 1) {
+		if (AudioQueue.Num() == 1 && bAudioInProgress == false) {
 			TriggerNextAudioSet();
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("CANNOT START AUDIO JUST YET"));
 		}
 		return true;
 	}
@@ -135,8 +140,6 @@ bool URadioPhoneComponent::TriggerAudio_WithParams(const FAudioEvent& AudioEvent
 
 	GetOwner()->GetWorldTimerManager().SetTimer(AudioTimerHandle, this, &URadioPhoneComponent::EndAudio, AudioEvent.AudioAsset->Duration, false, AudioEvent.AudioAsset->Duration);
 
-	AudioQueue.RemoveAt(0);
-
 	return true;
 }
 
@@ -145,8 +148,11 @@ bool URadioPhoneComponent::AddAudioToQueue_WithParams_Response(const FAudioEvent
 	if (AudioEvent.AudioAsset != nullptr)
 	{
 		AudioQueue.Add(FDoubleAudioEvent{ AudioEvent, ResponseAudioEvent, ResponseDelay });
-		if (AudioQueue.Num() == 1) {
+		if (AudioQueue.Num() == 1 && bAudioInProgress == false) {
 			TriggerNextAudioSet();
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("CANNOT START AUDIO JUST YET"));
 		}
 		return true;
 	}
@@ -172,8 +178,12 @@ bool URadioPhoneComponent::TriggerAudio_WithParams_Response(const FAudioEvent& A
 				OnAudioTriggered.Broadcast(EAudioType::EAT_Dialogue, ResponseAudioEvent.AudioInfo, ResponseAudioEvent.AudioAsset->Duration, ResponseAudioEvent.Instigator);
 				FTimerHandle ResponseAudioTimerHandle;
 				GetWorld()->GetTimerManager().SetTimer(ResponseAudioTimerHandle, FTimerDelegate::CreateLambda([this]() {
+					/*
 					bAudioInProgress = false;
+					AudioQueue.RemoveAt(0);  // manually remove audio from queue in case of response audio
 					OnAudioCompleted.Broadcast();
+					*/
+					EndAudio();
 					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString("Response dialogue have been completed"));
 					}), ResponseAudioEvent.AudioAsset->Duration, false, ResponseAudioEvent.AudioAsset->Duration);
 			}
@@ -183,8 +193,6 @@ bool URadioPhoneComponent::TriggerAudio_WithParams_Response(const FAudioEvent& A
 			}),
 		AudioEvent.AudioAsset->Duration, false, AudioEvent.AudioAsset->Duration + ResponseDelay
 	);
-
-	AudioQueue.RemoveAt(0);
 
 	return true;
 }
@@ -221,6 +229,7 @@ bool URadioPhoneComponent::TriggerIncomingMessage()
 void URadioPhoneComponent::EndAudio()
 {
 	bAudioInProgress = false;
+	AudioQueue.RemoveAt(0);
 	OnAudioCompleted.Broadcast();
 }
 

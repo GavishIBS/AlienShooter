@@ -461,6 +461,9 @@ void AShooterCharacter::TriggerCombatSelfDialogueWrapper(bool Sarcastic)
 void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, const FString AudioInfo, const float AudioDuration, FName AudioInstigator) {
 	if (RadioPhoneComponent == nullptr) return;
 	
+	// DEBUG
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("RADIOPHONETRIGGERED"));
+
 	if (CombatComponent) {
 		CombatComponent->UnselectWeapon();
 	}
@@ -492,6 +495,9 @@ void AShooterCharacter::OnRadioPhoneAudioTriggered(const EAudioType AudioType, c
 void AShooterCharacter::OnRadioPhoneAudioCompleted()
 {
 	if (RadioPhoneComponent == nullptr) return;
+
+	// DEBUG
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, FString("RADIOPHONECOMPLETED"));
 
 	GetCharacterMovement()->MaxWalkSpeed = RadioPhoneComponent->GetOnAudioCompleted_MaxWalkSpeed();
 	AnimationLibrary::PlayAnimationMontage(GetMesh(), {RadioPhoneComponent->GetOnAudioCompleted_ToggleRadioPhone_AnimMontage()});
