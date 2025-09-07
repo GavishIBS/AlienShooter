@@ -119,6 +119,12 @@ protected:
 
 	FShooterProperties ShooterProperties = FShooterProperties();
 
+	// camera shake on damage
+	UPROPERTY(EditDefaultsOnly, Category = "Properties")
+	float DamageCameraShakeIntensityFactor = 0.35f;
+	UPROPERTY(EditDefaultsOnly, Category = "Properties")
+	float DamageCameraShakeTime = 1.f;
+
 protected:
 	UFUNCTION(BlueprintCallable)
 	void EndAttack();

@@ -119,6 +119,10 @@ void AShooterCharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Dama
 
 	AttributeComponent->TakeDamage(Damage);
 	
+	float CameraShakeIntensityFloat = Damage * DamageCameraShakeIntensityFactor;
+	DoCameraShake(FVector(CameraShakeIntensityFloat, CameraShakeIntensityFloat, CameraShakeIntensityFloat),
+		DamageCameraShakeTime, false, FVector());
+
 	if (AttributeComponent->GetHealth() <= 0.f)
 	{
 		// Death

@@ -115,14 +115,14 @@ void ABaseCharacter::TriggerSelfDialogue(const EReactionType InReactionType)
 		if (RD.TriggerChancePercent < UKismetMathLibrary::RandomIntegerInRange(1, 100)) continue;
 		if (RD.Reaction == InReactionType && RD.DialogueAudios.Num() > 0)
 		{
-			TObjectPtr<USoundBase> SelectedAudio = RD.DialogueAudios[UKismetMathLibrary::RandomFloatInRange(0, RD.DialogueAudios.Num() - 1)];
+			TObjectPtr<USoundBase> SelectedAudio = RD.DialogueAudios[UKismetMathLibrary::RandomIntegerInRange(0, RD.DialogueAudios.Num() - 1)];
 			UGameplayStatics::PlaySound2D(this, SelectedAudio);
 			// TEMPORARY begin
 			bPlaying = true;
 			FTimerHandle CanPlayAnotherDialogueTimerHandle;
 			GetWorld()->GetTimerManager().SetTimer(CanPlayAnotherDialogueTimerHandle, FTimerDelegate::CreateLambda([this] {
 				bPlaying = false;
-			}), 5.f, false, 5.f);
+			}), 2.2f, false, 2.2f);
 			// TEMPORARY end
 			break;
 		}
