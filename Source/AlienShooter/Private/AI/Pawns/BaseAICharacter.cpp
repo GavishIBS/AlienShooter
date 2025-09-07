@@ -39,7 +39,7 @@ void ABaseAICharacter::BeginPlay()
 	{
 		GetWorldTimerManager().SetTimer(ForgetTargetTimerHandle, this, &ABaseAICharacter::ForgetTarget, ForgetTargetRate, true, ForgetTargetRate / 2);
 	}
-	if (bCanForgetTarget == true)
+	else if (bCanForgetTarget == true)
 	{
 		TWeakObjectPtr<ABaseAICharacter> WeakThis(this);
 		GetWorldTimerManager().SetTimer(ForgetTargetTimerHandle, FTimerDelegate::CreateLambda([WeakThis] {
@@ -47,7 +47,8 @@ void ABaseAICharacter::BeginPlay()
 			if (!WeakThis.IsValid()) return;  // Actor destroyed? Do nothing
 
 			if (WeakThis->AIController) {
-				bool CanReach = WeakThis->AIController->CanReachActor(WeakThis->AIController->TargetCharacter);
+				//bool CanReach = WeakThis->AIController->CanReachActor(WeakThis->AIController->TargetCharacter);
+				bool CanReach = WeakThis->AIController->CanReachActor(UGameplayStatics::GetPlayerCharacter(WeakThis->GetWorld(), 0));
 				if (!CanReach) {
 					WeakThis->ForgetTarget();
 				}
