@@ -31,74 +31,87 @@ void AHitscanWeapon::Fire()
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(this);
 	ActorsToIgnore.Add(OwnerAsShooterCharacter);
-	for (int i = 0; i < HitscanWeaponProperties.NumberOfTraces; i++)
+	for (int j = 0; j < (HitscanWeaponProperties.AngularTraces_EachSide * 2) + 1; j++)
 	{
-		const float TraceHeight = HitscanWeaponProperties.TraceHeightOffset +
-			OwnerAsShooterCharacter->GetMesh()->GetComponentLocation().Z -
+		for (int i = 0; i < HitscanWeaponProperties.NumberOfTraces; i++)
+		{
+			const float TraceHeight = HitscanWeaponProperties.TraceHeightOffset +
+				OwnerAsShooterCharacter->GetMesh()->GetComponentLocation().Z -
 				((i * OwnerAsShooterCharacter->GetMesh()->GetRelativeLocation().Z) / HitscanWeaponProperties.NumberOfHeightDivisions);
 
-		const FVector MuzzleLocation = GetWeaponMuzzleTransform().GetLocation();
-		const FVector Start = FVector(MuzzleLocation.X, MuzzleLocation.Y, TraceHeight);
-		const FVector End = Start + MuzzleDirection->GetForwardVector() * HitscanWeaponProperties.Range;
+			const FVector MuzzleLocation = GetWeaponMuzzleTransform().GetLocation();
+			const FVector MuzzleForward = MuzzleDirection->GetForwardVector();
+			const FVector Start = FVector(MuzzleLocation.X, MuzzleLocation.Y, TraceHeight);
+			FVector End = Start;
+			const FVector Up = FVector::UpVector;  // or MuzzleDirection->GetUpVector()
 
-		FHitResult HitResult;
-		UKismetSystemLibrary::SphereTraceSingle(this, Start, End, 3.f, TraceTypeQuery1,
-			false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true);
+			float AngleOffset = HitscanWeaponProperties.AngularTraces_EachSide <= 0 ? 0.f : (j - 1) * HitscanWeaponProperties.TraceDeltaAngle_Degrees;
 
-		if (HitResult.bBlockingHit)
-		{
-			if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
+			// Rotate Forward vector around the Up axis
+			FQuat RotationQuat = FQuat(Up, FMath::DegreesToRadians(AngleOffset));
+			FVector RotatedDirection = RotationQuat.RotateVector(MuzzleForward);
+
+			End = Start + RotatedDirection * HitscanWeaponProperties.Range;
+
+			FHitResult HitResult;
+			UKismetSystemLibrary::SphereTraceSingle(this, Start, End, 3.f, TraceTypeQuery1,
+				false, ActorsToIgnore, EDrawDebugTrace::ForOneFrame, HitResult, true);
+
+			if (HitResult.bBlockingHit)
 			{
-				EGetHitReturnType OutGetHitReturn;
-				BulletHealth -= HitInterface->GetHit(HitResult.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter, UDamageType::StaticClass(), &OutGetHitReturn);
-				if (OutGetHitReturn == EGetHitReturnType::MonsterKill)
+				if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
 				{
-					OnMonsterKill.Broadcast();
-				}
-			}
-			
-			// Hit particles
-			OnBulletHit(HitResult.GetActor(), HitResult.ImpactPoint, HitResult.PhysMaterial.Get());
-			if (HitResult.GetActor())
-			{
-				/*
-				TArray<FName> ActorTags = HitResult.GetActor()->Tags;
-				ActorTags.Sort();
-				for (auto It = WeaponFXData.HitParticles.CreateIterator(); It; ++It)
-				{
-					// Use binary search to check if the tag exists in ActorTags
-					if (Algo::BinarySearch(ActorTags, It.Key()))
+					EGetHitReturnType OutGetHitReturn;
+					BulletHealth -= HitInterface->GetHit(HitResult.ImpactPoint, WeaponProperties.Damage, WeaponProperties.Damage_RandomizationFactor, OwnerAsShooterCharacter, UDamageType::StaticClass(), &OutGetHitReturn);
+					if (OutGetHitReturn == EGetHitReturnType::MonsterKill)
 					{
-						// Spawn particle if the value exists
-						if (It.Value())
-							UGameplayStatics::SpawnEmitterAtLocation(this, It.Value(), HitResult.ImpactPoint);
-						goto END_LOOP; // Exit the loop
+						OnMonsterKill.Broadcast();
 					}
 				}
-				*/
-				/*
-				TArray<FName> ActorTags = HitResult.GetActor()->Tags;
-				for (auto It = WeaponFXData.HitParticles.CreateIterator(); It; ++It)
+
+				// Hit particles
+				OnBulletHit(HitResult.GetActor(), HitResult.ImpactPoint, HitResult.PhysMaterial.Get());
+				if (HitResult.GetActor())
 				{
-					// Check if the tag exists directly in the ActorTags array
-					if (ActorTags.Contains(It.Key()))
+					/*
+					TArray<FName> ActorTags = HitResult.GetActor()->Tags;
+					ActorTags.Sort();
+					for (auto It = WeaponFXData.HitParticles.CreateIterator(); It; ++It)
 					{
-						// Spawn particle if the value exists
-						if (It.Value())
-							UGameplayStatics::SpawnEmitterAtLocation(this, It.Value(), HitResult.ImpactPoint);
-						goto END_LOOP; // Exit the loop
+						// Use binary search to check if the tag exists in ActorTags
+						if (Algo::BinarySearch(ActorTags, It.Key()))
+						{
+							// Spawn particle if the value exists
+							if (It.Value())
+								UGameplayStatics::SpawnEmitterAtLocation(this, It.Value(), HitResult.ImpactPoint);
+							goto END_LOOP; // Exit the loop
+						}
 					}
+					*/
+					/*
+					TArray<FName> ActorTags = HitResult.GetActor()->Tags;
+					for (auto It = WeaponFXData.HitParticles.CreateIterator(); It; ++It)
+					{
+						// Check if the tag exists directly in the ActorTags array
+						if (ActorTags.Contains(It.Key()))
+						{
+							// Spawn particle if the value exists
+							if (It.Value())
+								UGameplayStatics::SpawnEmitterAtLocation(this, It.Value(), HitResult.ImpactPoint);
+							goto END_LOOP; // Exit the loop
+						}
+					}
+					*/
 				}
-				*/
+
+				//END_LOOP:
+
+				if (BulletHealth <= 0.f)
+					break;
+
+				// TODO: the below break; is breaking the loop even if the bullet health is more than 0.
+				//break;
 			}
-
-			//END_LOOP:
-
-			if (BulletHealth <= 0.f)
-				break;
-
-			// TODO: the below break; is breaking the loop even if the bullet health is more than 0.
-			break;
 		}
 	}
 }

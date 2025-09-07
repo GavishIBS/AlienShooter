@@ -247,6 +247,13 @@ struct FHitscanWeaponProperties
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Hitscan | Properties")
 	float TraceHeightOffset = 10.f;
+
+	// XY range - for shotgun weapon
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties | XY Range")
+	float TraceDeltaAngle_Degrees = 20.f;   // spread angle
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties | XY Range")
+	int32 AngularTraces_EachSide = 0;
 };
 
 USTRUCT(BlueprintType)

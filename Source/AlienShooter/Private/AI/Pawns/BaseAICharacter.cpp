@@ -41,14 +41,18 @@ void ABaseAICharacter::BeginPlay()
 	}
 	if (bCanForgetTarget == true)
 	{
-		GetWorldTimerManager().SetTimer(ForgetTargetTimerHandle, FTimerDelegate::CreateLambda([this] {
-			if (AIController) {
-				bool CanReach = AIController->CanReachActor(AIController->TargetCharacter);
+		TWeakObjectPtr<ABaseAICharacter> WeakThis(this);
+		GetWorldTimerManager().SetTimer(ForgetTargetTimerHandle, FTimerDelegate::CreateLambda([WeakThis] {
+			
+			if (!WeakThis.IsValid()) return;  // Actor destroyed? Do nothing
+
+			if (WeakThis->AIController) {
+				bool CanReach = WeakThis->AIController->CanReachActor(WeakThis->AIController->TargetCharacter);
 				if (!CanReach) {
-					ForgetTarget();
+					WeakThis->ForgetTarget();
 				}
-				else if (AIController->TargetCharacter == nullptr && bOnlyForgetWhenNoPathFound == true) {
-					ReaquireTarget();
+				else if (WeakThis->AIController->TargetCharacter == nullptr && WeakThis->bOnlyForgetWhenNoPathFound == true) {
+					WeakThis->ReaquireTarget();
 				}
 			}
 		}), PathCheckRate, true, PathCheckRate);
