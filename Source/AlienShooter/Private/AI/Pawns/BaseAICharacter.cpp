@@ -338,15 +338,19 @@ void ABaseAICharacter::ForgetTarget()
 	}
 	else {
 		// Random AI movement
-		GetWorldTimerManager().SetTimer(NoTargetRandomMoveTickTimerHandle, FTimerDelegate::CreateLambda([&]() {
+		TWeakObjectPtr<ABaseAICharacter> WeakThis(this);
+		GetWorldTimerManager().SetTimer(NoTargetRandomMoveTickTimerHandle, FTimerDelegate::CreateLambda([WeakThis]() {
+			
+			if (!WeakThis.IsValid()) return;  // Actor destroyed? Do nothing
+			
 			FNavLocation ResultLocation;
-			UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
-			if (NavSys && NavSys->GetRandomPointInNavigableRadius(GetActorLocation(), NoTargetMoveRandomPointArea, ResultLocation))
+			UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(WeakThis->GetWorld());
+			if (NavSys && NavSys->GetRandomPointInNavigableRadius(WeakThis->GetActorLocation(), WeakThis->NoTargetMoveRandomPointArea, ResultLocation))
 			{
 				FAIMoveRequest MoveRequest;
-				MoveRequest.SetAcceptanceRadius(AIController->GetAIProperties().AcceptanceRadius);
+				MoveRequest.SetAcceptanceRadius(WeakThis->AIController->GetAIProperties().AcceptanceRadius);
 				MoveRequest.SetGoalLocation(ResultLocation);
-				AIController->MoveTo(MoveRequest);
+				WeakThis->AIController->MoveTo(MoveRequest);
 			}
 		}), NoTargetRandomMovementResetRate, true, NoTargetRandomMovementResetRate);
 	}
