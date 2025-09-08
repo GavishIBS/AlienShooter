@@ -11,6 +11,7 @@
 
 AAIControllerBase::AAIControllerBase()
 {
+    PrimaryActorTick.bCanEverTick = true;
 }
 
 void AAIControllerBase::BeginPlay()

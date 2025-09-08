@@ -18,7 +18,7 @@
 
 ABaseAICharacter::ABaseAICharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	Tags.Add(FName("TeamFungus"));
 	
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
@@ -34,6 +34,23 @@ void ABaseAICharacter::BeginPlay()
 		GetCharacterMovement()->MaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed + FMath::FRandRange(-SpeedRandomizationRange, SpeedRandomizationRange);
 	}
 
+	TWeakObjectPtr<ABaseAICharacter> WeakThis(this);
+
+	FTimerHandle CheckCanAttackTimerHandle;
+	GetWorldTimerManager().SetTimer(CheckCanAttackTimerHandle, FTimerDelegate::CreateLambda([WeakThis]{
+		
+		if (!WeakThis.IsValid()) return;  // Actor destroyed? Do nothing
+
+		if (WeakThis->AIController->TargetCharacter) {
+			if (WeakThis->IsInAttackRange())
+				WeakThis->Attack();
+			else {
+
+				WeakThis->ChaseTarget(WeakThis->AIController);
+			}
+		}
+	}), 0.16f, true, 0.16f);
+
 	// Setup target forget timer
 	if (bCanForgetTarget == true && bOnlyForgetWhenNoPathFound == false)
 	{
@@ -41,7 +58,6 @@ void ABaseAICharacter::BeginPlay()
 	}
 	else if (bCanForgetTarget == true)
 	{
-		TWeakObjectPtr<ABaseAICharacter> WeakThis(this);
 		GetWorldTimerManager().SetTimer(ForgetTargetTimerHandle, FTimerDelegate::CreateLambda([WeakThis] {
 			
 			if (!WeakThis.IsValid()) return;  // Actor destroyed? Do nothing
@@ -57,19 +73,6 @@ void ABaseAICharacter::BeginPlay()
 				}
 			}
 		}), PathCheckRate, true, PathCheckRate);
-	}
-}
-
-void ABaseAICharacter::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-	if (AIController->TargetCharacter) {
-		if (IsInAttackRange())
-			Attack();
-		else {
-			
-			ChaseTarget(AIController);
-		}
 	}
 }
 

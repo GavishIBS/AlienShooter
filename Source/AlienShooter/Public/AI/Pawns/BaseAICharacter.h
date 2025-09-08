@@ -26,7 +26,6 @@ class ALIENSHOOTER_API ABaseAICharacter : public AGameCharacter, public IHitInte
 
 public:
 	ABaseAICharacter();
-	virtual void Tick(float DeltaSeconds) override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void PostInitializeComponents() override;
 	virtual void Destroyed() override;

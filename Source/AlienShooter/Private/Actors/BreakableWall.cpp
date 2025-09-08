@@ -8,6 +8,7 @@
 
 ABreakableWall::ABreakableWall()
 {
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 void ABreakableWall::BeginPlay()

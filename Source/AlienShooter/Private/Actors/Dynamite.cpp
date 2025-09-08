@@ -7,7 +7,7 @@
 
 ADynamite::ADynamite()
 {
-
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 void ADynamite::Explode(AActor* ThisObject, UParticleSystem* InExplosionParticleSystem, const FDamageProperties& InDamageProperties,

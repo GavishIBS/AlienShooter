@@ -9,6 +9,8 @@
 
 ABreakableActor::ABreakableActor()
 {
+	PrimaryActorTick.bCanEverTick = false;
+
 	GeometryCollectionComponent = CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("GeometryCollectionComponent"));
 	GeometryCollectionComponent->SetupAttachment(GetRootComponent());
 	GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
