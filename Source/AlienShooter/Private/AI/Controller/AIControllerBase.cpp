@@ -12,6 +12,7 @@
 AAIControllerBase::AAIControllerBase()
 {
     PrimaryActorTick.bCanEverTick = true;
+    SetActorTickInterval(0.5f);
 }
 
 void AAIControllerBase::BeginPlay()
