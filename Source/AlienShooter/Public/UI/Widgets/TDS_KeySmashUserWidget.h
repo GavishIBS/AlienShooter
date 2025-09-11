@@ -10,6 +10,7 @@
 #include "TDS_KeySmashUserWidget.generated.h"
 
 class UImage;
+class UTextBlock;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnKeySmashPropertiesUpdated, FKeySmashProperties, KeySmashProperties);
 
@@ -36,6 +37,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> KeyGroup_Icon;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UTextBlock> DescText;
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	bool bShouldIconMatchSize = false;
