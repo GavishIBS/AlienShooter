@@ -15,6 +15,7 @@
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "AnimationLibrary.h"
 
 ABaseAICharacter::ABaseAICharacter()
 {
@@ -242,11 +243,21 @@ void ABaseAICharacter::OnTakeAnyDamageCallback(AActor* DamagedActor, float Damag
 void ABaseAICharacter::OnDeathCallback(AActor* Killer)
 {
 	if (LifeStatus == ELifeStatus::ELS_Dead) return;
-	if (AIAnimations.DeathAnimMontage) Destroy();
 	
+	StopStopwatch();
+	
+	if (AIAnimations.DeathAnimMontage == nullptr) {
+		Destroy();
+		return;
+	}
+	
+	AnimationLibrary::PlayAnimationMontage(GetMesh(), {AIAnimations.DeathAnimMontage});
+	LifeStatus = ELifeStatus::ELS_Dead;
+	/*
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 		AnimInstance->Montage_Play(AIAnimations.DeathAnimMontage);
 	LifeStatus = ELifeStatus::ELS_Dead;
+	*/
 }
 
 bool ABaseAICharacter::CanAttack() const
