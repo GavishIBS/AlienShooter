@@ -19,6 +19,7 @@ class ALIENSHOOTER_API UOptionsGameInstanceSubsystem : public UGameInstanceSubsy
 	
 public:
 	UOptionsGameInstanceSubsystem();
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	FCameraOptions CameraSettings;
 };

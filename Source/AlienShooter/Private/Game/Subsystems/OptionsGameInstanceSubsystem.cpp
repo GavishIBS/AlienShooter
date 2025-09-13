@@ -9,3 +9,8 @@ UOptionsGameInstanceSubsystem::UOptionsGameInstanceSubsystem()
 {
 
 }
+
+void UOptionsGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+}

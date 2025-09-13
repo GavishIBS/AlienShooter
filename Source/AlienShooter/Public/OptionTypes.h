@@ -20,3 +20,12 @@ public:
 	bool bEnableCameraBoomRotation = true;
 	bool bEnableCameraBoomOffset = true;  // camera boom can move away from player mesh
 };
+
+UENUM()
+enum class EQualityLevel : uint8
+{
+	LOW = 0 UMETA(DisplayName = "Low"),
+	MEDIUM = 1 UMETA(DisplayName = "Medium"),
+	HIGH = 2 UMETA(DisplayName = "High"),
+	EPIC = 3 UMETA(DisplayName = "Epic")
+};

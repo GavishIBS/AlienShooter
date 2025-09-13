@@ -89,7 +89,7 @@ void AControllableCharacter::Tick(float DeltaTime)
 		
 		UpdateCameraBoomLength(DeltaTime);
 		
-		if (CameraSettings.bEnableCameraBoomOffset) {
+		if (CameraSettings.bEnableCameraBoomRotation) {
 			UpdateCameraBoomRotation(DeltaTime);
 		}
 	}

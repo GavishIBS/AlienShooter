@@ -13,6 +13,7 @@ class UButton;
 class UTDS_MainMenu;
 class UCheckBox;
 class UOptionsGameInstanceSubsystem;
+class UTextBlock;
 
 /**
  * 
@@ -30,6 +31,8 @@ protected:
 	UOptionsGameInstanceSubsystem* OptionsGIS;
 
 	FCameraOptions CameraSettings{true, true};
+
+	EQualityLevel OverallGameScalability_QualityLevel = EQualityLevel::LOW;
 
 protected:
 	virtual void NativePreConstruct() override;
@@ -54,6 +57,15 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UCheckBox* EnableCameraBoomRotation_Checkbox;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton* Cycle_OverallQualityLevel_Decrease_Button;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton* Cycle_OverallQualityLevel_Increase_Button;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* OverallQuality_Text;
 
 	UFUNCTION()
 	void OnBackButtonPressed();
@@ -66,4 +78,13 @@ protected:
 	
 	UFUNCTION()
 	void OnCameraBoomRotation_CheckboxChanged(bool bIsChecked);
+	
+	UFUNCTION()
+	void OnOverallQualityLevel_DecreaseButtonClicked();
+	
+	UFUNCTION()
+	void OnOverallQualityLevel_IncreaseButtonClicked();
+
+private:
+	void UpdateOverallQualityText();
 };
