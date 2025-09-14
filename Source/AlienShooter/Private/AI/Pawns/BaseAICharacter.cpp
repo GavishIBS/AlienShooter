@@ -251,7 +251,13 @@ void ABaseAICharacter::OnDeathCallback(AActor* Killer)
 		return;
 	}
 	
-	AnimationLibrary::PlayAnimationMontage(GetMesh(), {AIAnimations.DeathAnimMontage});
+	if (AnimationLibrary::PlayAnimationMontage(GetMesh(), { AIAnimations.DeathAnimMontage })) {
+		// Do nothing
+	}
+	else {
+		Destroy();
+		return;
+	}
 	LifeStatus = ELifeStatus::ELS_Dead;
 	/*
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
