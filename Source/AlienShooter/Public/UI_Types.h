@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Gavish Bansal
+// 
+// All rights reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,7 +12,7 @@ class UTexture2D;
 UENUM(BlueprintType)
 enum class EKeyGroup : uint8
 {
-	WASD, L, LEFT_MOUSE_BUTTON, LEFT_ALT
+	WASD, L, LEFT_MOUSE_BUTTON, LEFT_ALT, V
 };
 
 USTRUCT(BlueprintType)

@@ -12,7 +12,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SpotLightComponent.h"
-
+#include "Game/Subsystems/OptionsGameInstanceSubsystem.h"
 
 #include "Components/AttributeComponent.h"
 
@@ -52,6 +52,21 @@ void AControllableCharacter::BeginPlay()
 	// Update static variables
 	BaseCameraBoomLength = CameraBoom->TargetArmLength;
 	BaseCameraBoomRotationYaw = CameraBoom->GetRelativeRotation().Yaw;
+
+	// Update camera settings
+	UOptionsGameInstanceSubsystem* OptionsGIS = GetGameInstance()->GetSubsystem<UOptionsGameInstanceSubsystem>();
+	if (OptionsGIS) {
+		CameraSettings = OptionsGIS->CameraSettings;
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString("New camera settings applied"));
+		/*
+		if (CameraSettings.bEnableCameraBoomOffset) {
+			UpdateCameraBoomOffset(0, true);
+		}
+		if (CameraSettings.bEnableCameraBoomRotation) {
+			UpdateCameraBoomRotation(0, true);
+		}
+		*/
+	}
 }
 
 void AControllableCharacter::Tick(float DeltaTime)
@@ -65,10 +80,18 @@ void AControllableCharacter::Tick(float DeltaTime)
 
 	if (LifeStatus != ELifeStatus::ELS_Dead && GetCharacterMovement()) {
 		CheckCursorLocation();
+		
 		UpdateCharacterRotationToCursor();
-		UpdateCameraBoomOffset(DeltaTime);
+		
+		if (CameraSettings.bEnableCameraBoomOffset) {
+			UpdateCameraBoomOffset(DeltaTime);
+		}
+		
 		UpdateCameraBoomLength(DeltaTime);
-		UpdateCameraBoomRotation(DeltaTime);
+		
+		if (CameraSettings.bEnableCameraBoomRotation) {
+			UpdateCameraBoomRotation(DeltaTime);
+		}
 	}
 }
 
@@ -121,7 +144,7 @@ void AControllableCharacter::UpdateCharacterRotationToCursor()
 	}
 }
 
-void AControllableCharacter::UpdateCameraBoomOffset(float DeltaTime)
+void AControllableCharacter::UpdateCameraBoomOffset(float DeltaTime, bool bReset)
 {
 	if (!PlayerController) return;
 
@@ -165,7 +188,7 @@ void AControllableCharacter::UpdateCameraBoomOffset(float DeltaTime)
 	CameraBoomOffset_LastFrame = CurrentCameraBoomOffset;
 }
 
-void AControllableCharacter::UpdateCameraBoomLength(float DeltaTime)
+void AControllableCharacter::UpdateCameraBoomLength(float DeltaTime, bool bReset)
 {
 	const float SpeedFraction = GetVelocity().Size() / GetCharacterMovement()->MaxWalkSpeed;
 	const float NewTargetArmLength = BaseCameraBoomLength + (SpeedFraction * CameraBoomLengthAdditiveFactor);
@@ -173,7 +196,7 @@ void AControllableCharacter::UpdateCameraBoomLength(float DeltaTime)
 	CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, NewTargetArmLength, DeltaTime, CameraSpeed / 2);
 }
 
-void AControllableCharacter::UpdateCameraBoomRotation(float DeltaTime)
+void AControllableCharacter::UpdateCameraBoomRotation(float DeltaTime, bool bReset)
 {
 	FHitResult OutHit;
 	UKismetSystemLibrary::SphereTraceSingle(this, CameraBoomTopPoint->GetComponentLocation(), CameraBoomTopPoint->GetComponentLocation() +

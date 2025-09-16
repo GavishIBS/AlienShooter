@@ -7,6 +7,7 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "Characters/BaseCharacter.h"
+#include "OptionTypes.h"
 #include "ControllableCharacter.generated.h"
 
 class UInputMappingContext;
@@ -40,15 +41,17 @@ protected:
 	/* Character rotation end */
 
 	/* Camera boom begin */
-	void UpdateCameraBoomOffset(float DeltaTime);
-	void UpdateCameraBoomLength(float DeltaTime);
-	void UpdateCameraBoomRotation(float DeltaTime);
+	void UpdateCameraBoomOffset(float DeltaTime, bool bReset = false);
+	void UpdateCameraBoomLength(float DeltaTime, bool bReset = false);
+	void UpdateCameraBoomRotation(float DeltaTime, bool bReset = false);
 
 	inline static float BaseCameraBoomLength = 1000.f;
 	inline static float BaseCameraBoomRotationYaw = -40.f;
 	
 	UPROPERTY(EditAnywhere, Category=Properties)
 	float CameraBoomLengthAdditiveFactor = 75.f;
+
+	FCameraOptions CameraSettings{true, true};
 	/* Camera boom end */
 
 protected:
