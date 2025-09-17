@@ -9,6 +9,7 @@
 #include "Game/Subsystems/OptionsGameInstanceSubsystem.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/GameUserSettings.h"
+#include "Components/Slider.h"
 
 UTDS_OptionsMenu::UTDS_OptionsMenu(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -52,6 +53,11 @@ void UTDS_OptionsMenu::BindCallbacks()
 	if (Cycle_OverallQualityLevel_Decrease_Button && Cycle_OverallQualityLevel_Increase_Button) {
 		Cycle_OverallQualityLevel_Decrease_Button->OnClicked.AddDynamic(this, &UTDS_OptionsMenu::OnOverallQualityLevel_DecreaseButtonClicked);
 		Cycle_OverallQualityLevel_Increase_Button->OnClicked.AddDynamic(this, &UTDS_OptionsMenu::OnOverallQualityLevel_IncreaseButtonClicked);
+	}
+	if (MusicVolumeSlider && EffectsVolumeSlider && DialoguesVolumeSlider) {
+		MusicVolumeSlider->OnValueChanged.AddDynamic(this, &UTDS_OptionsMenu::OnMusicVolumeChanged);
+		EffectsVolumeSlider->OnValueChanged.AddDynamic(this, &UTDS_OptionsMenu::OnEffectsVolumeChanged);
+		DialoguesVolumeSlider->OnValueChanged.AddDynamic(this, &UTDS_OptionsMenu::OnDialoguesVolumeChanged);
 	}
 }
 
@@ -138,4 +144,25 @@ void UTDS_OptionsMenu::UpdateOverallQualityText()
 {
 	FText OverallQuality_DisplayName = StaticEnum<EQualityLevel>()->GetDisplayNameTextByValue((int64)OverallGameScalability_QualityLevel);
 	OverallQuality_Text->SetText(OverallQuality_DisplayName);
+}
+
+void UTDS_OptionsMenu::OnMusicVolumeChanged(float Value)
+{
+	if (OptionsGIS) {
+		OptionsGIS->MusicVolume = Value;
+	}
+}
+
+void UTDS_OptionsMenu::OnEffectsVolumeChanged(float Value)
+{
+	if (OptionsGIS) {
+		OptionsGIS->EffectsVolume = Value;
+	}
+}
+
+void UTDS_OptionsMenu::OnDialoguesVolumeChanged(float Value)
+{
+	if (OptionsGIS) {
+		OptionsGIS->DialoguesVolume = Value;
+	}
 }
