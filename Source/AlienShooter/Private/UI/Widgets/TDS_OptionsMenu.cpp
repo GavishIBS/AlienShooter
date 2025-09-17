@@ -59,6 +59,9 @@ void UTDS_OptionsMenu::BindCallbacks()
 		EffectsVolumeSlider->OnValueChanged.AddDynamic(this, &UTDS_OptionsMenu::OnEffectsVolumeChanged);
 		DialoguesVolumeSlider->OnValueChanged.AddDynamic(this, &UTDS_OptionsMenu::OnDialoguesVolumeChanged);
 	}
+	if (BrightnessSlider) {
+		BrightnessSlider->OnValueChanged.AddDynamic(this, &UTDS_OptionsMenu::OnBrightnessChanged);
+	}
 }
 
 void UTDS_OptionsMenu::DisplayDefaultSettings()
@@ -79,6 +82,11 @@ void UTDS_OptionsMenu::DisplayDefaultSettings()
 			}
 			UpdateOverallQualityText();
 		}
+
+		MusicVolumeSlider->SetValue(OptionsGIS->MusicVolume);
+		EffectsVolumeSlider->SetValue(OptionsGIS->EffectsVolume);
+		DialoguesVolumeSlider->SetValue(OptionsGIS->DialoguesVolume);
+		BrightnessSlider->SetValue(OptionsGIS->BrightnessAdditiveValue);
 	}
 }
 
@@ -164,5 +172,12 @@ void UTDS_OptionsMenu::OnDialoguesVolumeChanged(float Value)
 {
 	if (OptionsGIS) {
 		OptionsGIS->DialoguesVolume = Value;
+	}
+}
+
+void UTDS_OptionsMenu::OnBrightnessChanged(float Value)
+{
+	if (OptionsGIS) {
+		OptionsGIS->BrightnessAdditiveValue = Value;
 	}
 }

@@ -77,6 +77,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	USlider* DialoguesVolumeSlider;
 
+	UPROPERTY(meta = (BindWidget))
+	USlider* BrightnessSlider;
+
 	UFUNCTION()
 	void OnBackButtonPressed();
 	
@@ -103,6 +106,9 @@ protected:
 
 	UFUNCTION()
 	void OnDialoguesVolumeChanged(float Value);
+	
+	UFUNCTION()
+	void OnBrightnessChanged(float Value);
 
 private:
 	void UpdateOverallQualityText();

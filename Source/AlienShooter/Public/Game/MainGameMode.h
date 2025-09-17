@@ -10,6 +10,8 @@
 #include "MainGameMode.generated.h"
 
 class AElectric_Siren_SpotLight;
+class USoundMix;
+class USoundClass;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAlarmingModeChanged, EAlarmingModeName, NewModeName, EAlarmingModeName, LastModeName);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlaySequence, float, Duration);
@@ -72,6 +74,20 @@ protected:
 	TArray<FAlarmingModeData> AlarmingModes;          // 4 modes - normal, safe, gray-zone, and danger
 
 	void Setup_AlarmLights();
+
+	// Audio begin
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
+	TObjectPtr<USoundMix> GameSoundMix = nullptr;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
+	TObjectPtr<USoundClass> MusicSoundClass;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
+	TObjectPtr<USoundClass> EffectsSoundClass;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
+	TObjectPtr<USoundClass> DialoguesSoundClass;
+	// Audio end
 
 private:
 	TArray<AElectric_Siren_SpotLight*> SirensCache;

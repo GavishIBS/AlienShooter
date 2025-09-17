@@ -9,6 +9,7 @@
 #include "Electricity/Actors/AlarmDirectionalLight_Electric.h"
 #include "Components/AudioComponent.h"
 #include "Electricity/Actors/Electric_Siren_SpotLight.h"
+#include "Game/Subsystems/OptionsGameInstanceSubsystem.h"
 
 /*
 void AMainGameMode::OnPostLogin(AController* NewPlayer)
@@ -55,6 +56,27 @@ void AMainGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (UOptionsGameInstanceSubsystem* OptionsGameInstSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UOptionsGameInstanceSubsystem>())
+	{
+		{   // Update audio controls
+			if (GameSoundMix) {
+				UGameplayStatics::PushSoundMixModifier(this, GameSoundMix);
+				if (MusicSoundClass, EffectsSoundClass, DialoguesSoundClass) {
+					UGameplayStatics::SetSoundMixClassOverride(this, GameSoundMix, MusicSoundClass, OptionsGameInstSubsystem->MusicVolume);
+					UGameplayStatics::SetSoundMixClassOverride(this, GameSoundMix, EffectsSoundClass, OptionsGameInstSubsystem->EffectsVolume);
+					UGameplayStatics::SetSoundMixClassOverride(this, GameSoundMix, DialoguesSoundClass, OptionsGameInstSubsystem->DialoguesVolume);
+				}
+			}
+		}
+		{   // Update post process controls
+			AActor* PostProcessVolume_AsActor = UGameplayStatics::GetActorOfClass(this, APostProcessVolume::StaticClass());
+			APostProcessVolume* PostProcessVolume = Cast<APostProcessVolume>(PostProcessVolume_AsActor);
+			if (PostProcessVolume) {
+				PostProcessVolume->Settings.AutoExposureBias += OptionsGameInstSubsystem->BrightnessAdditiveValue;
+			}
+		}
+	}
+	
 	{
 		//ABaseCharacter* BChar = Cast<ABaseCharacter>(NewPlayer->GetPawn());
 		BChar = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
