@@ -22,4 +22,12 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	FCameraOptions CameraSettings;
+
+	// volume controls
+	float MusicVolume = 1.f;
+	float EffectsVolume = 1.f;
+	float DialoguesVolume = 1.f;
+
+	// post process controls
+	float BrightnessAdditiveValue = 0.f;
 };

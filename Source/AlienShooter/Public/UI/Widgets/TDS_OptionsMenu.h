@@ -14,6 +14,7 @@ class UTDS_MainMenu;
 class UCheckBox;
 class UOptionsGameInstanceSubsystem;
 class UTextBlock;
+class USlider;
 
 /**
  * 
@@ -66,6 +67,18 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* OverallQuality_Text;
+	
+	UPROPERTY(meta = (BindWidget))
+	USlider* MusicVolumeSlider;
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* EffectsVolumeSlider;
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* DialoguesVolumeSlider;
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* BrightnessSlider;
 
 	UFUNCTION()
 	void OnBackButtonPressed();
@@ -84,6 +97,18 @@ protected:
 	
 	UFUNCTION()
 	void OnOverallQualityLevel_IncreaseButtonClicked();
+
+	UFUNCTION()
+	void OnMusicVolumeChanged(float Value);
+
+	UFUNCTION()
+	void OnEffectsVolumeChanged(float Value);
+
+	UFUNCTION()
+	void OnDialoguesVolumeChanged(float Value);
+	
+	UFUNCTION()
+	void OnBrightnessChanged(float Value);
 
 private:
 	void UpdateOverallQualityText();
