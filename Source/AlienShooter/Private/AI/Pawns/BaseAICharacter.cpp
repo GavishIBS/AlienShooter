@@ -36,8 +36,6 @@ void ABaseAICharacter::BeginPlay()
 	}
 
 	TWeakObjectPtr<ABaseAICharacter> WeakThis(this);
-
-	FTimerHandle CheckCanAttackTimerHandle;
 	GetWorldTimerManager().SetTimer(CheckCanAttackTimerHandle, FTimerDelegate::CreateLambda([WeakThis]{
 		
 		if (!WeakThis.IsValid()) return;  // Actor destroyed? Do nothing
@@ -244,6 +242,16 @@ void ABaseAICharacter::OnDeathCallback(AActor* Killer)
 {
 	if (LifeStatus == ELifeStatus::ELS_Dead) return;
 	
+	LifeStatus = ELifeStatus::ELS_Dead;
+	
+	{   // Stop AI - TODO: find a better approach
+		FAIMoveRequest MoveRequest;
+		MoveRequest.SetGoalActor((AActor*)this);
+		MoveRequest.SetAcceptanceRadius(AIController->GetAIProperties().AcceptanceRadius);
+		AIController->MoveTo(MoveRequest);
+	}
+
+	ClearAllTimers();
 	StopStopwatch();
 	
 	if (AIAnimations.DeathAnimMontage == nullptr) {
@@ -256,9 +264,7 @@ void ABaseAICharacter::OnDeathCallback(AActor* Killer)
 	}
 	else {
 		Destroy();
-		return;
 	}
-	LifeStatus = ELifeStatus::ELS_Dead;
 	/*
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 		AnimInstance->Montage_Play(AIAnimations.DeathAnimMontage);
@@ -335,6 +341,12 @@ void ABaseAICharacter::StopwatchTick()
 	AcquiredSpecialEffectData.Duration -= 1.f;
 }
 
+void ABaseAICharacter::ClearAllTimers()
+{
+	GetWorldTimerManager().ClearTimer(CheckCanAttackTimerHandle);
+	GetWorldTimerManager().ClearTimer(ReaquireTargetTimerHandle);
+}
+
 bool ABaseAICharacter::CanForgetTarget()
 {
 	if (AIController == nullptr || AIController->TargetCharacter == nullptr) return false;
@@ -383,7 +395,6 @@ void ABaseAICharacter::ForgetTarget()
 
 	if (bOnlyForgetWhenNoPathFound == false) {
 		// Setup timer to reaquire target
-		FTimerHandle ReaquireTargetTimerHandle;
 		GetWorldTimerManager().SetTimer(ReaquireTargetTimerHandle, this, &ABaseAICharacter::ReaquireTarget, ForgetTargetTime, false, ForgetTargetTime);
 	}
 }

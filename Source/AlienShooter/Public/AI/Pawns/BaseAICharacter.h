@@ -71,6 +71,8 @@ protected:
 
 	virtual void StopwatchTick() override;
 
+	virtual void ClearAllTimers();
+
 	UPROPERTY(EditDefaultsOnly, Category=Animations)
 	FAIAnimations AIAnimations;
 
@@ -133,4 +135,9 @@ protected:
 	void ForgetTarget();
 	void ReaquireTarget();
 	// Dumbness logic end
+
+private:
+	// Timer handles
+	FTimerHandle CheckCanAttackTimerHandle;
+	FTimerHandle ReaquireTargetTimerHandle;
 };
