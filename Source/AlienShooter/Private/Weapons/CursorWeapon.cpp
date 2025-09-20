@@ -35,14 +35,34 @@ void ACursorWeapon::Fire()
 	ActorsToIgnore.Add(OwnerAsShooterCharacter);
 
 	FHitResult HitResult;
-	OwnerAsShooterCharacter->GetPlayerController()->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+	if (bTraceUnderCursor)
+	{
+		OwnerAsShooterCharacter->GetPlayerController()->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+	}
+	else {
+		APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+		
+		float MouseX, MouseY;
+		PC->GetMousePosition(MouseX, MouseY);
+		FVector WorldOrigin, WorldDirection;
+		PC->DeprojectScreenPositionToWorld(MouseX, MouseY, WorldOrigin, WorldDirection);
+
+		FVector TraceStart = WorldOrigin;
+		FVector TraceEnd = WorldOrigin + (WorldDirection * 9999.f);
+
+		UKismetSystemLibrary::SphereTraceSingle(this, TraceStart, TraceEnd, TraceFromCursorRadius, ETraceTypeQuery::TraceTypeQuery1, false,
+			{this, OwnerAsShooterCharacter}, EDrawDebugTrace::None, HitResult, true);
+	}
+
 	//FVector BasisX, BasisY;
 	if (HitResult.bBlockingHit)
 	{
 		// Check for blocking object inbetween BEGIN
 		{
 			FHitResult HitBetween;
-			UKismetSystemLibrary::LineTraceSingle(this, OwnerAsShooterCharacter->GetActorLocation(), HitResult.ImpactPoint, ETraceTypeQuery::TraceTypeQuery1, false,
+			//UKismetSystemLibrary::LineTraceSingle(this, OwnerAsShooterCharacter->GetActorLocation(), HitResult.ImpactPoint, ETraceTypeQuery::TraceTypeQuery1, false,
+				//{ this, OwnerAsShooterCharacter }, EDrawDebugTrace::None, HitBetween, true);
+			UKismetSystemLibrary::SphereTraceSingle(this, OwnerAsShooterCharacter->GetActorLocation(), HitResult.ImpactPoint, InBetweenTraceRadius, ETraceTypeQuery::TraceTypeQuery1, false,
 				{ this, OwnerAsShooterCharacter }, EDrawDebugTrace::None, HitBetween, true);
 			if (HitBetween.bBlockingHit)
 			{
@@ -87,7 +107,7 @@ void ACursorWeapon::Fire()
 		const FVector RandomPoint = HitResult.ImpactPoint + (BasisX * R_X) + (BasisY * R_Y);
 
 		FHitResult HitResult_M;
-		UKismetSystemLibrary::SphereTraceSingle(GetWorld(), RandomPoint, RandomPoint, 7.f, ETraceTypeQuery::TraceTypeQuery1, false,
+		UKismetSystemLibrary::SphereTraceSingle(GetWorld(), RandomPoint, RandomPoint, HitTraceRadius, ETraceTypeQuery::TraceTypeQuery1, false,
 			ActorsToIgnore, EDrawDebugTrace::None, HitResult_M, true, FLinearColor::Red, FLinearColor::Green);
 
 		if (!HitResult_M.bBlockingHit) return;

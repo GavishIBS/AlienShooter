@@ -25,4 +25,16 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0"))
 	float DistanceToInBetweenHit = 40.f;
+
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0"))
+	float InBetweenTraceRadius = 5.f;
+	
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0"))
+	float HitTraceRadius = 7.f;
+	
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0"))
+	bool bTraceUnderCursor = false;
+	
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (ClampMin = "0"))
+	float TraceFromCursorRadius = 5.f;
 };
