@@ -27,13 +27,23 @@ void AMainGameMode::OnPostLogin(AController* NewPlayer)
 }
 */
 
+void AMainGameMode::SkipSequence()
+{
+	EndSequence();
+}
+
 void AMainGameMode::OnSequencePlayed(float Duration)
 {
 	DisableControl();
 	FTimerHandle ControlEnableTimerHandle;
 	GetWorldTimerManager().SetTimer(ControlEnableTimerHandle, FTimerDelegate::CreateLambda([&] {
-		EnableControl();
+		EndSequence();
 	}), Duration + ControlToggleOnSequence_Delay, false, Duration + ControlToggleOnSequence_Delay);
+}
+
+void AMainGameMode::EndSequence()
+{
+	EnableControl();
 }
 
 void AMainGameMode::DisableControl()

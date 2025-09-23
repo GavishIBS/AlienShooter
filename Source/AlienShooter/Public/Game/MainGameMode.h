@@ -28,6 +28,9 @@ public:
 	UPROPERTY(BlueprintCallable, BlueprintAssignable)
 	FOnPlaySequence OnPlaySequence;
 
+	UFUNCTION(BlueprintCallable)
+	void SkipSequence();
+
 public:
 	UPROPERTY(BlueprintReadWrite, Category="Game | Rebirth")
 	FTransform LastCheckpointTransform;
@@ -37,6 +40,8 @@ protected:
 
 	UFUNCTION()
 	void OnSequencePlayed(float Duration);
+
+	void EndSequence();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Game | Data", meta = (ClampMin = "0", ClampMax = "9"))
 	float ControlToggleOnSequence_Delay = 1.f;
