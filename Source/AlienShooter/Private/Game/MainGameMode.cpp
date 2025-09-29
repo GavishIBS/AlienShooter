@@ -18,7 +18,7 @@ void AMainGameMode::OnPostLogin(AController* NewPlayer)
 
 	if (NewPlayer && NewPlayer->GetPawn())
 	{
-		//ABaseCharacter* BChar = Cast<ABaseCharacter>(NewPlayer->GetPawn());w
+		//ABaseCharacter* BChar = Cast<ABaseCharacter>(NewPlayer->GetPawn());
 		BChar = Cast<ABaseCharacter>(NewPlayer->GetPawn());
 		if (BChar) {
 			BChar->OnDeath.AddDynamic(this, &AMainGameMode::TryRespawnPlayer);
