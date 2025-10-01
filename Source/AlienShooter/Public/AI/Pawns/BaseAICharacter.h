@@ -64,7 +64,7 @@ protected:
 	virtual void OnDeathCallback(AActor* Killer);
 
 	bool CanAttack() const;
-	void Attack() const;
+	void Attack();
 
 	UFUNCTION(BlueprintCallable, Category = "Death")
 	void ShouldDestroy();
@@ -81,6 +81,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category=Attacking)
 	float AttackTraceRate = 0.1f;
 	
+	UPROPERTY(EditDefaultsOnly, Category=Attacking)
+	bool bEndAttackStateWithTimer = false;
+	
+	UPROPERTY(EditDefaultsOnly, Category=Attacking)
+	float AttackLength = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category=Attacking)
+	bool bForceLookAtTargetWhileAttack = false;
+
 	TObjectPtr<AAIControllerBase> AIController;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
