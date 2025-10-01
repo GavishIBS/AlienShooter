@@ -6,7 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "AI/AI_Types.h"
-#include "AIParentCharacter.h"
+#include "../../GameCharacter.h"
 #include "Interfaces/AIInterface.h"
 #include "Interfaces/HitInterface.h"
 #include "SpecialWeaponTypes.h"
@@ -20,7 +20,7 @@ class UMaterialInstance;
  * 
  */
 UCLASS()
-class ALIENSHOOTER_API ABaseAICharacter : public AAIParentCharacter, public IHitInterface, public IAIInterface
+class ALIENSHOOTER_API ABaseAICharacter : public AGameCharacter, public IHitInterface, public IAIInterface
 {
 	GENERATED_BODY()
 
