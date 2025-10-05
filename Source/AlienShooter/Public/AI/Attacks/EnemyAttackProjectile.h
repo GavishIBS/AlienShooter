@@ -11,6 +11,7 @@
 class UBoxComponent;
 class UStaticMeshComponent;
 class UProjectileMovementComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class ALIENSHOOTER_API AEnemyAttackProjectile : public AActor
@@ -40,4 +41,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	TObjectPtr<UNiagaraSystem> HitFX;
+	
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	TObjectPtr<UMaterialInstance> HitDecal;
 };
