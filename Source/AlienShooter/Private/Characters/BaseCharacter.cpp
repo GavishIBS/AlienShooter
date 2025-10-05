@@ -11,6 +11,7 @@
 #include "Components/RadioPhoneComponent.h"
 //#include "Components/ObjectiveComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "CustomCollisionTypes.h"
 
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -22,6 +23,7 @@ ABaseCharacter::ABaseCharacter()
 	Tags.Add("Player");
 
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Player, ECR_Block);
 	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());

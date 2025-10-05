@@ -40,12 +40,38 @@ void ABaseAICharacter::BeginPlay()
 		
 		if (!WeakThis.IsValid()) return;  // Actor destroyed? Do nothing
 
-		if (WeakThis->AIController->TargetCharacter) {
-			if (WeakThis->IsInAttackRange())
-				WeakThis->Attack();
-			else {
+		/*
+		switch (WeakThis->AIController->GetAIState())
+		{
+		case EAIState::EAS_Idle:
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("Idle")));
+			break;
+		case EAIState::EAS_Attacking:
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("attacking")));
+			break;
+		default:
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("default")));
+			break;
+		}
+		*/
 
-				WeakThis->ChaseTarget(WeakThis->AIController);
+		if (WeakThis->AIController->GetAIState() == EAIState::EAS_Attacking)
+		{
+			if (WeakThis->AIController->TargetCharacter)
+			{
+				FRotator NewRotation = UKismetMathLibrary::RInterpTo(WeakThis->GetActorRotation(),
+					UKismetMathLibrary::FindLookAtRotation(WeakThis->GetActorLocation(), WeakThis->AIController->TargetCharacter->GetActorLocation()), 0.16f, 10.f);
+				WeakThis->SetActorRotation(NewRotation);
+			}
+		}
+		else {
+			if (WeakThis->AIController->TargetCharacter) {
+				if (WeakThis->IsInAttackRange())
+					WeakThis->Attack();
+				else {
+					WeakThis->ChaseTarget(WeakThis->AIController);
+					WeakThis->AIController->SetAIState(EAIState::EAS_Idle);
+				}
 			}
 		}
 	}), 0.16f, true, 0.16f);
@@ -279,11 +305,12 @@ bool ABaseAICharacter::CanAttack() const
 	return true;
 }
 
-void ABaseAICharacter::Attack() const
+void ABaseAICharacter::Attack()
 {
 	if (!CanAttack()) return;
 	if (AIAnimations.AttackAnimMontages.Num() == 0) return;
 	
+	/*
 	const int MontageSelectionIndex = FMath::RandRange(0, AIAnimations.AttackAnimMontages.Num() - 1);
 
 	if (!AIAnimations.AttackAnimMontages[MontageSelectionIndex]) return;
@@ -293,6 +320,22 @@ void ABaseAICharacter::Attack() const
 		AnimInstance->Montage_Play(AIAnimations.AttackAnimMontages[MontageSelectionIndex]);
 		AIController->SetAIState(EAS_Attacking);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("Playing attack montage"));
+	}
+	*/
+
+	if (AnimationLibrary::PlayAnimationMontage_RawPtr(GetMesh(), AIAnimations.AttackAnimMontages))
+	{
+		AIController->SetAIState(EAS_Attacking);
+		
+		if (bEndAttackStateWithTimer)
+		{
+			FTimerHandle EndAttackStateTimerHandle;
+			TWeakObjectPtr<ABaseAICharacter> WeakThis(this);
+			GetWorldTimerManager().SetTimer(EndAttackStateTimerHandle, FTimerDelegate::CreateLambda([WeakThis] {
+				if (!WeakThis.IsValid()) return;  // Actor destroyed? Do nothing
+				WeakThis->AIController->SetAIState(EAIState::EAS_Idle);
+			}), AttackLength, false);
+		}
 	}
 }
 
