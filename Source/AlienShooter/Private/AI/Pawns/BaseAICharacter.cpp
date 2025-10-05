@@ -40,6 +40,7 @@ void ABaseAICharacter::BeginPlay()
 		
 		if (!WeakThis.IsValid()) return;  // Actor destroyed? Do nothing
 
+		/*
 		switch (WeakThis->AIController->GetAIState())
 		{
 		case EAIState::EAS_Idle:
@@ -52,6 +53,7 @@ void ABaseAICharacter::BeginPlay()
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, FString::Printf(TEXT("default")));
 			break;
 		}
+		*/
 
 		if (WeakThis->AIController->GetAIState() == EAIState::EAS_Attacking)
 		{
@@ -324,7 +326,6 @@ void ABaseAICharacter::Attack()
 	if (AnimationLibrary::PlayAnimationMontage_RawPtr(GetMesh(), AIAnimations.AttackAnimMontages))
 	{
 		AIController->SetAIState(EAS_Attacking);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("Playing attack montage"));
 		
 		if (bEndAttackStateWithTimer)
 		{
