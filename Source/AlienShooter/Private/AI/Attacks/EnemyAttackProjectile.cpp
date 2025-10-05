@@ -10,6 +10,9 @@
 #include "CustomCollisionTypes.h"
 #include "Characters/ShooterCharacter.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "CustomCollisionTypes.h"
 
 AEnemyAttackProjectile::AEnemyAttackProjectile()
 {
@@ -88,23 +91,23 @@ void AEnemyAttackProjectile::OnAttackProjectileHit(AActor* HitActor, UPrimitiveC
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitFX, GetActorLocation(),
 			GetActorRotation(), GetActorScale3D(), true, true);
 	}
-	/*
 	if (HitDecal)
 	{
-		TArray<AActor*> ActorsToIgnore;
-		ActorsToIgnore.Add(this);
-		FHitResult OutHit;
-		const FVector Start = GetActorLocation();
-		const FVector End = GetActorLocation() - FVector(0.f, 0.f, 1000.f);
-		UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1,
-			false, ActorsToIgnore, EDrawDebugTrace::None, OutHit, true);
-		if (OutHit.bBlockingHit)
+		if (UWorld* World = GetWorld())
 		{
-			UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(),
-				DeathDecalMI_Selection, DeathDecalSize, OutHit.ImpactPoint,
-				FRotator(-90.f, 0.f, 0.f), DeathDecalLifeSpawn);
+			TArray<AActor*> ActorsToIgnore;
+			ActorsToIgnore.Add(this);
+			FHitResult OutHit;
+			const FVector Start = GetActorLocation();
+			const FVector End = GetActorLocation() - FVector(0.f, 0.f, 1000.f);
+			World->LineTraceSingleByChannel(OutHit, Start, End, ECC_Floor);
+			if (OutHit.bBlockingHit)
+			{
+				UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(),
+					HitDecal, HitDecalSize, OutHit.ImpactPoint,
+					FRotator(-90.f, 0.f, 0.f), HitDecalLifetime);
+			}
 		}
 	}
-	*/
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("HitActorName: %s"), *HitActor->GetName()));
 }

@@ -47,4 +47,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	TObjectPtr<UMaterialInstance> HitDecal;
+	
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	FVector HitDecalSize = FVector(200, 200, 100);
+	
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	float HitDecalLifetime = 5.f;
 };
