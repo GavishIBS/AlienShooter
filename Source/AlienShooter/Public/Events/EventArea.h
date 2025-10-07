@@ -39,6 +39,8 @@ protected:
 	UFUNCTION()
 	void OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	bool SetListenOverlapWithDelay(const bool InValue, const float InDelay);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
 	TObjectPtr<UBoxComponent> OverlapArea;
 
@@ -54,4 +56,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Chaining")
 	float ChainedEvent_Delay = 1.f;
+
+	bool bListenOverlaps = true;
+
+public:
+	//FORCEINLINE void SetListenOverlaps(const bool InValue) { bListenOverlaps = InValue; }
 };

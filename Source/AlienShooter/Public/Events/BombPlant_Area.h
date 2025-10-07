@@ -36,4 +36,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Properties", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<ADynamite> Bomb_Class;
+	
+	UPROPERTY(EditAnywhere, Category = "Properties", meta = (AllowPrivateAccess = "true"))
+	float AreaResetTime = 7.f;
 };

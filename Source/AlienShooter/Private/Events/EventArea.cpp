@@ -35,6 +35,8 @@ void AEventArea::BindCallbacks()
 
 void AEventArea::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (bListenOverlaps == false) return;
+
 	if (OtherActor->ActorHasTag(TagToLook)) {
 		OnEnterArea.Broadcast(OtherActor);
 		if (ChainedEvent) {
@@ -50,6 +52,8 @@ void AEventArea::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 
 void AEventArea::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (bListenOverlaps == false) return;
+
 	if (OtherActor->ActorHasTag(TagToLook)) {
 		OnExitArea.Broadcast(OtherActor);
 		if (ChainedEvent) {
@@ -61,4 +65,13 @@ void AEventArea::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 				ChainedEvent_Delay, false, ChainedEvent_Delay);
 		}
 	}
+}
+
+bool AEventArea::SetListenOverlapWithDelay(const bool InValue, const float InDelay)
+{
+	FTimerHandle UpdateListenOverlapTimerHandle;
+	GetWorldTimerManager().SetTimer(UpdateListenOverlapTimerHandle, FTimerDelegate::CreateLambda([this, InValue] {
+		bListenOverlaps = InValue;
+	}), InDelay, false);
+	return true;
 }

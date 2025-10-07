@@ -42,7 +42,11 @@ void ABombPlant_Area::TryPlantBomb(AActor* OtherActor)
 			{
 				SpawnedDynamite->PlantDynamiteAtLocation(BombPlantPoint->GetComponentLocation(), BombPlantPoint->GetComponentRotation());
 				InventoryComponent->RemoveItemFromInventory(Bomb_Class, true);
-				Destroy();
+				//Destroy();
+				if (SetListenOverlapWithDelay(true, AreaResetTime))
+				{
+					bListenOverlaps = false;
+				}
 			}
 		}
 	}
