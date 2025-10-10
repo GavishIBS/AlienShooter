@@ -61,6 +61,7 @@ public:
 	
 	FORCEINLINE FArmorProperties GetArmorProperties() const { return ArmorProperties; }
 	FORCEINLINE float GetArmorHealth() const { return ArmorProperties.CurrentArmorHealth; }
+	FORCEINLINE float GetArmorMaxHealth() const { return ArmorProperties.MaxArmorHealth; }
 	FORCEINLINE float GetArmorDamageAbsorption() const { return ArmorProperties.ArmorDamageAbsorption; }
 	FORCEINLINE FName GetAttachmentSocketName() const { return ArmorProperties.AttachmentSocketName; }
 	FORCEINLINE TArray<FName> GetArmorPiecesAttachmentSocketNames() const { return ArmorPiecesAttachmentSocketNames; }
