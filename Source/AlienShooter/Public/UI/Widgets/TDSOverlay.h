@@ -51,6 +51,9 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UImage* HealthIndicator_Image;
+	
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* ArmorBar;
 
 	UPROPERTY(meta = (BindWidget))
 	UBorder* EnvText_Border;
@@ -61,6 +64,8 @@ protected:
 protected:
 	UFUNCTION()
 	void UpdateHealthBar(float Health, float MaxHealth);
+	UFUNCTION()
+	void UpdateArmor(float ArmorHealth, float MaxArmorHealth, bool bEquipped);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Properties")

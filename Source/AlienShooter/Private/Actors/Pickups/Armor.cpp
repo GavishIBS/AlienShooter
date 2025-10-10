@@ -53,6 +53,9 @@ void AArmor::AbsorbDamage(const float InDamage)
 void AArmor::Break()
 {
 	if (DestructionParticleSystem)
-		UGameplayStatics::SpawnEmitterAtLocation(this, DestructionParticleSystem, OverlapSphere->GetComponentLocation(), OverlapSphere->GetComponentRotation(), true);
+	{
+		//UGameplayStatics::SpawnEmitterAtLocation(this, DestructionParticleSystem, OverlapSphere->GetComponentLocation(), OverlapSphere->GetComponentRotation(), true);
+		UGameplayStatics::SpawnEmitterAtLocation(this, DestructionParticleSystem, GetActorLocation(), GetActorRotation(), true);
+	}
 	Destroy();
 }

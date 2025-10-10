@@ -49,6 +49,10 @@ void UTDSOverlay::NativeConstruct()
 		OwnerAsShooterCharacter->GetAttributeComponent()->OnHealthUpdated.AddDynamic(this, &UTDSOverlay::UpdateHealthBar);
 		OwnerAsShooterCharacter->GetAttributeComponent()->OnMaxHealthUpdated.AddDynamic(this, &UTDSOverlay::UpdateHealthBar);
 	}
+	if (OwnerAsShooterCharacter)
+	{
+		OwnerAsShooterCharacter->GetAttributeComponent()->OnArmorUpdated.AddDynamic(this, &UTDSOverlay::UpdateArmor);
+	}
 }
 
 void UTDSOverlay::NativeDestruct()
@@ -73,6 +77,10 @@ void UTDSOverlay::InitComponents()
 	{
 		HealthBar->SetPercent(1);
 	}
+	if (ArmorBar)
+	{
+		ArmorBar->SetPercent(0);  // start with no armor
+	}
 }
 
 void UTDSOverlay::UpdateHealthBar(float Health, float MaxHealth)
@@ -83,6 +91,19 @@ void UTDSOverlay::UpdateHealthBar(float Health, float MaxHealth)
 	}
 	if (HealthIndicator_Image) {
 		HealthIndicator_Image->SetOpacity(1 - UKismetMathLibrary::SafeDivide(Health, MaxHealth));
+	}
+}
+
+void UTDSOverlay::UpdateArmor(float ArmorHealth, float MaxArmorHealth, bool bEquipped)
+{
+	if (bEquipped == false)
+	{
+		ArmorBar->SetPercent(0);
+		return;
+	}
+	if (MaxArmorHealth == 0) return;
+	if (ArmorBar) {
+		ArmorBar->SetPercent(ArmorHealth / MaxArmorHealth);
 	}
 }
 

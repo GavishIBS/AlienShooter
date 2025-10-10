@@ -26,6 +26,7 @@ struct FDeathAssetsData
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdated, float, NewHealth, float, MaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMaxHealthUpdated, float, Health, float, NewMaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnArmorUpdated, float, ArmorHealth, float, NewMaxArmorHealth, bool, bEquipped);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ALIENSHOOTER_API UAttributeComponent : public UActorComponent
@@ -38,6 +39,7 @@ public:
 	// Delegates
 	FOnHealthUpdated OnHealthUpdated;
 	FOnMaxHealthUpdated OnMaxHealthUpdated;
+	FOnArmorUpdated OnArmorUpdated;
 
 	void ReInitComponent();
 

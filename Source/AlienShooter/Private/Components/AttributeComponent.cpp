@@ -42,7 +42,10 @@ void UAttributeComponent::TakeDamage(const float InDamage)
 	}
 	Health = FMath::Clamp(Health - BodyDamage, 0.f, MaxHealth);
 	if (ArmorEquipped)
+	{
+		OnArmorUpdated.Broadcast(ArmorEquipped->GetArmorHealth(), ArmorEquipped->GetArmorMaxHealth(), true);
 		GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Emerald, FString::Printf(TEXT("AmorHealth: %f, BodyHealth: %f"), ArmorEquipped->GetArmorHealth(), Health));
+	}
 
 	OnHealthUpdated.Broadcast(Health, MaxHealth);
 }
@@ -64,6 +67,8 @@ void UAttributeComponent::TakeArmor(AArmor* InArmor)
 
 	ArmorEquipped = InArmor;
 	if (!ArmorEquipped) return;
+
+	OnArmorUpdated.Broadcast(ArmorEquipped->GetArmorHealth(), ArmorEquipped->GetArmorMaxHealth(), true);
 
 	if (AActor* OwnerActor = GetOwner())
 	{
@@ -93,6 +98,8 @@ void UAttributeComponent::BreakArmor()
 	{
 		ArmorEquipped->Break();
 		ArmorEquipped = nullptr;
+		
+		OnArmorUpdated.Broadcast(0, 0, false);
 	}
 }
 
