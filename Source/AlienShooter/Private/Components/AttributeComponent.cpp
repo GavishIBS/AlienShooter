@@ -60,13 +60,13 @@ bool UAttributeComponent::CanTakeArmor(const EArmorColorCode ArmorColorCode)
 	return false;
 }
 
-void UAttributeComponent::TakeArmor(AArmor* InArmor)
+bool UAttributeComponent::TakeArmor(AArmor* InArmor)
 {
 	// Break last armor
 	BreakArmor();
 
 	ArmorEquipped = InArmor;
-	if (!ArmorEquipped) return;
+	if (!ArmorEquipped) return false;
 
 	OnArmorUpdated.Broadcast(ArmorEquipped->GetArmorHealth(), ArmorEquipped->GetArmorMaxHealth(), true);
 
@@ -85,11 +85,14 @@ void UAttributeComponent::TakeArmor(AArmor* InArmor)
 				{
 					MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 					MeshComponent->AttachToComponent(OwnerCharacter->GetMesh(), AttachmentTransformRules, SocketName);
+					MeshComponent->SetVisibility(true);
 				}
 				Counter++;
 			}
+			return true;
 		}
 	}
+	return false;
 }
 
 void UAttributeComponent::BreakArmor()

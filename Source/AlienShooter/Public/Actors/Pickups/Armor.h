@@ -50,6 +50,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "ArmorPieces")
 	TArray<UStaticMeshComponent*> ArmorPiecesMeshComponents;
+	
+	UPROPERTY(EditAnywhere, Category = "ArmorPieces")
+	TArray<UStaticMesh*> ArmorPieceMeshes;
 
 public:
 	FORCEINLINE EArmorColorCode GetArmorColorCode() const { return ArmorColorCode; }

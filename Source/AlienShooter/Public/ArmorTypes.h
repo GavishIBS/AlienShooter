@@ -25,6 +25,9 @@ struct FArmorProperties
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	FName AttachmentSocketName = FName();
+	
+	UPROPERTY(EditAnywhere, Category = "Properties")
+	int32 NumMeshes = 1;
 };
 
 UENUM(BlueprintType)

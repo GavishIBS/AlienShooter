@@ -29,6 +29,8 @@ protected:
 
 	virtual bool PostPickup(AActor* Caller);
 
+	virtual void ClearDespawnTimer();
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> Mesh;
 
@@ -46,6 +48,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float DespawnDelay = 12.5f;
+
+	FTimerHandle DespawnTimerHandle;
 
 private:
 	void Despawn();

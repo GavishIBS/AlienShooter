@@ -46,7 +46,7 @@ public:
 public:	
 	void TakeDamage(const float InDamage);
 
-	void TakeArmor(AArmor* InArmor);
+	bool TakeArmor(AArmor* InArmor);
 	void BreakArmor();
 
 protected:
