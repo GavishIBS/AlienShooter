@@ -119,9 +119,11 @@ void AWeaponBase::OnWeaponFirePressedCallback()
 	if (CanFire())
 	{
 		Fire();
+		/*
 		if (WeaponSoundData.FireSound) {
 			UGameplayStatics::PlaySoundAtLocation(this, WeaponSoundData.FireSound, GetActorLocation());
 		}
+		*/
 	} else WeaponFiredFailed();
 }
 

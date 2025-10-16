@@ -290,6 +290,7 @@ public:
 	TMap<TEnumAsByte<EPhysicalSurface>, FBulletHitEffectData> HitEffects;  // TMap<PhysicsSurface, ParticleSystem>
 };
 
+/*
 USTRUCT(BlueprintType)
 struct FWeaponSoundData
 {
@@ -298,6 +299,7 @@ struct FWeaponSoundData
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	class USoundBase* FireSound;
 };
+*/
 
 UENUM()
 enum class EGetHitReturnType

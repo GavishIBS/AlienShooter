@@ -118,8 +118,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Properties)
 	FWeaponFXData WeaponFXData = FWeaponFXData();
 	
+	/*
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Properties)
 	FWeaponSoundData WeaponSoundData = FWeaponSoundData();
+	*/
 
 public:
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMeshAsSkeletalMesh() const { return WeaponSkeletalMesh; }
