@@ -10,6 +10,10 @@
 
 class UBoxComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOpenDoor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCloseDoor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDoorMovementTick);
+
 /*
 UENUM()
 enum class EMovementAxis
@@ -29,6 +33,16 @@ class ALIENSHOOTER_API AElectronicDoor : public AElectronicActor
 public:
 	AElectronicDoor();
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnOpenDoor OnOpenDoor;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnCloseDoor OnCloseDoor;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnDoorMovementTick OnDoorMovementTick;
+
 protected:
 	virtual void BeginPlay() override;
 	void BindCallbacks();
