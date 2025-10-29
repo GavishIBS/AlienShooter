@@ -35,6 +35,7 @@ void AElectronicDoor::Tick(float DeltaTime)
 		FVector Door_NewLocation = FMath::VInterpTo(DoorMesh->GetComponentLocation(),
 			Target, DeltaTime, DoorSpeed);
 		DoorMesh->SetWorldLocation(Door_NewLocation);
+		OnDoorMovementTick.Broadcast();   // door movement tick
 		if (Door_NewLocation == Target)
 		{
 			bOpening = false;
@@ -47,6 +48,7 @@ void AElectronicDoor::Tick(float DeltaTime)
 		FVector Door_NewLocation = FMath::VInterpTo(DoorMesh->GetComponentLocation(),
 			Target, DeltaTime, DoorSpeed);
 		DoorMesh->SetWorldLocation(Door_NewLocation);
+		OnDoorMovementTick.Broadcast();   // door movement tick
 		if (Door_NewLocation == Target)
 		{
 			bClosing = false;
@@ -114,11 +116,13 @@ void AElectronicDoor::OnCloseDoorBoxOverlap(UPrimitiveComponent* OverlappedCompo
 void AElectronicDoor::OpenDoor()
 {
 	bOpening = true;
+	OnOpenDoor.Broadcast();
 }
 
 void AElectronicDoor::CloseDoor()
 {
 	bClosing = true;
+	OnCloseDoor.Broadcast();
 }
 
 bool AElectronicDoor::TryUnlockDoor(AActor* Caller)
