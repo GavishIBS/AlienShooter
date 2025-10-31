@@ -22,7 +22,7 @@ struct FAlarmingModeData   // 4 modes - normal, safe, gray-zone, and danger
 	//ACustomDirectionalLight_DerivedFromElectricDirectionalLight* DirectionalLight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Data)
-	class USoundBase* SirensSoundEffect;     // not applicable for normal mode
+	TArray<class USoundBase*> SirensSoundEffects;     // not applicable for normal mode
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Data)
 	EAlarmingModeName AlarmingModeName = EAlarmingModeName::NORMAL;

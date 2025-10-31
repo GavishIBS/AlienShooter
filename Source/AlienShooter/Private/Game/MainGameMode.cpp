@@ -172,12 +172,22 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 {
 	if (NewModeName == EAlarmingModeName::NONE) return;
 
+	/*
 	if (CurrentAlarmModeSound_AudioComponent) {
 		CurrentAlarmModeSound_AudioComponent->Stop();
 		CurrentAlarmModeSound_AudioComponent->DestroyComponent();
 	}
-	if (USoundBase* SoundToSpawn = GetAlarmingModeData_ByName(CurrentAlarmingModeName).SirensSoundEffect) {
-		CurrentAlarmModeSound_AudioComponent = UGameplayStatics::SpawnSound2D(this, SoundToSpawn);
+	*/
+	for (UAudioComponent* AudioComponent : CurrentAlarmModeSound_AudioComponents)
+	{
+		AudioComponent->Stop();
+		AudioComponent->DestroyComponent();
+	}
+	CurrentAlarmModeSound_AudioComponents.Empty();
+	for (USoundBase* SirensSoundEffect : GetAlarmingModeData_ByName(CurrentAlarmingModeName).SirensSoundEffects) {
+		if (SirensSoundEffect) {
+			CurrentAlarmModeSound_AudioComponents.Add(UGameplayStatics::SpawnSound2D(this, SirensSoundEffect));
+		}
 	}
 
 	/*

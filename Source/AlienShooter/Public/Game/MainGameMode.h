@@ -75,7 +75,7 @@ protected:
 	virtual void OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, const EAlarmingModeName& LastModeName);
 
 	EAlarmingModeName CurrentAlarmingModeName = EAlarmingModeName::NORMAL;
-	class UAudioComponent* CurrentAlarmModeSound_AudioComponent = nullptr;
+	TArray<class UAudioComponent*> CurrentAlarmModeSound_AudioComponents = {};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data | AlarmingSystem")
 	TArray<FAlarmingModeData> AlarmingModes;          // 4 modes - normal, safe, gray-zone, and danger
