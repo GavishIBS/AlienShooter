@@ -57,6 +57,21 @@ void AElectronicDoor::Tick(float DeltaTime)
 	}
 }
 
+void AElectronicDoor::StartForceKeepOpen()
+{
+	OpenDoorBoxOverlap->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CloseDoorBoxOverlap->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	OpenDoor();
+
+}
+
+void AElectronicDoor::EndForceKeepOpen()
+{
+	CloseDoor();
+	OpenDoorBoxOverlap->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	CloseDoorBoxOverlap->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
+
 void AElectronicDoor::BeginPlay()
 {
 	Super::BeginPlay();

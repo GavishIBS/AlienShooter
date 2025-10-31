@@ -34,6 +34,12 @@ public:
 	AElectronicDoor();
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	void StartForceKeepOpen();
+	
+	UFUNCTION(BlueprintCallable)
+	void EndForceKeepOpen();
+
 	UPROPERTY(BlueprintAssignable)
 	FOnOpenDoor OnOpenDoor;
 	

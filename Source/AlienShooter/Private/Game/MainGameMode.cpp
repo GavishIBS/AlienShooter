@@ -10,6 +10,7 @@
 #include "Components/AudioComponent.h"
 #include "Electricity/Actors/Electric_Siren_SpotLight.h"
 #include "Game/Subsystems/OptionsGameInstanceSubsystem.h"
+#include "Electricity/Actors/ElectronicDoor.h"
 
 /*
 void AMainGameMode::OnPostLogin(AController* NewPlayer)
@@ -98,6 +99,17 @@ void AMainGameMode::BeginPlay()
 	OnPlaySequence.AddDynamic(this, &AMainGameMode::OnSequencePlayed);
 
 	Setup_AlarmLights();
+	
+	// Setup doors
+	TArray<AActor*> Doors_AsActors;
+	UGameplayStatics::GetAllActorsOfClass(this, AElectronicDoor::StaticClass(), Doors_AsActors);
+	for (AActor* Door_AsActor : Doors_AsActors)
+	{
+		AElectronicDoor* Door = Cast<AElectronicDoor>(Door_AsActor);
+		if (Door) {
+			DoorsCache.AddUnique(Door);
+		}
+	}
 }
 
 void AMainGameMode::RespawnPlayer()
@@ -168,8 +180,9 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 		CurrentAlarmModeSound_AudioComponent = UGameplayStatics::SpawnSound2D(this, SoundToSpawn);
 	}
 
+	/*
 	// disable last alarm light
-	for (FAlarmingModeData& ModeData_LastLight : AlarmingModes)
+	for (FAlarmingModeData& ModeData_LastLight : AlarmingModes)   // TODO: Optimize this code
 	{
 		if (ModeData_LastLight.AlarmingModeName == LastModeName) {
 			if (ModeData_LastLight.DirectionalLight) {
@@ -192,6 +205,25 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 				Siren->TurnOnLightWithMode(NewModeName);
 			}
 		}
+		
+		// update doors
+		for (FAlarmingModeData& AlarmingModeData : AlarmingModes)
+		{
+			if (AlarmingModeData.AlarmingModeName == NewModeName)
+			{
+				for (AElectronicDoor* Door : DoorsCache)
+				{
+					if (Door) {
+						if (AlarmingModeData.bForceDoorsOpen) {
+							Door->StartForceKeepOpen();
+						}
+						else {
+							Door->EndForceKeepOpen();
+						}
+					}
+				}
+			}
+		}
 
 		// update cursor widget
 		for (FAlarmingModeData& ModeData_Cursor : AlarmingModes)
@@ -205,6 +237,64 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 
 		OnAlarmingModeChangedEvent.Broadcast(NewModeName, LastModeName);
 	}
+	*/
+
+	// disable last alarm light
+	for (FAlarmingModeData& ModeData_LastLight : AlarmingModes)
+	{
+		if (ModeData_LastLight.AlarmingModeName == LastModeName) {
+			if (ModeData_LastLight.DirectionalLight) {
+				ModeData_LastLight.DirectionalLight->SetLightVisibility(false);
+			}
+		}
+	}
+
+	// enable new alarm light
+	for (FAlarmingModeData& ModeData_NiewLight : AlarmingModes)
+	{
+		if (ModeData_NiewLight.AlarmingModeName == NewModeName) {
+			if (ModeData_NiewLight.DirectionalLight) { ModeData_NiewLight.DirectionalLight->SetLightVisibility(true); }
+		}
+	}
+
+	// update sirens
+	for (AElectric_Siren_SpotLight* Siren : SirensCache)
+	{
+		if (Siren) {
+			Siren->TurnOnLightWithMode(NewModeName);
+		}
+	}
+
+	// update doors
+	for (FAlarmingModeData& AlarmingModeData : AlarmingModes)
+	{
+		if (AlarmingModeData.AlarmingModeName == NewModeName)
+		{
+			for (AElectronicDoor* Door : DoorsCache)
+			{
+				if (Door) {
+					if (AlarmingModeData.bForceDoorsOpen) {
+						Door->StartForceKeepOpen();
+					}
+					else {
+						Door->EndForceKeepOpen();
+					}
+				}
+			}
+		}
+	}
+
+	// update cursor widget
+	for (FAlarmingModeData& ModeData_Cursor : AlarmingModes)
+	{
+		if (ModeData_Cursor.AlarmingModeName == NewModeName) {
+			if (ModeData_Cursor.CursorWidget) {
+				GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld())->SetMouseCursorWidget(EMouseCursor::Default, ModeData_Cursor.CursorWidget);
+			}
+		}
+	}
+
+	OnAlarmingModeChangedEvent.Broadcast(NewModeName, LastModeName);
 }
 
 FAlarmingModeData AMainGameMode::GetAlarmingModeData_ByName(const EAlarmingModeName& ModeName)

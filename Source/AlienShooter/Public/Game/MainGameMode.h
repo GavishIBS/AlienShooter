@@ -9,9 +9,11 @@
 #include "AlarmingTypes.h"
 #include "MainGameMode.generated.h"
 
+class ABaseCharacter;
 class AElectric_Siren_SpotLight;
 class USoundMix;
 class USoundClass;
+class AElectronicDoor;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAlarmingModeChanged, EAlarmingModeName, NewModeName, EAlarmingModeName, LastModeName);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlaySequence, float, Duration);
@@ -96,6 +98,7 @@ protected:
 
 private:
 	TArray<AElectric_Siren_SpotLight*> SirensCache;
+	TArray<AElectronicDoor*> DoorsCache;
 
 	FAlarmingModeData GetAlarmingModeData_ByName(const EAlarmingModeName& ModeName);
 	/** Alarming system ends */

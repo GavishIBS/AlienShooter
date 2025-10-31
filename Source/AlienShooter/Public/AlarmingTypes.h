@@ -35,4 +35,7 @@ struct FAlarmingModeData   // 4 modes - normal, safe, gray-zone, and danger
 	
 	UPROPERTY(BlueprintAssignable, Category=Data)
 	FOnAlarmingModeDeactivated OnAlarmingModeDeactivated;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Data)
+	bool bForceDoorsOpen = false;
 };
