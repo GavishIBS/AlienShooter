@@ -12,6 +12,7 @@
 #include "Game/Subsystems/OptionsGameInstanceSubsystem.h"
 #include "Electricity/Actors/ElectronicDoor.h"
 #include "AI/AISpawnerBase.h"
+#include "AI/SpawnStarter.h"
 
 /*
 void AMainGameMode::OnPostLogin(AController* NewPlayer)
@@ -120,6 +121,17 @@ void AMainGameMode::BeginPlay()
 		AAISpawnerBase* AISpawner = Cast<AAISpawnerBase>(AISpawner_AsActor);
 		if (AISpawner) {
 			AISpawnersCache.AddUnique(AISpawner);
+		}
+	}
+
+	// Setup AI spawn starters
+	TArray<AActor*> AISpawnStarters_AsActors;
+	UGameplayStatics::GetAllActorsOfClass(this, ASpawnStarter::StaticClass(), AISpawnStarters_AsActors);
+	for (AActor* AISpawnStarter_AsActor : AISpawnStarters_AsActors)
+	{
+		ASpawnStarter* AISpawnStarter = Cast<ASpawnStarter>(AISpawnStarter_AsActor);
+		if (AISpawnStarter) {
+			AISpawnStartersCache.AddUnique(AISpawnStarter);
 		}
 	}
 }
@@ -287,6 +299,7 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 		}
 	}
 
+	/*
 	// update doors
 	for (FAlarmingModeData& AlarmingModeData : AlarmingModes)
 	{
@@ -305,18 +318,41 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 			}
 		}
 	}
+	*/
 
+	
 	for (FAlarmingModeData& AlarmingModeData : AlarmingModes)
 	{
 		if (AlarmingModeData.AlarmingModeName == NewModeName)
 		{
-			if (AlarmingModeData.AISpawnerTriggerChance > 0.f)
-			{
-				for (AAISpawnerBase* AISpawner : AISpawnersCache)
+			{// update doors
+				for (AElectronicDoor* Door : DoorsCache)
 				{
-					if (AlarmingModeData.AISpawnerTriggerChance >= (FMath::RandRange(0, 1) * 100))
+					if (Door) {
+						if (AlarmingModeData.bForceDoorsOpen) {
+							Door->StartForceKeepOpen();
+						}
+						else {
+							Door->EndForceKeepOpen();
+						}
+					}
+				}
+			}
+
+			{// update AI spawn starters and AI spawners
+				for (ASpawnStarter* SpawnStarter : AISpawnStartersCache)
+				{
+					AlarmingModeData.bDisableAISpawnStarters ? SpawnStarter->DisableSpawnStarter() : SpawnStarter->EnableSpawnStarter();
+				}
+
+				if (AlarmingModeData.AISpawnerTriggerChance > 0.f)
+				{
+					for (AAISpawnerBase* AISpawner : AISpawnersCache)
 					{
-						AISpawner->StartSpawningWrapper();
+						if (AlarmingModeData.AISpawnerTriggerChance >= (FMath::RandRange(0, 1) * 100))
+						{
+							AISpawner->StartSpawningWrapper();
+						}
 					}
 				}
 			}

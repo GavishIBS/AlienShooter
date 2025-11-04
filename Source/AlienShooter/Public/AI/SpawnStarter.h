@@ -19,6 +19,9 @@ class ALIENSHOOTER_API ASpawnStarter : public AActor
 public:	
 	ASpawnStarter();
 
+	void DisableSpawnStarter();
+	void EnableSpawnStarter();
+
 protected:
 	virtual void BeginPlay() override;
 

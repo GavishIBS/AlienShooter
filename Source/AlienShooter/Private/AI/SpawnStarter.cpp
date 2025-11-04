@@ -15,6 +15,16 @@ ASpawnStarter::ASpawnStarter()
 	OverlapBox->SetupAttachment(GetRootComponent());
 }
 
+void ASpawnStarter::DisableSpawnStarter()
+{
+	OverlapBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ASpawnStarter::EnableSpawnStarter()
+{
+	OverlapBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
 void ASpawnStarter::BeginPlay()
 {
 	Super::BeginPlay();
