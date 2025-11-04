@@ -14,6 +14,7 @@ class AElectric_Siren_SpotLight;
 class USoundMix;
 class USoundClass;
 class AElectronicDoor;
+class AAISpawnerBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAlarmingModeChanged, EAlarmingModeName, NewModeName, EAlarmingModeName, LastModeName);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlaySequence, float, Duration);
@@ -99,6 +100,7 @@ protected:
 private:
 	TArray<AElectric_Siren_SpotLight*> SirensCache;
 	TArray<AElectronicDoor*> DoorsCache;
+	TArray<AAISpawnerBase*> AISpawnersCache;
 
 	FAlarmingModeData GetAlarmingModeData_ByName(const EAlarmingModeName& ModeName);
 	/** Alarming system ends */

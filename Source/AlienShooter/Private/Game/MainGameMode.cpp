@@ -11,6 +11,7 @@
 #include "Electricity/Actors/Electric_Siren_SpotLight.h"
 #include "Game/Subsystems/OptionsGameInstanceSubsystem.h"
 #include "Electricity/Actors/ElectronicDoor.h"
+#include "AI/AISpawnerBase.h"
 
 /*
 void AMainGameMode::OnPostLogin(AController* NewPlayer)
@@ -108,6 +109,17 @@ void AMainGameMode::BeginPlay()
 		AElectronicDoor* Door = Cast<AElectronicDoor>(Door_AsActor);
 		if (Door) {
 			DoorsCache.AddUnique(Door);
+		}
+	}
+
+	// Setup AI spawners
+	TArray<AActor*> AISpawners_AsActors;
+	UGameplayStatics::GetAllActorsOfClass(this, AAISpawnerBase::StaticClass(), AISpawners_AsActors);
+	for (AActor* AISpawner_AsActor : AISpawners_AsActors)
+	{
+		AAISpawnerBase* AISpawner = Cast<AAISpawnerBase>(AISpawner_AsActor);
+		if (AISpawner) {
+			AISpawnersCache.AddUnique(AISpawner);
 		}
 	}
 }
@@ -288,6 +300,23 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 					}
 					else {
 						Door->EndForceKeepOpen();
+					}
+				}
+			}
+		}
+	}
+
+	for (FAlarmingModeData& AlarmingModeData : AlarmingModes)
+	{
+		if (AlarmingModeData.AlarmingModeName == NewModeName)
+		{
+			if (AlarmingModeData.AISpawnerTriggerChance > 0.f)
+			{
+				for (AAISpawnerBase* AISpawner : AISpawnersCache)
+				{
+					if (AlarmingModeData.AISpawnerTriggerChance >= (FMath::RandRange(0, 1) * 100))
+					{
+						AISpawner->StartSpawningWrapper();
 					}
 				}
 			}
