@@ -12,7 +12,7 @@ public class AlienShooter : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Chaos", "GeometryCollectionEngine", "ChaosSolverEngine", "FieldSystemEngine",
-			"Niagara", "NavigationSystem", "PhysicsCore", "OnlineSubsystem", "OnlineSubsystemUtils", "OnlineSubsystemSteam"});
+			"Niagara", "NavigationSystem", "PhysicsCore", "OnlineSubsystem", "OnlineSubsystemUtils", "OnlineSubsystemSteam", "ApplicationCore"});
 
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
@@ -28,8 +28,7 @@ public class AlienShooter : ModuleRules
 
         PrivateDependencyModuleNames.AddRange(new string[] {  });
 
-		// Uncomment if you are using Slate UI
-		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 		
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");

@@ -10,6 +10,10 @@
 #include "Components/TextBlock.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Components/Slider.h"
+#include "HAL/PlatformApplicationMisc.h"
+#include "GenericPlatform/GenericApplication.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Engine/Engine.h"
 
 UTDS_OptionsMenu::UTDS_OptionsMenu(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -26,6 +30,34 @@ void UTDS_OptionsMenu::NativeConstruct()
 	Super::NativeConstruct();
 
 	OptionsGIS = GetGameInstance()->GetSubsystem<UOptionsGameInstanceSubsystem>();
+
+	{// get monitors info
+		FDisplayMetrics DisplayMetrics;
+		FDisplayMetrics::RebuildDisplayMetrics(DisplayMetrics);
+		NumMonitors = DisplayMetrics.MonitorInfo.Num();
+		FVector2D WindowPos;
+		if (GEngine && GEngine->GameViewport)
+		{
+			TSharedPtr<SWindow> Window = GEngine->GameViewport->GetWindow();
+			if (Window.IsValid())
+			{
+				WindowPos = Window->GetPositionInScreen();
+			}
+		}
+		WindowPos = FVector2D::ZeroVector;
+		for (int32 i = 0; i < DisplayMetrics.MonitorInfo.Num(); i++)
+		{
+			const FMonitorInfo& Monitor = DisplayMetrics.MonitorInfo[i];
+			const FPlatformRect& Rect = Monitor.DisplayRect;
+
+			if (WindowPos.X >= Rect.Left && WindowPos.X < Rect.Right &&
+				WindowPos.Y >= Rect.Top && WindowPos.Y < Rect.Bottom)
+			{
+				CurrentMonitorIndex = i;
+			}
+		}
+		CurrentMonitorIndex = 0;
+	}
 
 	BindCallbacks();
 	
@@ -54,6 +86,10 @@ void UTDS_OptionsMenu::BindCallbacks()
 		Cycle_OverallQualityLevel_Decrease_Button->OnClicked.AddDynamic(this, &UTDS_OptionsMenu::OnOverallQualityLevel_DecreaseButtonClicked);
 		Cycle_OverallQualityLevel_Increase_Button->OnClicked.AddDynamic(this, &UTDS_OptionsMenu::OnOverallQualityLevel_IncreaseButtonClicked);
 	}
+	if (Cycle_Monitor_Decrease_Button && Cycle_Monitor_Increase_Button) {
+		Cycle_Monitor_Decrease_Button->OnClicked.AddDynamic(this, &UTDS_OptionsMenu::OnMonitor_DecreaseButtonClicked);
+		Cycle_Monitor_Increase_Button->OnClicked.AddDynamic(this, &UTDS_OptionsMenu::OnMonitor_IncreaseButtonClicked);
+	}
 	if (MusicVolumeSlider && EffectsVolumeSlider && DialoguesVolumeSlider) {
 		MusicVolumeSlider->OnValueChanged.AddDynamic(this, &UTDS_OptionsMenu::OnMusicVolumeChanged);
 		EffectsVolumeSlider->OnValueChanged.AddDynamic(this, &UTDS_OptionsMenu::OnEffectsVolumeChanged);
@@ -81,6 +117,11 @@ void UTDS_OptionsMenu::DisplayDefaultSettings()
 					static_cast<EQualityLevel>(UserSettings->GetOverallScalabilityLevel());
 			}
 			UpdateOverallQualityText();
+		}
+
+		// Update monitor index text
+		{
+			MonitorIndex_Text->SetText(FText::FromString(FString::Printf(TEXT("%d"), CurrentMonitorIndex)));
 		}
 
 		MusicVolumeSlider->SetValue(OptionsGIS->MusicVolume);
@@ -116,6 +157,25 @@ void UTDS_OptionsMenu::OnSaveSettingsButtonPressed()
 			UserSettings->SaveSettings();
 		}
 	}
+
+	// Apply monitor index
+	if (GEngine && GEngine->GameViewport) {
+
+		//int MonitorNumber = CurrentMonitorIndex + 1;
+		//FParse::Value(FCommandLine::Get(), L"monitor=", MonitorNumber);
+		FDisplayMetrics DisplayMetrics;
+		FDisplayMetrics::RebuildDisplayMetrics(DisplayMetrics);
+
+		int8 MonitorIndex = CurrentMonitorIndex;
+		int32 CurrentMonitorWidth = DisplayMetrics.MonitorInfo[MonitorIndex].NativeWidth;
+
+		float WidthPosition = (MonitorIndex)*DisplayMetrics.PrimaryDisplayWidth - CurrentMonitorWidth;
+
+		float HeightPosition = 0.0f;
+
+		FVector2D WindowPosition = FVector2D(WidthPosition, 0.f);
+		GEngine->GameViewport->GetWindow()->MoveWindowTo(WindowPosition);
+	}
 }
 
 void UTDS_OptionsMenu::OnCameraBoomOffset_CheckboxChanged(bool bIsChecked)
@@ -146,6 +206,18 @@ void UTDS_OptionsMenu::OnOverallQualityLevel_IncreaseButtonClicked()
 			static_cast<int32>(EQualityLevel::EPIC)
 		));
 	UpdateOverallQualityText();
+}
+
+void UTDS_OptionsMenu::OnMonitor_DecreaseButtonClicked()
+{
+	CurrentMonitorIndex = FMath::Clamp(CurrentMonitorIndex - 1, 0, NumMonitors - 1);
+	MonitorIndex_Text->SetText(FText::FromString(FString::Printf(TEXT("%d"), CurrentMonitorIndex)));
+}
+
+void UTDS_OptionsMenu::OnMonitor_IncreaseButtonClicked()
+{
+	CurrentMonitorIndex = FMath::Clamp(CurrentMonitorIndex + 1, 0, NumMonitors - 1);
+	MonitorIndex_Text->SetText(FText::FromString(FString::Printf(TEXT("%d"), CurrentMonitorIndex)));
 }
 
 void UTDS_OptionsMenu::UpdateOverallQualityText()

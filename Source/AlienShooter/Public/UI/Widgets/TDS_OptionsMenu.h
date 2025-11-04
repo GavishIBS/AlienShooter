@@ -35,6 +35,9 @@ protected:
 
 	EQualityLevel OverallGameScalability_QualityLevel = EQualityLevel::LOW;
 
+	uint8 NumMonitors = 1;
+	uint8 CurrentMonitorIndex = 0;
+
 protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
@@ -67,6 +70,15 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* OverallQuality_Text;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* Cycle_Monitor_Decrease_Button;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* Cycle_Monitor_Increase_Button;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MonitorIndex_Text;
 	
 	UPROPERTY(meta = (BindWidget))
 	USlider* MusicVolumeSlider;
@@ -97,6 +109,12 @@ protected:
 	
 	UFUNCTION()
 	void OnOverallQualityLevel_IncreaseButtonClicked();
+
+	UFUNCTION()
+	void OnMonitor_DecreaseButtonClicked();
+
+	UFUNCTION()
+	void OnMonitor_IncreaseButtonClicked();
 
 	UFUNCTION()
 	void OnMusicVolumeChanged(float Value);
