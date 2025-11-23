@@ -3,6 +3,7 @@
 // All rights reserved.
 
 using System.IO;
+using UnrealBuildBase;
 using UnrealBuildTool;
 
 public class AlienShooter : ModuleRules
@@ -16,7 +17,19 @@ public class AlienShooter : ModuleRules
 
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
-            string SteamLibPath = "D:/Programs/EpicGames/UE_5.4/Engine/Source/ThirdParty/Steamworks/Steamv157/sdk/redistributable_bin/win64";
+            //string SteamLibPath = "C:/Program Files/Epic Games/UE_5.4/Engine/Source/ThirdParty/Steamworks/Steamv157/sdk/redistributable_bin/win64";
+
+            string EngineDir = Unreal.EngineDirectory.FullName;
+            string SteamLibPath = Path.Combine(
+                EngineDir,
+                "Source",
+                "ThirdParty",
+                "Steamworks",
+                "Steamv157",
+                "sdk",
+                "redistributable_bin",
+                "win64"
+            );
 
             PublicAdditionalLibraries.Add(SteamLibPath + "/steam_api64.lib");
             PublicDelayLoadDLLs.Add("steam_api64.dll");
