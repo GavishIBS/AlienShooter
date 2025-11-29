@@ -130,8 +130,9 @@ void AMainGameMode::BeginPlay()
 	for (AActor* AISpawnStarter_AsActor : AISpawnStarters_AsActors)
 	{
 		ASpawnStarter* AISpawnStarter = Cast<ASpawnStarter>(AISpawnStarter_AsActor);
-		if (AISpawnStarter) {
+		if (AISpawnStarter && AISpawnStarter->GetAISpawnerRef()) {
 			AISpawnStartersCache.AddUnique(AISpawnStarter);
+			AISpawnStarter->GetAISpawnerRef()->OnAIEnemySpawned.AddDynamic(this, &AMainGameMode::IncrementEnemyCount);
 		}
 	}
 }
@@ -382,6 +383,21 @@ FAlarmingModeData AMainGameMode::GetAlarmingModeData_ByName(const EAlarmingModeN
 		}
 	}
 	return ReturnValue;
+}
+
+void AMainGameMode::IncrementEnemyCount(AController* SpawnedEnemyControlled)
+{
+	if (SpawnedEnemyControlled) {
+		SpawnedEnemyControlled->OnDestroyed.AddDynamic(this, &AMainGameMode::DecrementEnemyCount);
+		CurrentEnemyNumber += 1;
+	}
+}
+
+void AMainGameMode::DecrementEnemyCount(AActor* DestroyedActor)
+{
+	if (DestroyedActor) {
+		CurrentEnemyNumber -= 1;
+	}
 }
 
 void AMainGameMode::Setup_AlarmLights()

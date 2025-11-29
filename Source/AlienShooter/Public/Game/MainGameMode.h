@@ -107,10 +107,19 @@ private:
 	FAlarmingModeData GetAlarmingModeData_ByName(const EAlarmingModeName& ModeName);
 	/** Alarming system ends */
 
+	UFUNCTION()
+	void IncrementEnemyCount(AController* SpawnedEnemyControlled);
+	UFUNCTION()
+	void DecrementEnemyCount(AActor* DestroyedActor);
+
+
 public:
 	//UFUNCTION(BlueprintCallable, Category = "Game | Rebirth")
 	FORCEINLINE bool CanRespawn() const { return RespawnCount > 0 && BChar; }
 	
 	//UFUNCTION(BlueprintCallable, Category = "Game | Rebirth")
 	void RespawnPlayer();
+
+	UPROPERTY(BlueprintReadOnly)
+	int CurrentEnemyNumber = 0;
 };

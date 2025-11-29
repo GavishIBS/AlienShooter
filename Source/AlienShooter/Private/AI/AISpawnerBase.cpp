@@ -82,7 +82,10 @@ void AAISpawnerBase::SpawnTick()
 		ABaseAICharacter* AICharacter = World->SpawnActor<ABaseAICharacter>(SpawnDataSelection->AIClass,
 			SpawnTransform, ActorSpawnParamerts);
 		if (AICharacter)
+		{
 			AICharacter->SpawnDefaultController();
+			OnAIEnemySpawned.Broadcast(AICharacter->GetController());
+		}
 		SpawnDataSelection->Count--;
 		if (SpawnDataSelection->Count <= 0)
 			SpawnData.RemoveAt(RandomSelectionIndex);
