@@ -12,6 +12,7 @@
 #include "Components/InputComponent.h"
 #include "Game/MainGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/WidgetComponent.h"
 
 ADialoguePawn::ADialoguePawn()
 {
@@ -24,6 +25,10 @@ ADialoguePawn::ADialoguePawn()
 	ConversationArea->SetupAttachment(PawnMesh);
 
 	DialogueComponent = CreateDefaultSubobject<UDialogueComponent>(TEXT("DialogueComponent"));
+
+	MessageUWComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("MessageUWComponent"));
+	MessageUWComponent->SetupAttachment(PawnMesh);
+	MessageUWComponent->SetVisibility(false);
 }
 
 void ADialoguePawn::BeginPlay()
@@ -36,6 +41,7 @@ void ADialoguePawn::InitCallbacks()
 {
 	if (ConversationArea) {
 		ConversationArea->OnComponentBeginOverlap.AddDynamic(this, &ADialoguePawn::StartConversation);
+		ConversationArea->OnComponentEndOverlap.AddDynamic(this, &ADialoguePawn::OnExitConversationArea);
 	}
 	if (DialogueComponent) {
 		DialogueComponent->OnConversationEnd.AddDynamic(this, &ADialoguePawn::OnConvoEnd);
@@ -45,16 +51,17 @@ void ADialoguePawn::InitCallbacks()
 void ADialoguePawn::StartConversation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// TODO: Optimization -> Use a better approach to trigger conversation and create widget in viewport
-
-	if (AMainGameMode* MGM = Cast<AMainGameMode>(UGameplayStatics::GetGameMode(this)))
-	{
-		if (MGM->CanStartActionOtherThenCombat() == false) {
-			return;
-		}
-	}
-	
+	// TODO: Optimization -> Use a better approach to trigger conversation and create widget in viewport	
 	if (OtherActor->ActorHasTag("Player")) {
+
+		if (AMainGameMode* MGM = Cast<AMainGameMode>(UGameplayStatics::GetGameMode(this)))
+		{
+			if (MGM->CanStartActionOtherThenCombat() == false) {
+				MessageUWComponent->SetVisibility(true);
+				return;
+			}
+		}
+
 		if (ConversationArea) ConversationArea->DestroyComponent();
 		SecondPerson = Cast<AControllableCharacter>(OtherActor);
 		if (SecondPerson) {
@@ -68,8 +75,16 @@ void ADialoguePawn::StartConversation(UPrimitiveComponent* OverlappedComponent, 
 				SecondPerson->InputComponent->ClearActionBindings();
 			}
 		}
+
 	}
 	else return;
+}
+
+void ADialoguePawn::OnExitConversationArea(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor->ActorHasTag("Player")) {
+		MessageUWComponent->SetVisibility(false);
+	}
 }
 
 void ADialoguePawn::OnConvoEnd()
