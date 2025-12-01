@@ -112,6 +112,7 @@ private:
 	UFUNCTION()
 	void DecrementEnemyCount(AActor* DestroyedActor);
 
+	int CurrentEnemyNumber = 0;
 
 public:
 	//UFUNCTION(BlueprintCallable, Category = "Game | Rebirth")
@@ -120,6 +121,8 @@ public:
 	//UFUNCTION(BlueprintCallable, Category = "Game | Rebirth")
 	void RespawnPlayer();
 
-	UPROPERTY(BlueprintReadOnly)
-	int CurrentEnemyNumber = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
+	int StartAction_EnemyNumberTolerence = 0;
+
+	FORCEINLINE bool CanStartActionOtherThenCombat() const { return CurrentEnemyNumber <= StartAction_EnemyNumberTolerence; }
 };

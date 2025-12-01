@@ -10,6 +10,8 @@
 #include "HUD/TDSHUD.h"
 #include "UI/Widgets/TDS_DialogueUW.h"
 #include "Components/InputComponent.h"
+#include "Game/MainGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 ADialoguePawn::ADialoguePawn()
 {
@@ -44,6 +46,13 @@ void ADialoguePawn::StartConversation(UPrimitiveComponent* OverlappedComponent, 
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// TODO: Optimization -> Use a better approach to trigger conversation and create widget in viewport
+
+	if (AMainGameMode* MGM = Cast<AMainGameMode>(UGameplayStatics::GetGameMode(this)))
+	{
+		if (MGM->CanStartActionOtherThenCombat() == false) {
+			return;
+		}
+	}
 	
 	if (OtherActor->ActorHasTag("Player")) {
 		if (ConversationArea) ConversationArea->DestroyComponent();
