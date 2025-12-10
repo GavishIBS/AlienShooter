@@ -178,8 +178,10 @@ void AWeaponBase::UpdateMagazine()
 	//WeaponProperties.AmmoInMagazine = GetTotalAmmoAvailable() >= WeaponProperties.MagazineMaxSize ? WeaponProperties.MagazineMaxSize : GetTotalAmmoAvailable();
 	//SetTotalAmmoAvailable(GetTotalAmmoAvailable() - WeaponProperties.AmmoInMagazine);
 	
-	WeaponProperties.SetAmmoInMag(GetAmmoInBag() >= WeaponProperties.MagazineMaxSize ? WeaponProperties.MagazineMaxSize : GetAmmoInBag());
-	WeaponProperties.SetAmmoInBag(GetAmmoInBag() - WeaponProperties.AmmoInMagazine);
+	const int32 AmmoToAdd = WeaponProperties.MagazineMaxSize - GetAmmoInMag();
+	const int32 AmmoCanAdd = GetAmmoInBag() >= AmmoToAdd ? AmmoToAdd : GetAmmoInBag();
+	WeaponProperties.SetAmmoInMag(GetAmmoInMag() + AmmoCanAdd);
+	WeaponProperties.SetAmmoInBag(GetAmmoInBag() - AmmoCanAdd);
 }
 
 FTransform AWeaponBase::GetWeaponMuzzleTransform() const
