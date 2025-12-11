@@ -14,6 +14,7 @@ UTDS_KeySmashUserWidget::UTDS_KeySmashUserWidget(const FObjectInitializer& Objec
 void UTDS_KeySmashUserWidget::NativePreConstruct()
 {
 	Super::NativePreConstruct();
+	SetIsFocusable(true);
 }
 
 void UTDS_KeySmashUserWidget::NativeConstruct()

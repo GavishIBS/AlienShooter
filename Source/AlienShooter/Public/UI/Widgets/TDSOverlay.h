@@ -58,7 +58,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UBorder* EnvText_Border;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadOnly)
 	TObjectPtr<UTDS_KeySmashUserWidget> KeySmashUI;
 
 protected:
