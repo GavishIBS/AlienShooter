@@ -107,10 +107,22 @@ private:
 	FAlarmingModeData GetAlarmingModeData_ByName(const EAlarmingModeName& ModeName);
 	/** Alarming system ends */
 
+	UFUNCTION()
+	void IncrementEnemyCount(AController* SpawnedEnemyControlled);
+	UFUNCTION()
+	void DecrementEnemyCount(AActor* DestroyedActor);
+
+	int CurrentEnemyNumber = 0;
+
 public:
 	//UFUNCTION(BlueprintCallable, Category = "Game | Rebirth")
 	FORCEINLINE bool CanRespawn() const { return RespawnCount > 0 && BChar; }
 	
 	//UFUNCTION(BlueprintCallable, Category = "Game | Rebirth")
 	void RespawnPlayer();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
+	int StartAction_EnemyNumberTolerence = 0;
+
+	FORCEINLINE bool CanStartActionOtherThenCombat() const { return CurrentEnemyNumber <= StartAction_EnemyNumberTolerence; }
 };

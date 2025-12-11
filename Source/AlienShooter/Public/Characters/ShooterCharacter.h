@@ -70,6 +70,7 @@ protected:
 	void LeftMouseButtonReleased();
 	void RightMouseButtonPressed();
 	void RightMouseButtonReleased();
+	void RKeyPressed();
 	void MouseWheelUp();
 	void MouseWheelDown();
 	void LeftAltPressed();
@@ -88,6 +89,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category=Input)
 	TObjectPtr<UInputAction> RightMouseButtonAction = nullptr;
+	
+	UPROPERTY(EditDefaultsOnly, Category=Input)
+	TObjectPtr<UInputAction> RAction = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category=Input)
 	TObjectPtr<UInputAction> MouseWheelUpAction = nullptr;

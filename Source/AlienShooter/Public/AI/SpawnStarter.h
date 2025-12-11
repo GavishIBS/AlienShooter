@@ -34,4 +34,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UBoxComponent> OverlapBox = nullptr;
+
+public:
+	FORCEINLINE TObjectPtr<AAISpawnerBase> GetAISpawnerRef() const { return Spawner; }
 };

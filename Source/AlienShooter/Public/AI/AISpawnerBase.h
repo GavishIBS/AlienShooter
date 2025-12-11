@@ -11,6 +11,8 @@
 class ABaseAICharacter;
 class ATargetPoint;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAIEnemySpawned, AController*, SpawnedEnemyControlled);
+
 USTRUCT(BlueprintType)
 struct FAISpawnData
 {
@@ -39,6 +41,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void StartSpawningWrapper();
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAIEnemySpawned OnAIEnemySpawned;
 
 protected:
 	virtual void BeginPlay() override;
