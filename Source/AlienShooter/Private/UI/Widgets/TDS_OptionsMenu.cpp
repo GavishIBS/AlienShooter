@@ -78,6 +78,9 @@ void UTDS_OptionsMenu::BindCallbacks()
 	if (SaveSettingsButton) {
 		SaveSettingsButton->OnClicked.AddDynamic(this, &UTDS_OptionsMenu::OnSaveSettingsButtonPressed);
 	}
+	if (ResetSettingsToDefaultButton) {
+		ResetSettingsToDefaultButton->OnClicked.AddDynamic(this, &UTDS_OptionsMenu::OnResetSettingsToDefaultButtonPressed);
+	}
 	if (EnableCameraBoomOffset_Checkbox && EnableCameraBoomRotation_Checkbox) {
 		EnableCameraBoomOffset_Checkbox->OnCheckStateChanged.AddDynamic(this, &UTDS_OptionsMenu::OnCameraBoomOffset_CheckboxChanged);
 		EnableCameraBoomRotation_Checkbox->OnCheckStateChanged.AddDynamic(this, &UTDS_OptionsMenu::OnCameraBoomRotation_CheckboxChanged);
@@ -176,6 +179,24 @@ void UTDS_OptionsMenu::OnSaveSettingsButtonPressed()
 		FVector2D WindowPosition = FVector2D(WidthPosition, 0.f);
 		GEngine->GameViewport->GetWindow()->MoveWindowTo(WindowPosition);
 	}
+}
+
+void UTDS_OptionsMenu::OnResetSettingsToDefaultButtonPressed()
+{
+	OnMusicVolumeChanged(MusicVolumeSlider->GetMaxValue());
+	OnEffectsVolumeChanged(EffectsVolumeSlider->GetMaxValue());
+	OnDialoguesVolumeChanged(DialoguesVolumeSlider->GetMaxValue());
+	OnBrightnessChanged(BrightnessSlider->GetMaxValue());
+
+	OnCameraBoomOffset_CheckboxChanged(true);
+	OnCameraBoomRotation_CheckboxChanged(true);
+	while (static_cast<int32>(OverallGameScalability_QualityLevel) > 0)
+	{
+		OnOverallQualityLevel_DecreaseButtonClicked();
+	}
+
+	OnSaveSettingsButtonPressed();
+	OnBackButtonPressed();
 }
 
 void UTDS_OptionsMenu::OnCameraBoomOffset_CheckboxChanged(bool bIsChecked)

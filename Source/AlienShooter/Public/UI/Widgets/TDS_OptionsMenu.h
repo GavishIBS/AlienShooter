@@ -55,6 +55,9 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* SaveSettingsButton;   // saves and applies the new and updated settings
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton* ResetSettingsToDefaultButton;
 
 	UPROPERTY(meta = (BindWidget))
 	UCheckBox* EnableCameraBoomOffset_Checkbox;
@@ -97,6 +100,9 @@ protected:
 	
 	UFUNCTION()
 	void OnSaveSettingsButtonPressed();
+	
+	UFUNCTION()
+	void OnResetSettingsToDefaultButtonPressed();
 
 	UFUNCTION()
 	void OnCameraBoomOffset_CheckboxChanged(bool bIsChecked);
