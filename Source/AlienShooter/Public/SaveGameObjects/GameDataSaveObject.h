@@ -21,6 +21,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Data | Player | Details")
 	int32 NumberOfLevelsCompleted = 0;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Data | Game")
+	int32 NumGasCanisters = 0;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	FString SaveSlotName;

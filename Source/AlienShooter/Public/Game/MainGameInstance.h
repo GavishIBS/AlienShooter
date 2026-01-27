@@ -37,4 +37,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE int GetNumGasCanisters() { return (int)NumGasCanisters; }
+
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void SetNumGasCanisters(const int32 InValue) { NumGasCanisters = InValue; }
 };
