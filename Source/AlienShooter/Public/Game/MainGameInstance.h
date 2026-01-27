@@ -20,11 +20,12 @@ protected:
 	// Data
 	FName PlayerName = "MyName";
 	unsigned int AvailableCashAmount = 0;
+	unsigned int NumGasCanisters = 0;
 
 public:
 	FORCEINLINE void AddCash(unsigned int InAmount) { AvailableCashAmount += InAmount; }
 	FORCEINLINE void DeductCash(unsigned int InAmount) { AvailableCashAmount -= InAmount; }
-
+	FORCEINLINE void AddGasCanister(unsigned int InValue) { NumGasCanisters += InValue; }
 
 
 
@@ -33,4 +34,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE int GetAvailableCash() { return (int)AvailableCashAmount; }
+	
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int GetNumGasCanisters() { return (int)NumGasCanisters; }
 };
