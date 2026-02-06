@@ -8,6 +8,8 @@
 #include "Engine/GameInstance.h"
 #include "MainGameInstance.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGasCanistersUpdated, int32, NumGasCanisters);
+
 /**
  * 
  */
@@ -16,6 +18,10 @@ class ALIENSHOOTER_API UMainGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnGasCanistersUpdated OnGasCanistersUpdated;
+
 protected:
 	// Data
 	FName PlayerName = "MyName";
@@ -25,7 +31,11 @@ protected:
 public:
 	FORCEINLINE void AddCash(unsigned int InAmount) { AvailableCashAmount += InAmount; }
 	FORCEINLINE void DeductCash(unsigned int InAmount) { AvailableCashAmount -= InAmount; }
-	FORCEINLINE void AddGasCanister(unsigned int InValue) { NumGasCanisters += InValue; }
+	FORCEINLINE void AddGasCanister(unsigned int InValue)
+	{
+		NumGasCanisters += InValue;
+		OnGasCanistersUpdated.Broadcast(NumGasCanisters);
+	}
 
 
 
@@ -40,5 +50,9 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetNumGasCanisters(const int32 InValue) { NumGasCanisters = InValue; }
+	FORCEINLINE void SetNumGasCanisters(const int32 InValue)
+	{
+		NumGasCanisters = InValue;
+		OnGasCanistersUpdated.Broadcast(NumGasCanisters);
+	}
 };
