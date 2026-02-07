@@ -37,6 +37,7 @@ public:
 	FOnItemSelected OnItemSelected;
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Core")
 	bool AddItemToInventoryFromClass(TSubclassOf<AActor> InItemClass);
 	bool AddItemToInventory(const FItemData ItemData);
 	bool RemoveItemFromInventory(const TSubclassOf<AInventoryPickup> ItemClass, bool bShouldDestroy = false);
