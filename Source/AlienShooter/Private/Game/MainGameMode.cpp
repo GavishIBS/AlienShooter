@@ -113,7 +113,15 @@ void AMainGameMode::BeginPlay()
 		}
 	}
 
-	// Setup AI spawners
+
+	Cache_AISpawners();
+	Cache_SpawnStarters();
+}
+
+void AMainGameMode::Cache_AISpawners()
+{
+	AISpawnersCache.Empty();
+
 	TArray<AActor*> AISpawners_AsActors;
 	UGameplayStatics::GetAllActorsOfClass(this, AAISpawnerBase::StaticClass(), AISpawners_AsActors);
 	for (AActor* AISpawner_AsActor : AISpawners_AsActors)
@@ -123,8 +131,12 @@ void AMainGameMode::BeginPlay()
 			AISpawnersCache.AddUnique(AISpawner);
 		}
 	}
+}
 
-	// Setup AI spawn starters
+void AMainGameMode::Cache_SpawnStarters()
+{
+	AISpawnStartersCache.Empty();
+
 	TArray<AActor*> AISpawnStarters_AsActors;
 	UGameplayStatics::GetAllActorsOfClass(this, ASpawnStarter::StaticClass(), AISpawnStarters_AsActors);
 	for (AActor* AISpawnStarter_AsActor : AISpawnStarters_AsActors)
@@ -166,6 +178,12 @@ void AMainGameMode::EnableAlarmingSystem(const EAlarmingModeName& SwitchToModeNa
 	{
 		if (ModeData.AlarmingModeName == CurrentAlarmingModeName) {
 			ModeData.OnAlarmingModeActivated.Broadcast(ModeData.AlarmingModeName);
+
+			FTimerHandle ResetAlarmingModeTimerHandle;
+			GetWorldTimerManager().SetTimer(ResetAlarmingModeTimerHandle, FTimerDelegate::CreateLambda([&] {
+				EnableAlarmingSystem(EAlarmingModeName::NORMAL);
+			}), ModeData.ResetAfterSeconds, false);
+
 			break;
 		}
 	}
@@ -340,10 +358,16 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 				}
 			}
 
+			Cache_AISpawners();
+			Cache_SpawnStarters();
+
 			{// update AI spawn starters and AI spawners
 				for (ASpawnStarter* SpawnStarter : AISpawnStartersCache)
 				{
-					AlarmingModeData.bDisableAISpawnStarters ? SpawnStarter->DisableSpawnStarter() : SpawnStarter->EnableSpawnStarter();
+					if (SpawnStarter)
+					{
+						AlarmingModeData.bDisableAISpawnStarters ? SpawnStarter->DisableSpawnStarter() : SpawnStarter->EnableSpawnStarter();
+					}
 				}
 
 				if (AlarmingModeData.AISpawnerTriggerChance > 0.f)
@@ -352,7 +376,10 @@ void AMainGameMode::OnAlarmingModeChanged(const EAlarmingModeName& NewModeName, 
 					{
 						if (AlarmingModeData.AISpawnerTriggerChance >= (FMath::RandRange(0, 1) * 100))
 						{
-							AISpawner->StartSpawningWrapper();
+							if (AISpawner)
+							{
+								AISpawner->StartSpawningWrapper();
+							}
 						}
 					}
 				}

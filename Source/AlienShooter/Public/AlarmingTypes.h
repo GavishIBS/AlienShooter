@@ -44,4 +44,7 @@ struct FAlarmingModeData   // 4 modes - normal, safe, gray-zone, and danger
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Data, meta = (ClampMin = "0", ClampMax = "100"))
 	float AISpawnerTriggerChance = 0.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Data, meta = (ClampMin = "5", ClampMax = "600"))
+	float ResetAfterSeconds = 45.f;
 };

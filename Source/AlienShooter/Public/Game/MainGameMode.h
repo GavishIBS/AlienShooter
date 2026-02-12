@@ -98,6 +98,9 @@ protected:
 	TObjectPtr<USoundClass> DialoguesSoundClass;
 	// Audio end
 
+	void Cache_AISpawners();
+	void Cache_SpawnStarters();
+
 private:
 	TArray<AElectric_Siren_SpotLight*> SirensCache;
 	TArray<AElectronicDoor*> DoorsCache;

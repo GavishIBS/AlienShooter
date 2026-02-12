@@ -17,12 +17,18 @@ ASpawnStarter::ASpawnStarter()
 
 void ASpawnStarter::DisableSpawnStarter()
 {
-	OverlapBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	if (OverlapBox)
+	{
+		OverlapBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
 
 void ASpawnStarter::EnableSpawnStarter()
 {
-	OverlapBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	if (OverlapBox)
+	{
+		OverlapBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
 }
 
 void ASpawnStarter::BeginPlay()
