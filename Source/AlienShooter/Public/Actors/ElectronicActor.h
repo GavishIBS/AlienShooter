@@ -27,6 +27,7 @@ protected:
 public:
 	FORCEINLINE bool HaveElectricity() const { return bHaveElectricity; }
 
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetHaveElectricity(const bool Value)
 	{
 		if (bHaveElectricity == Value) return;
