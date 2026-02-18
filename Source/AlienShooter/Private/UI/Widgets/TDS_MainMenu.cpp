@@ -72,6 +72,24 @@ void UTDS_MainMenu::OnContinueGameButtonPressed()
 		case 3:
 			LevelName = "4th";
 			break;
+		case 4:
+			LevelName = "5thBoss";
+			break;
+		case 5:
+			LevelName = "6th";
+			break;
+		case 6:
+			LevelName = "7th";
+			break;
+		case 7:
+			LevelName = "8th";
+			break;
+		case 8:
+			LevelName = "9th";
+			break;
+		case 9:
+			LevelName = "MainMenuLevel";
+			break;
 		default:
 			break;
 		}

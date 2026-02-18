@@ -19,7 +19,7 @@ class ALIENSHOOTER_API UMainGameInstance : public UGameInstance
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintAssignable)
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnGasCanistersUpdated OnGasCanistersUpdated;
 
 protected:

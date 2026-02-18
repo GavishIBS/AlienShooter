@@ -67,6 +67,8 @@ protected:
 
 	int NumSpawned = 0;   // Number of AI characters spawned through this spawner.
 
+	bool bAlreadySpawned = false;
+
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float SpawnTimerTickRate = 0.085f;
 

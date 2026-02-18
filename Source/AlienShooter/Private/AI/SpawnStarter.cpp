@@ -45,6 +45,7 @@ void ASpawnStarter::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	if (!Spawner) Destroy();
 	if (OtherActor->ActorHasTag("Player"))
 	{
+		if (Spawner->bAlreadySpawned) Destroy();
 		bool bSpawned = Spawner->StartSpawning();
 		if (bSpawned) Destroy();
 	}

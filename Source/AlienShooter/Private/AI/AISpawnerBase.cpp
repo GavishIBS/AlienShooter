@@ -30,11 +30,16 @@ void AAISpawnerBase::StartSpawningWrapper()
 
 bool AAISpawnerBase::StartSpawning()
 {
+	if (bAlreadySpawned) return false;
+
 	bool ReturnValue = false;
 
 	if (SpawnDelay > 0.f) {
+		TWeakObjectPtr<AAISpawnerBase> WeakThis(this);
 		FTimerHandle SpawnDelayTimerHandle;
 		GetWorldTimerManager().SetTimer(SpawnDelayTimerHandle, FTimerDelegate::CreateLambda([&] {
+			if (!WeakThis.IsValid()) return;  // Actor destroyed? Do nothing
+
 			if (SpawnPoint)
 			{
 				GetWorldTimerManager().SetTimer(SpawnerTickTimerHandle, this, &AAISpawnerBase::SpawnTick, SpawnTimerTickRate, true, SpawnTimerTickRate);
@@ -46,6 +51,8 @@ bool AAISpawnerBase::StartSpawning()
 		GetWorldTimerManager().SetTimer(SpawnerTickTimerHandle, this, &AAISpawnerBase::SpawnTick, SpawnTimerTickRate, true, SpawnTimerTickRate);
 		ReturnValue = true;
 	}
+
+	bAlreadySpawned = true;
 
 	return ReturnValue;
 }
