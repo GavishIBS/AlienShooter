@@ -179,9 +179,12 @@ void AMainGameMode::EnableAlarmingSystem(const EAlarmingModeName& SwitchToModeNa
 	{
 		if (ModeData.AlarmingModeName == CurrentAlarmingModeName) {
 			ModeData.OnAlarmingModeActivated.Broadcast(ModeData.AlarmingModeName);
-
+			
 			FTimerHandle ResetAlarmingModeTimerHandle;
+			TWeakObjectPtr<AMainGameMode> WeakThis(this);
 			GetWorldTimerManager().SetTimer(ResetAlarmingModeTimerHandle, FTimerDelegate::CreateLambda([&] {
+				if (!WeakThis.IsValid()) return;
+
 				EnableAlarmingSystem(EAlarmingModeName::NORMAL);
 			}), ModeData.ResetAfterSeconds, false);
 
