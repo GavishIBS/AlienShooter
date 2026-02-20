@@ -51,7 +51,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DoCameraShake(const FVector IntensityFactor, const float ShakeTime, const bool bShakeInDir, const FVector Direction);
 
-	void Rebirth(const FTransform& RebirthTransform);
+	virtual void Rebirth(const FTransform& RebirthTransform);
 
 protected:
 	virtual void BeginPlay() override;

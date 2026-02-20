@@ -44,7 +44,7 @@ protected:
 	bool bCheckObstaclesBetween = true;
 
 	// Effects
-	UPROPERTY(EditDefaultsOnly, Category = "Effects / FX")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects / FX")
 	UNiagaraComponent* FlameFXComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Effects / FX")

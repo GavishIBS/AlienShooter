@@ -43,7 +43,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Properties")
 	float RotationSpeed = 1.f;
 	
-	UPROPERTY(EditAnywhere, Category = "Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	bool bDespawnAfterDelay = true;
 
 	UPROPERTY(EditAnywhere, Category = "Properties")

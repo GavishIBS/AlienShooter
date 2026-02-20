@@ -9,7 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/InventoryComponent.h"
 #include "Components/RadioPhoneComponent.h"
-//#include "Components/ObjectiveComponent.h"
+#include "Components/ObjectiveComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "CustomCollisionTypes.h"
 

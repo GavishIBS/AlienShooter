@@ -22,6 +22,8 @@ public:
 	AShooterCharacter_MeleeAttacker();
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+	virtual void Rebirth(const FTransform& RebirthTransform) override;
+
 protected:
 	virtual void BeginPlay() override;
 

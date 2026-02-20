@@ -164,6 +164,7 @@ void AMainGameMode::TryRespawnPlayer(AActor* Killer)
 	}
 	else {
 		// Game over
+		UGameplayStatics::OpenLevel(this, FName("MainMenuLevel"));
 	}
 }
 

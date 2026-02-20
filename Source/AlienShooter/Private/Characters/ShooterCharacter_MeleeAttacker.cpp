@@ -72,6 +72,8 @@ void AShooterCharacter_MeleeAttacker::MeleeAttackKeyUp()
 
 void AShooterCharacter_MeleeAttacker::EndMeleeAttack()
 {
+	if (!MeleeWeapon) return;
+
 	if (MeleeWeapon->ShouldFreezeTickInAttack()) {
 		SetActorTickEnabled(true);
 	}
@@ -103,4 +105,11 @@ void AShooterCharacter_MeleeAttacker::SetupPlayerInputComponent(UInputComponent*
 		EnhancedInputComponent->BindAction(MeleeAttackAction, ETriggerEvent::Started, this, &AShooterCharacter_MeleeAttacker::MeleeAttackKeyDown);
 		EnhancedInputComponent->BindAction(MeleeAttackAction, ETriggerEvent::Completed, this, &AShooterCharacter_MeleeAttacker::MeleeAttackKeyUp);
 	}
+}
+
+void AShooterCharacter_MeleeAttacker::Rebirth(const FTransform& RebirthTransform)
+{
+	Super::Rebirth(RebirthTransform);
+	//StopMeleeAttackTrace();
+	EndMeleeAttack();
 }
