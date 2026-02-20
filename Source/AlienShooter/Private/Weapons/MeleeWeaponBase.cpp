@@ -7,6 +7,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interfaces/HitInterface.h"
 #include "Damage/MeleeAttackDamage.h"
+#include "Kismet/GameplayStatics.h"
 
 AMeleeWeaponBase::AMeleeWeaponBase()
 {
@@ -52,6 +53,25 @@ void AMeleeWeaponBase::PerformAttackTrace()
 		}
 		if (DamageDealt_ThisAttack > MaxDamagePerAttack) {
 			StopAttackTrace();
+		}
+
+		{
+			OutHit.PhysMaterial.Get();
+
+			if (!OutHit.GetActor()) return;
+			if (OutHit.PhysMaterial.Get()) {
+				EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(OutHit.PhysMaterial.Get());
+
+				if (HitEffects.Contains(SurfaceType)) {
+					const FBulletHitEffectData& EffectData = HitEffects[SurfaceType];
+
+					if (EffectData.HitParticle)
+						UGameplayStatics::SpawnEmitterAtLocation(this, EffectData.HitParticle, OutHit.ImpactPoint);
+
+					if (EffectData.HitSound)
+						UGameplayStatics::PlaySoundAtLocation(this, EffectData.HitSound, OutHit.ImpactPoint);
+				}
+			}
 		}
 	}
 }

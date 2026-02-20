@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "./WeaponTypes.h"
 #include "MeleeWeaponBase.generated.h"
 
 UCLASS()
@@ -18,6 +19,9 @@ public:
 
 	void StartAttackTrace();
 	void StopAttackTrace();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties | FX")
+	TMap<TEnumAsByte<EPhysicalSurface>, FBulletHitEffectData> HitEffects;  // TMap<PhysicsSurface, ParticleSystem>
 
 protected:
 	virtual void BeginPlay() override;
